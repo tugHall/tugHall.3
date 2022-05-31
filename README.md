@@ -17,6 +17,8 @@ _**Iurii Nagornov**_
 
 _**Jo Nishino**_
 
+_**Eisaku Furukawa**_
+
 _**Mamoru Kato**_
 
 _Division of Bioinformatics, Research Institute, National Cancer Center Japan, Tokyo, Japan_
