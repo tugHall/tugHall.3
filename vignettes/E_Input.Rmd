@@ -1,0 +1,246 @@
+---
+title: "Input data for simulation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Input data for simulation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Table of Contents
+
+[User Guide content](A_User_Guide.html)
+
+[Theory of the model](B_Theory.html)
+
+[Quick start guide](C_Quick_start.html)
+
+[Simulation preparation](D_Simulation.html)
+
+[Input data](E_Input.html)
+
+[Output data](F_Output.html)
+
+[Post simulation analisys](G_Analisys.html)
+
+[VAF calculation](H_VAF.html)
+
+[Figures](I_Figures.html)
+
+[Relation to experimental measurements](J_Relation.html)
+
+[Versions](K_Versions.html)
+
+[References](L_References.html)
+
+
+---
+
+
+## Copy /Input/ folder to working directory 
+
+To copy all the files just call the function:
+
+    copy_files_to_Input()
+    
+By default it copies all the files:
+
+    files = c("CCDS.current.txt", "CF.txt", "cloneinit.txt", "gene_hallmarks.txt",
+            "gene_map.txt", "parameters.txt")
+
+to the folder dir = 'Input'.
+
+## Input of hallmark variables and gene weights
+
+The file **./Input/gene_hallmarks.txt** defines the hallmark variables and weights:
+
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Input/gene_hallmarks.txt",header = FALSE, sep = "\t" )
+x <- data.frame( x[ , 1], x[ , 3], x[ , 2], x[ , 4] )
+knitr::kable(x, col.names = c("Genes", "Suppressor or Oncogene", "Hallmark", "Weights"), 
+             align = "c", 
+             caption = "**Table 1. Input file for genes.** Example of input file for hallmarks and weights in the file **./Input/gene_hallmarks.txt**."
+             )
+```
+
+1. **Genes**  - name of gene, e.g., TP53, KRAS. The names must be typed carefully. The program detects all the unique gene names.
+
+2. **Suppressor or oncogene.**  - Distinction of oncogene/suppressor:
+- o: oncogene
+- s: suppressor
+- ?: unknown (will be randomly assigned)
+Note that gene malfunction probabilities shown below for "Suppressor" and "Oncogene" are defined separately.
+
+3. **Hallmark** - hallmark name, e.g., "apoptosis". Available names: 
+- apoptosis
+- immortalization
+- growth
+- anti-growth
+- angiogenesis
+- invasion
+
+Note that "growth" and "anti-growth" are related to the single hallmark "growth/anti-growth".
+Note that "invasion" is related to "invasion/metastasis" hallmark.
+
+
+4. **Weights**  - Hallmark weights for genes, e.g., 0.333 and 0.5. For each hallmark, the program checks the summation of all the weights. If it is not equal to 1, then the program normalizes it to reach unity. Note that, if the gene belongs to more than one hallmark type, it must be separated into separate lines.
+
+---
+
+
+After that, the program defines all the weights. **Unspecified  weights** are set to 0. Program performs normalization so that the sum of all weights should be equal to 1 for each column (see next table). The **./Output/Weights.txt** file saves these final input weights for the simulation.
+
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Output/Weights.txt", header = TRUE, sep = "\t", nrows = 10)
+knitr::kable(x,  col.names = c("Genes", "Apoptosis, $H_a$", "Angiogenesis, $H_b$", "Growth / Anti-growth, $H_d$", "Immortalization, $H_i$", 
+                               "Invasion / Metastasis, $H_{im}$"), align = "c", caption = "**Table 2. Weights for hallmarks.** Example of weights for hallmarks and genes from _**./Output/Weights.txt**_ file. Unspecified values equal 0."  )
+```
+
+1. **Genes** - name of genes.
+
+2. **Apoptosis, $H_a$** - weights of hallmark "Apoptosis".
+
+3. **Angiogenesis, $H_b$** - weights of hallmark "Angiogenesis".
+
+4. **Growth / Anti-growth, $H_d$** - weights of hallmark "Growth / Anti-growth".
+
+5. **Immortalization, $H_i$** - weights of hallmark "Immortalization".
+
+6. **Invasion / Metastasis, $H_{im}$** - weights of hallmark "Invasion / Metastasis".
+
+---
+
+## Input the probabilities
+
+The input of the probabilities used in the model is possible in the code for parameter value settings, just call or see the function **define_paramaters()**:
+
+|  Probability variable and value | Description  |  Units  |
+|:---|:---|:---|
+| **E0 = 2E-4**    | Parameter $E_0$ related to environmental resource limitation |  $^*$ |
+| **F0 = 1E0**     | Parameter $F_0$ related angiogenesis  |  $^*$ |
+| **m =  1E-6**    | Point mutation probability  $m'$ | per cell's division per base pair |
+| **uo = 0.5**     | Gene malfunction probability by point mutation for oncogene $u_o$ | per mutation  |
+| **us = 0.5**     | Gene malfunction probability by point mutation for suppressor $u_s$ |  per mutation |
+| **s =  10**      | Parameter in the sigmoid function $s$ |  $^*$ |
+| **k =  0.1**     | Environmental death probability $k'$ |  per time-step  |
+| **m_dup      =  0.01**     | CNA duplication probability $m_{dup}$ | per cell's division  |
+| **m_del      =  0.01**     | CNA deletion probability $m_{del}$ |  per cell's division  |
+| **lambda_dup =  7000**        | CNA duplication average length $\lambda_{dup}$  | the geometrical distribution for the length  |
+| **lambda_del =  5000**        | CNA deletion average length $\lambda_{del}$  |  the geometrical distribution for the length |
+| **uo,dup = 0.8**     | Gene malfunction probability by CNA duplication for oncogene $u_{o,dup}$ |  per mutation |
+| **us,dup = 0**     | Gene malfunction probability by CNA duplication for suppressor, $u_{s,dup}$. Currently, 0 is assumed. | per mutation  |
+| **uo,del = 0**     | Gene malfunction probability by CNA deletion for oncogene $u_{o,del}$. Currently, 0 is assumed. | per mutation  |
+| **us,del = 0.8**     | Gene malfunction probability by CNA deletion for suppressor, $u_{s,del}$.  | per mutation  |
+| **d0 = 0.35**     |  Initial division rate  | per time-step  | 
+| **censore_n = 30000 **     | Max cell number where the program forcibly stops  | number of cells |
+| **censore_t = 200**        | Max time where the program forcibly stops  | in time-steps |
+| **Compaction_factor	= TRUE**   | Indicator about an usage of compaction factor | Logical |
+| **model_name	= 'proportional_metastatic'**  | Model definition, it can be 'proportional_metastatic' or 'threshold_metastatic' or 'simplified' |  string/character variable |
+| **time_stop	= 120**  | Max time of running after that the program forcibly stops| in seconds |
+| **n_repeat	= 1**  | Max number of repetition of the program until the NON-ZERO output will be getting | must be integer |
+| **monitor	= TRUE**| The indicator to safe or not to the monitoring file *Sim_monitoring.txt* during a simulation | logical |
+| <img width=160/> | <img width=340/> |  <img width=200/> |
+
+$^*$ [see Suplementary materials in Bioinformatics,V.36,N11,2020,p.3597](https://doi.org/10.1093/bioinformatics/btaa182)
+
+User can also define input parameters from the file **./Input/parameters.txt** and print all the parameters like:
+
+    define_paramaters( read_fl = TRUE , file_name = './Input/parameters.txt' )
+    print_parameters()
+
+---
+
+## Compaction factor
+
+If the model 'proportional_metastatic' is used then an user should to define compaction factors which reduce hallmark values like:
+
+    define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
+where file **'./Input/CF.txt'** contents values of compaction factors:
+
+|  Hallmark's name | Factor  |
+|:---|:---|
+| apoptosis | 0.9 |
+| growth | 	0.85 |
+| immortalization | 	0.79 |
+| angiogenesis | 	0.82 |
+| invasion | 0.97 |
+| <img width=160/> | <img width=140/> |  
+---
+
+## Filename input
+
+A user should define names of input and output files using function **define_files_names()** before a simulation:
+
+|  Variables and file names  | Description  |
+|:---|:---|
+| **genefile = 'gene_hallmarks.txt'**     | File with information about gene-hallmarks weights  |
+| **mapfile = 'gene_map.txt'**     | File with information about genes' map |
+| **clonefile = 'cloneinit.txt'**      | Initial Cells  |
+| **geneoutfile = 'geneout.txt'**    | Gene Out file with hallmarks  |
+| **cloneoutfile = 'cloneout.txt'**   | Output information of simulation  |
+| **logoutfile =  'log.txt'**       | Log file to save the input information of simulation  |
+| <img width=200/> | <img width=350/> |
+
+
+---
+
+
+## Input of the initial clones
+
+**Please, pay attention, it works for driver point mutation only.**
+
+The initial states of cells are defined in **"./Input/cloneinit.txt"** file:
+
+|  Clone ID  | List of malfunctioned genes  | Number of cells |
+|:---|:---|:---|
+| 1 | ""  | 1000 |
+| 2    |  "APC" | 10 |
+| 3   | "APC, KRAS"  | 100 |
+| 4   | "KRAS"  | 1 |
+| 5   | "TP53, KRAS"  | 1 |
+| ...   | ...  | 100 |
+| 1000        | ""  | 10 |
+| <img width=50/> | <img width=150/> | <img width=150/> |
+
+1. **Clone ID**  - ID of clone, e.g., 1, 324.
+
+2. **List of malfunctioned genes** - list of malfunctioned genes for each clone, e.g. "“,”KRAS, APC“. The values are comma separated. The double quotes ("") without gene names indicate a clone without malfunctioned genes.
+
+3. **Number of cells**  - number of cells in each clone, e.g., 1, 1000.
+
+
+## Input of the genes' location (defiine gene_maps data.frame)
+
+This new version of **tugHall.3** allows to calculate CNAs in the genome. The breakpoints of CNAs may fall on genic regions consisting of exons and introns. That's why it's needed to enter information about gene's map.
+In the **/Input/** directory you can find **CCDS.current.txt**, which was getting from 
+[CCDS database](https://ftp.ncbi.nlm.nih.gov/pub/CCDS/current_human/) at the National Center for Biotechnology Information and has information about genes. 
+At the beginning of simulation, the program reads this file and extracts genes’ location using function **define_gene_location()**.
+For example, the 'gene_map' data.frame is shown as follow:
+
+```{r, echo=FALSE, results='asis'}
+x <- read.table( file = "../inst/extdata/Input/gene_map.txt",header = TRUE, sep = "\t",  nrows = 10)
+knitr::kable(x, align = "c", caption = "")
+```
+
+1. **Chr**  - Name of the chromosome, e.g., 1, 12, X, Y.
+
+2. **CCDS_ID** - ID of the gene in the [CCDS database](https://www.ncbi.nlm.nih.gov/CCDS/).
+
+3. **Gene**  -  the name of the gene.
+
+3. **Start**  -  the start position of each exon of the gene.
+
+4. **End**  -   the final position of each exon of the gene.
+
+5. **Len** - the length of gene's location *Len = End - Start + 1*
+
+---
+

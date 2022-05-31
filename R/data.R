@@ -1,0 +1,25 @@
+
+#' tugHall dataset named 'tugHall_dataset'
+#'
+#' Dataset contains all the necessary data.frames and objects to check functions of tugHall.
+#' Description of each data.frame and object could be found in documentation to tugHall package.
+#'
+#' @format A data frame with 12 data.frames and 2 objects:
+#' \describe{
+#'   \item{data_flow}{simulation data for all time steps, data from file cloneout.txt}
+#'   \item{data_last}{simulation data for the last time step, data from file cloneout.txt}
+#'   \item{data_avg}{simulation data averaged for the each time step, data from file cloneout.txt}
+#'   \item{pnt_mut}{data.frame with point mutation information}
+#'   \item{pnt_mut_B}{data.frame with point mutation information of mutated allele B}
+#'   \item{cna_mut}{data.frame with CNA mutation information}
+#'   \item{gene_map}{data.frame with genes' locations information}
+#'   \item{hall}{Object of class 'HallMark'}
+#'   \item{onco}{Object of class 'OncoGene'}
+#'   \item{time_max}{Value of maximal time step in an example simulation}
+#'   \item{CF}{Values of compaction factor}
+#'   \item{vf}{data.frame of preliminary data for VAF calculations}
+#'   \item{VAF_rho}{data.frame with VAF values for different rho}
+#'   \item{rdr_dysf}{data.frame of order of genes dysfunction for each clone}
+#' }
+'tugHall_dataset'
+

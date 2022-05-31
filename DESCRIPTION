@@ -1,0 +1,34 @@
+Package: tugHall.3
+Title: R-based script to simulate the cancer cell evolution
+Version: 3.0
+Authors@R: c(
+    person("Iurii", "Nagornov", , "inagonov@ncc.go.jp", role = c("aut", "cre") ),
+    person("Jo", "Nishino", , "jnishino@ncc.go.jp", role = "ctb"),
+    person("Eisaku", "Furukawa", , "efurukaw@ncc.go.jp", role = "ctb"),
+    person("Mamoru", "Kato", , "mamkato@ncc.go.jp", role = "aut")
+  )
+Description: tugHall (tumor gene-Hallmark) is a cancer-cell evolution
+    model simulator, wherein gene mutations are linked to the hallmarks of
+    cancer, which influence tumor cell behaviors.
+License: GPL (>= 3)
+Depends: 
+    R (>= 3.6.0)
+Imports:
+    actuar,
+    graphics,
+    grDevices,
+    methods,
+    randomcoloR,
+    stats,
+    stringr,
+    utils
+Suggests: 
+    rmarkdown,
+    knitr,
+    testthat,
+    DiagrammeR
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+LazyData: true
+VignetteBuilder: knitr

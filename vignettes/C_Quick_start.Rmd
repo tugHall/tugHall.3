@@ -1,0 +1,76 @@
+---
+title: "Quick start"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Quick start}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Table of Contents
+
+[User Guide content](A_User_Guide.html)
+
+[Theory of the model](B_Theory.html)
+
+[Quick start guide](C_Quick_start.html)
+
+[Simulation preparation](D_Simulation.html)
+
+[Input data](E_Input.html)
+
+[Output data](F_Output.html)
+
+[Post simulation analisys](G_Analisys.html)
+
+[VAF calculation](H_VAF.html)
+
+[Figures](I_Figures.html)
+
+[Relation to experimental measurements](J_Relation.html)
+
+[Versions](K_Versions.html)
+
+[References](L_References.html)
+
+
+---
+
+The simplest way to run tugHall is just run function:
+
+    simulation_example()
+
+
+This function makes several changes in the working directory:
+
+- copy /Input/ folder to your working directory;
+
+- create /Output/ folder in your working directory;
+
+- define all the global parameters;
+
+- define all the names of files for input and output;
+
+- define genes location info from the file;
+
+- define hallmarks from the file;
+
+- define compaction factors from the file;
+
+- define initial clones;
+
+- run the simulation (please, wait for a while);
+
+- after finishing of simulation, it calculates VAF and order of genes dysfunction;
+
+- plot given results.
+
+

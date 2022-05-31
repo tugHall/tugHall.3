@@ -1,0 +1,158 @@
+---
+title: "Figures"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Figures}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+
+
+## Table of Contents
+
+[User Guide content](A_User_Guide.html)
+
+[Theory of the model](B_Theory.html)
+
+[Quick start guide](C_Quick_start.html)
+
+[Simulation preparation](D_Simulation.html)
+
+[Input data](E_Input.html)
+
+[Output data](F_Output.html)
+
+[Post simulation analisys](G_Analisys.html)
+
+[VAF calculation](H_VAF.html)
+
+[Figures](I_Figures.html)
+
+[Relation to experimental measurements](J_Relation.html)
+
+[Versions](K_Versions.html)
+
+[References](L_References.html)
+
+
+---
+
+```{r setup}
+library(tugHall.3)
+```
+
+Figures are gotten by corresponding functions. Code is shown near the plot.
+
+This figure demonstrates the number of cells for each order of genes' dysfunction sorted for convenient watching:
+
+```{r echo=TRUE, fig.height=6, warning=TRUE, fig.width=6}
+rdr = tugHall_dataset$rdr_dysf
+plot_order_dysfunction( rdr_dysf = rdr , pos = c(10,200), logscale = 'y', cex = 0.9 ,
+                        change_par = TRUE )
+```
+
+Here index is indicator of order and corresponded to numbers before text lines on the plot.
+
+Next plots are parties from the function of 
+
+    plot_average_simulation_data( data_avg, time_max )
+
+There is numbers of cells during a simulation:
+
+```{r echo=TRUE, fig.height=6, fig.width=6}
+data_avg = tugHall_dataset$data_avg
+time_max = tugHall_dataset$time_max
+g_range_y  =  range( 0, data_avg$N_normal + 1 , data_avg$N_primary + 1, data_avg$N_metastatic + 1 )
+g_range_x  =  range( min( data_avg$Time ), max( data_avg$Time, round( time_max/10 +0.5 ) * 10  ) )
+plot_2D_lines( x = data_avg$Time, data_avg, 
+               nl = c('N_normal', 'N_primary', 'N_metastatic'), 
+               xr = g_range_x, yr = g_range_y, 
+                legend_names = c('Normal', 'Primary tumor', 'Metastatic'), 
+                names = c( 'Time step', 'Number of cells' ) ,
+              safe_pdf  =  FALSE, filename = ''  )
+```
+
+Next is the plot of all the probabilities:
+
+```{r echo=TRUE, fig.height=6, fig.width=6}
+data_avg = tugHall_dataset$data_avg
+time_max = tugHall_dataset$time_max
+g_range_x  =  range( min( data_avg$Time ), max( data_avg$Time, round( time_max/10 +0.5 ) * 10  ) )
+g_range_y  =  range( 0, 1 )
+plot_2D_lines( x = data_avg$Time, data_avg,
+                   nl = c('a', 'd', 'i', 'im', 'k'), xr = g_range_x, yr = g_range_y,
+                   legend_names = '',
+                   names = c( 'Time step', 'Probabilities' ) ,
+                   safe_pdf  =  FALSE, filename = ''  )
+
+```
+
+where **'a', 'd', 'i', 'im', 'k'** are probabilities described in [Theory](B_Theory.html)
+
+Next is the plot of hallmarks variables:
+
+```{r echo=TRUE, fig.height=6, fig.width=6}
+data_avg = tugHall_dataset$data_avg
+time_max = tugHall_dataset$time_max
+g_range_x  =  range( min( data_avg$Time ), max( data_avg$Time, round( time_max/10 +0.5 ) * 10  ) )
+g_range_y  =  range( 0, max( data_avg[c('Ha', 'Hd', 'Hi', 'Him', 'Hb')] ) + 0.04 )
+plot_2D_lines( x = data_avg$Time, data_avg,
+                   nl = c('Ha', 'Hd', 'Hi', 'Him', 'Hb'), xr = g_range_x, yr = g_range_y,
+                   legend_names = '',
+                   names = c( 'Time step', 'Hallmarks' ) ,
+                   safe_pdf  =  FALSE, filename = '' )  
+```
+
+where **'Ha', 'Hd', 'Hi', 'Him', 'Hb'** are hallmarks variables.
+
+Next is an evolution of average mutation rate:
+
+```{r echo=TRUE, fig.height=6, fig.width=6}
+data_avg = tugHall_dataset$data_avg
+time_max = tugHall_dataset$time_max
+g_range_x  =  range( min( data_avg$Time ), max( data_avg$Time, round( time_max/10 +0.5 ) * 10  ) )
+g_range_y  =  range( 0, max( data_avg[c('mut_den')] ) + 0.05 )
+plot_2D_lines( x = data_avg$Time, data_avg,
+                   nl = c('mut_den'), xr = g_range_x, yr = g_range_y,
+                   legend_names = '',
+                   names = c( 'Time step', 'Mutation rate' ) ,
+                   safe_pdf  =  FALSE, filename = '', draw_key = FALSE )
+```
+
+
+Clones' evolution is represented as evolution of number of cells in logarithmic scale for each clone:
+
+```{r echo=TRUE, fig.height=6, fig.width=6}
+data_flow = tugHall_dataset$data_flow
+plot_clone_evolution( data_flow, threshold = c(0.01, 1 ), lwd = 2.0,
+                              hue = c(" ", "random", "red", "orange", "yellow",
+                                      "green", "blue", "purple", "pink", "monochrome")[1],
+                              luminosity = c(" ", "random", "light", "bright", "dark")[4],
+                              yr = NA , add_initial = TRUE, log_scale = TRUE, change_par = FALSE )
+```
+
+where threshold is used to cut clones with small numbers of cells at the end of simulation.
+
+
+```{r echo=TRUE, fig.height=6, fig.width=6}
+data_flow = tugHall_dataset$data_flow
+plot_clone_evolution( data_flow, threshold = c(0.0, 0.01), lwd = 2.0,
+                              hue = c(" ", "random", "red", "orange", "yellow",
+                                      "green", "blue", "purple", "pink", "monochrome")[1],
+                              luminosity = c(" ", "random", "light", "bright", "dark")[4],
+                              yr = NA , add_initial = FALSE, log_scale = TRUE )
+```
+
+where threshold is used to cut clones with large numbers of cells at the end of simulation.
+
+

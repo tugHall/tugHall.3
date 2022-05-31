@@ -1,0 +1,204 @@
+---
+title: "Preparation of simulation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Preparation of simulation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Table of Contents
+
+[User Guide content](A_User_Guide.html)
+
+[Theory of the model](B_Theory.html)
+
+[Quick start guide](C_Quick_start.html)
+
+[Simulation preparation](D_Simulation.html)
+
+[Input data](E_Input.html)
+
+[Output data](F_Output.html)
+
+[Post simulation analisys](G_Analisys.html)
+
+[VAF calculation](H_VAF.html)
+
+[Figures](I_Figures.html)
+
+[Relation to experimental measurements](J_Relation.html)
+
+[Versions](K_Versions.html)
+
+[References](L_References.html)
+
+
+---
+
+# Standart simulation         
+        
+Standard simulation includes several steps:
+
+1. Preparation of Input and Output folders from working directory
+
+2. Preparation of input files and parameters
+
+3. Run a simulation
+
+4. Post simulation data processing 
+
+5. Plot the results of simulation
+
+### 1. Preparation of Input and Output folders from working directory
+        
+To check dependencies from external packages from import list, please, run:
+
+            packages  =  list(  actuar = 'rztpois',
+                                randomcoloR = 'randomColor',
+                                methods = 'new',
+                                stats = c('aggregate', 'rbinom', 'rexp', 'rnorm', 'runif' ),
+                                stringr = c('str_length', 'str_split', 'str_sub', 'str_trim'),
+                                utils = c('read.delim', 'read.table', 
+                                'write.table', 'globalVariables' ),
+                                grDevices = c('dev.off', 'pdf', 'rgb'),
+                                graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title' ) )
+        
+            for( pck in names( packages ) ){
+                library( package = pck, character.only = TRUE, include.only = packages[[ pck ]])
+            }
+
+### 2. Preparation of input files and parameters
+
+Firstly, we need to copy all the input files to Input folder by calling the function,
+(make sure that **working directory** is in a proper place):
+
+            copy_files_to_Input( files = c( 'CCDS.current.txt', 'CF.txt',
+                                           'cloneinit.txt','gene_hallmarks.txt',
+                                           'gene_map.txt','parameters.txt' ) ,
+                                 dir = 'Input' )
+
+Next define names of all the files to input and output:
+                                 
+            define_files_names()
+            
+Define location of all the genes of interest:
+
+            define_gene_location(   file_input = "Input/CCDS.current.txt",
+                                    genes_list = c("CCDS4107.1", "CCDS8702.1", 
+                                    "CCDS43171.1", "CCDS11118.1") )
+            
+Define parameters from './Input/parameters.txt', if it necessary, please, change it directly:
+
+            define_parameters( read_fl = TRUE , file_name = './Input/parameters.txt' )
+            
+If compaction factors are used in simulation, please, change and define them:
+
+            define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
+
+To check all the parameters and names of files, just print them:
+
+            print_parameters()
+
+### 3. Run a simulation
+
+For a simulation **tugHall.3** uses the global parameters generated automatically:
+
+                              'CF', 'Compaction_factor', 'E0', 'F0', 'censore_n',
+                              'censore_t', 'clonefile', 'cloneoutfile',
+                              'cna_clones', 'd0', 'env', 'file_monitor',
+                              'gene_map', 'genefile', 'geneoutfile', 'hall', 'k0',
+                              'lambda_del', 'lambda_dup', 'logoutfile', 'm0',
+                              'm_del', 'm_dup', 'model_name', 'monitor',
+                              'n_repeat', 'onco', 'pnt_clones', 's0',
+                              'time_stop', 'uo', 'uo_del', 'uo_dup',
+                              'us', 'us_del', 'us_dup'
+
+So, please, be kind to make sure that these parameters are not affected by other packages or programs.
+
+Start simulation, please, wait for a while ... or see Sim_monitoring.txt file in working folder:
+
+                smlt = model(genefile, clonefile, geneoutfile, cloneoutfile, 
+                              logoutfile, E0, F0, m0, uo, us, s0, k0, 
+                              censore_n, censore_t, d0)
+                clones        =  smlt[[ 1 ]]
+                onco_clones   =  smlt[[ 2 ]]
+        
+Save point mutations and CNA to the files in Output folder:
+
+            write_pnt_clones( pnt_clones, file_out = 'Output/point_mutations.txt' )
+            write_pnt_clones( cna_clones, file_out = 'Output/CNA_mutations.txt' )
+
+### 4. Post simulation data processing 
+
+Get data of the last simulation from cloneout file:
+
+            dtst = get_flow_data(cloneoutfile, genefile )
+            data_avg  =  dtst$data_avg
+            data_flow  =  dtst$data_flow
+            time_max = dtst$time_max
+            data_last = dtst$data_last
+            cna_mut = dtst$cna_mut
+            pnt_mut = dtst$pnt_mut
+            pnt_mut_B = dtst$pnt_mut_B
+            onco = dtst$onco
+            hall = dtst$hall
+        
+Also get VAF data and save them into file 'Output/VAF_data.txt':
+
+            vf = get_VAF(pnt_mut, data_last )
+            VAF  =  get_rho_VAF( vf = vf, 
+                                rho = c( 0.0, 0.1, 0.2, 0.5, 0.7, 0.9 ) , 
+                                file_name = './Output/VAF.txt' )
+
+If it necessary, get order of genes dysfunction for allclones:
+
+            rdr_dysf  =  get_order_of_genes_dysfunction(  pnt_mut = pnt_mut, 
+                                                          data_last, cna_mut,
+                                      file_name = './Output/order_genes_dysfunction.txt')
+        
+### 5. Plot the results of simulation
+
+To visualize results of a simulation one may plot them using special functions:
+
+                plot_order_dysfunction( rdr_dysf , pos = c(10,200), logscale = 'y', cex = 1. )
+        
+                plot_average_simulation_data( data_avg, time_max )
+        
+                # Main clones
+                plot_clone_evolution( data_flow, threshold = c(0.01, 1 ), lwd = 2.0,
+                                      hue = c(" ", "random", "red", "orange", "yellow",
+                                              "green", "blue", "purple", "pink", "monochrome")[1],
+                                      luminosity = c(" ", "random", "light", "bright", "dark")[4],
+                                      yr = NA , add_initial = TRUE, log_scale = TRUE, 
+                                      change_par = FALSE )
+        
+                # Minor clones but large amount of them
+                plot_clone_evolution( data_flow, threshold = c(0.0, 0.01), lwd = 2.0,
+                                      hue = c(" ", "random", "red", "orange", "yellow",
+                                              "green", "blue", "purple", "pink", "monochrome")[1],
+                                      luminosity = c(" ", "random", "light", "bright", "dark")[4],
+                                      yr = NA , add_initial = FALSE, log_scale = TRUE )
+
+
+# Parallel simulations
+
+To be done
+
+# Simulations with different parameters
+
+To be done 
+
+# Simulation started from saved results of previous simulation 
+
+To be done 
+
+

@@ -1,0 +1,61 @@
+---
+title: "Relation to experimental measurements"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Relation to experimental measurements}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Table of Contents
+
+[User Guide content](A_User_Guide.html)
+
+[Theory of the model](B_Theory.html)
+
+[Quick start guide](C_Quick_start.html)
+
+[Simulation preparation](D_Simulation.html)
+
+[Input data](E_Input.html)
+
+[Output data](F_Output.html)
+
+[Post simulation analisys](G_Analisys.html)
+
+[VAF calculation](H_VAF.html)
+
+[Figures](I_Figures.html)
+
+[Relation to experimental measurements](J_Relation.html)
+
+[Versions](K_Versions.html)
+
+[References](L_References.html)
+
+
+---
+
+
+We here list variables processed from the **tugHall.3** outputs that are related to experimental measurements. 
+
+
+|  Variables processed from the simulator outputs  | Relation to experimental measurements  |
+|:---|:---|
+| Number of cells | Observed tumor size. $10^9$ cells correspond to the tumor tissue diameter of 1 cm. $10^{12}$ cells correspond to that of 10 cm. $10^{12}-10^{13}$ cells correspond to lethal burden. See Friberg and Mattson, Journal of Surgical Oncology, 1997. |
+| VAF | VAF calculated from sequence reads in the next-generation sequencer (NGS) under the assumption of tumor purity as external parameter, for details, please, see [VAF calculation](H_VAF.html). |
+| Mutation number per base-pairs | Tumor mutation burden calculated from NGS data. |
+| Number of clones | Number of clones estimated from NGS data by computational tools such as SciClone ([Miller et al, PLOS Computational Biology, 2014](https://doi.org/10.1371/journal.pcbi.1003665)) and SubClonalSelection ([Williams et al, Nature Genetics, 2018](https://doi.org/10.1038/s41588-018-0128-6)). |
+| <img width=200/> | <img width=440/> |
+
+
+
+

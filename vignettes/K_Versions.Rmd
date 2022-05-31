@@ -1,0 +1,156 @@
+---
+title: "Versions of tugHall"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Versions of tugHall}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+## Table of Contents
+
+[User Guide content](A_User_Guide.html)
+
+[Theory of the model](B_Theory.html)
+
+[Quick start guide](C_Quick_start.html)
+
+[Simulation preparation](D_Simulation.html)
+
+[Input data](E_Input.html)
+
+[Output data](F_Output.html)
+
+[Post simulation analisys](G_Analisys.html)
+
+[VAF calculation](H_VAF.html)
+
+[Figures](I_Figures.html)
+
+[Relation to experimental measurements](J_Relation.html)
+
+[Versions](K_Versions.html)
+
+[References](L_References.html)
+
+
+---
+
+
+
+# Differences with *cell-based* code
+
+### Reason to develop clone-based code
+
+* Clone-based code was designed to accelerate calculation and increase number of tumor cell. 
+Advantage of clone-based algorithm is making trial for all cells at 1 clone with one application of **trial()** function. In cell-based algorithm **trial()** applies to each cell. But if number of cells equal number of clones, then speed up is 1. That's why  clone-based code works faster for any cases. 
+
+* Another reason is a case, when we need to simulate huge number of cells like $10^7$ or $10^9$, but mutation rate is very low. Cell-based algorithm takes a huge computational cost, and vice versa clone-based algorithm will work very fast, if mutated cells will appear slowly.
+
+### Usage of _trial()_ function
+
+* In **trial()** function program applies several trials like environmental death, apoptosis death, division process, etc. We changed the trials with probability $p$ (for some death process) for each cell in the clone with for 1 trial with procedure:
+
+$N_{cells} = N_{cells} - Binom(p,N_{cells})$,
+
+where $Binom(p,N_{cells})$ is random number from the binomial distribution with probability $p$, $N_{cells}$ is a number of cells in a clone. Probability $p$ is one of probabilities of death processes, for example, for apoptosis death $p = a'$ or for environment death $p = k$ etc. 
+
+* For cell division with probability $d'$ the new number of cells will be:
+
+$N_{cells} = N_{cells} + Binom(d',N_{cells})$
+
+
+* Check at the end of **trial()** function: if $N_{cells} = 0$, then the clone has been died.
+
+### Usage of mutation function
+
+* In mutation function we have changed the mutation to birth of a new clone (one mutation is a birth of one clone):
+
+$N_{new\_clones} = Binom(m,N_{new\_cells})$,
+
+$N_{new\_cells} = Binom(d',N_{cells})$.
+
+* Passenger or Driver mutations do not matter for new clone's generation. Only during analysis, we will distinguish Passengers or Drivers clones.
+
+
+### Average function
+
+* The average values $\overline{x}$ of probabilities or hallmarks are found by summation on the $x_i$ with multiplication by cells number $N_{cells,i}$ of this clone:
+
+$\overline{x} = \sum_i x_i \times w_i$,
+
+where $w_i = \frac{N_{cells,i} }{ N_{cells,tot}}$ is $i$th clone's occupancy in
+whole cell population $N_{cells,tot} = \sum_i N_{cells,i}$, 
+$x_i$  is the value for $i$th clone, 
+summation applies for all clones $i = 1 .. N_{clones}$.
+
+* For this purpose, we added the calculation of cells number (primary and metastasis) before average and hallmarks update.
+
+
+# Difference with tugHall version 2.0
+
+In the current version we use library *actuar* to make non-zero-binom calculation faster, and 
+we use the approximation for big numbers of cells in **trial()** function, because **rbinom()** function in R has restriction for big numbers like $n \times p > 10^{12}$. 
+For more details, please, be kind to see function:
+
+    calc_binom( tr,  n, p )
+
+For Poisson distribution when we calculate the numbers of mutations for each new clone (in model() function), the function rztpois() from package *actuar* is used:
+
+    num_mut <- rztpois(N_new, sm ) # Numbers of mutations for each new clone
+
+
+# Differences with clone-based code and version 2.1
+
+### Reason to develop CNA-based code
+
+New version of tugHall with copy number alteration (CNA) was designed for correct calculation of VAF influenced by CNA and tumor purity. It's expected that this design should improve comparison between observation VAF $\in [0;1]$ and calculated VAF. The previous versions of tugHall have VAF in the range $[0;0.5]$
+because of the neglect of CNA and tumor purity.
+
+
+### Changing the formula of the cell division coefficient
+
+In the cell division process, the logistic growth applies to primary-tumor cells and normal cells, where normal cells are cells without any driver mutations. Meanwhile, $N_p$ of the friction term in the logistic equation is the number of primary-tumor cells. $N_p$, $N_m$, and $N_n$ are the numbers of primary-tumor, metastatic-tumor, and normal cells. So, the division coefficient now is calculated by next formula:
+
+$$
+d'=
+\begin{cases}
+d_0 + H_d - E' \times N_p \qquad \text{when logistic growth,} \\
+d_0 + H_d, \qquad \qquad \qquad \text{when exponential growth}    \\
+\end{cases}
+$$
+where $H_d$ is division hallmark, 
+$d_0$ is initial division coefficient, 
+$E' = \frac{E_0}{ (1+F_0 \times H_b) }$,
+$H_b$ is angiogenesis hallmark, $F_0$ is a friction coefficient.
+
+
+### Calculation of point and CNA mutations
+
+Probabilities of CNA mutations are calculated in the same way as point mutations:
+
+* $m_{point} = m_0 \times l_{CDS}$ - for point mutation of a gene, where $l_{CDS}$ is the length of all exons of a gene ( *CDS_(gene's name)* is denoted in the table of [Output data](F_Output.html) ) and $m_0$ is a constant per base pairs per cell's division defined by users;
+
+* $m_{0,dup}$ and $m_{0,del}$, or we collectively call $m_{0,CNA}$, indicate the first breakpoint event of a CNA and it is a constant per base pairs per cell's division defined by users. 
+$m_{CNA} = m_{0,CNA} \times l_{genes}$, where $l_{genes}$ is the total region size of all genes of interest which consists of exons as well as introns ( *Len_(gene's name)* is denoted in the table of [Output data](F_Output.html) ).
+
+* a length of CNA is calculated using geometrical distribution:
+    $l_{CNA} = rgeom(1,1 / \lambda_{CNA})$+1, where $\lambda_{CNA}$ is average base-pair length defined by users ($\lambda_{CNA}$ is either $\lambda_{dup}$ or $\lambda_{del}$).
+
+* probability of malfunctioning a gene $u = u_{s,CNA}$ for suppressor and 
+$u = u_{o,CNA}$ for oncogene.
+
+The algorithm of point and CNA mutations is described in [Theory chapter](B_Theory.html).
+The calculation of probabilities and hallmarks variables is not changed. 
+Variant allele frequencies are calculated using approach that is described in
+[VAF calculation](H_VAF.html)
+

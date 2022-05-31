@@ -1,0 +1,116 @@
+---
+title: "USER GUIDE of tugHall.3"
+#authors: "Iurii Nagornov, Nishino Jo and Mamoru Kato"
+## date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{USER GUIDE of tugHall.3}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Authors: Iurii Nagornov, Nishino Jo and Mamoru Kato
+
+## Organization: National Cancer Center Japan, Research Institute, Division of Bioinformatics
+
+date: "`r Sys.Date()`"
+
+## Table of Contents
+
+[User Guide content](A_User_Guide.html)
+
+[Theory of the model](B_Theory.html)
+
+[Quick start guide](C_Quick_start.html)
+
+[Simulation preparation](D_Simulation.html)
+
+[Input data](E_Input.html)
+
+[Output data](F_Output.html)
+
+[Post simulation analisys](G_Analisys.html)
+
+[VAF calculation](H_VAF.html)
+
+[Figures](I_Figures.html)
+
+[Relation to experimental measurements](J_Relation.html)
+
+[Versions](K_Versions.html)
+
+[References](L_References.html)
+
+
+---
+
+
+**tugHall** _(**tu**mor **g**ene-**Hall**mark)_ is a cancer-cell evolution model simulator, wherein gene mutations are linked to the hallmarks of cancer, which influence tumor cell behaviors. 
+
+
+## Requirements for tugHall simulation:
+
+R version **3.6.0** or later
+
+Libraries: 
+
+as Import: **actuar, graphics, grDevices, methods, randomcoloR, stats, stringr, utils**.
+
+as Suggests: **rmarkdown, knitr, testthat**.
+
+**tugHall** is a tool based on the model described in the paper
+Iurii S Nagornov,  Mamoru Kato. tugHall: a simulator of cancer-cell evolution based on the hallmarks of cancer and tumor-related genes. 
+[Bioinformatics, V.36, N11, June 2020, pp. 3597–3599](https://doi.org/10.1093/bioinformatics/btaa182). 
+The parameters of the model are described in the Supplementary materials of the paper. 
+
+Note that the program has two different procedures in general: the first is the simulation and the second is the analysis of the simulation results.
+Please, note that plots and tables of this document are related to the dataset **tugHall_dataset** which is available as 
+
+    **tugHall.3::tugHall_dataset**. 
+
+
+## Important notes:
+
+For a simulation **tugHall.3** uses the global parameters by calling the function:
+
+    utils::globalVariables( c( 'CF', 'Compaction_factor', 'E0', 'F0', 'censore_n',
+                               'censore_t', 'clonefile', 'cloneoutfile',
+                               'cna_clones', 'd0', 'env', 'file_monitor',
+                               'gene_map', 'genefile', 'geneoutfile', 'hall', 'k0',
+                               'lambda_del', 'lambda_dup', 'logoutfile', 'm0',
+                               'm_del', 'm_dup', 'model_name', 'monitor',
+                               'n_repeat', 'onco', 'pnt_clones', 's0',
+                               'time_stop', 'uo', 'uo_del', 'uo_dup',
+                               'us', 'us_del', 'us_dup' ) )
+
+So, please, be kind to make sure that these parameters are not affected by other packages or programs.
+
+
+## Cite package tugHall.3
+
+For publication, please, be kind to use next references related to tugHall software:
+
+- Model description and first version of tugHall
+
+Iurii S Nagornov,  Mamoru Kato. tugHall: a simulator of cancer-cell evolution based on the hallmarks of cancer and tumor-related genes. 
+[Bioinformatics, V.36, N11, June 2020, pp. 3597–3599](https://doi.org/10.1093/bioinformatics/btaa182)
+
+- Clone-based version of tugHall 2.0 and 2.1 with acceleration of calculation speed
+
+Nagornov, I., Nishino, J., Kato, M. (2020). tugHall: A Tool to Reproduce Darwinian Evolution of Cancer Cells for Simulation-Based Personalized Medicine. In: Mathematical and Computational Oncology. ISMCO 2020. 
+[Lecture Notes in Computer Science, vol 12508. Springer](https://doi.org/10.1007/978-3-030-64511-3_7)
+
+- for reference of tugHall.3 package, please, cite both papers and corresponding github repository.
+
+
+
+
+

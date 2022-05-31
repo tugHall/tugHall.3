@@ -1,0 +1,248 @@
+---
+title: "Output data for simulation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Output data for simulation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Table of Contents
+
+[User Guide content](A_User_Guide.html)
+
+[Theory of the model](B_Theory.html)
+
+[Quick start guide](C_Quick_start.html)
+
+[Simulation preparation](D_Simulation.html)
+
+[Input data](E_Input.html)
+
+[Output data](F_Output.html)
+
+[Post simulation analisys](G_Analisys.html)
+
+[VAF calculation](H_VAF.html)
+
+[Figures](I_Figures.html)
+
+[Relation to experimental measurements](J_Relation.html)
+
+[Versions](K_Versions.html)
+
+[References](L_References.html)
+
+
+---
+
+
+The output data consists of several files after the simulation. 
+
+## "log.txt" file
+The file **"log.txt"** contains information about probabilities and file names. These variables are explained in the ["Inputs"](E_Input.html). 
+
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Output/log.txt",header = FALSE, sep = "\t", col.names = c("Variable","Value"), stringsAsFactors = FALSE )
+x[is.na(x)] <- ""
+x[ c(6,7) , 1 ] =  c( 'E0' , 'F0' )
+knitr::kable(x, align = "c", caption = "**The log.txt file.** Example of log.txt file.")
+```
+
+
+## "geneout.txt" file
+The file **"geneout.txt"** contains input information about the weights that connect the hallmarks and genes, which are defined by the user. These variables also are explained in the ["Inputs"](E_Input.html). 
+
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = '../inst/extdata/Output/geneout.txt', header = TRUE, sep = "\t", col.names = c("Gene_name","Hallmark_name", "Weight", "Weight_CF", "Suppressor_or_oncogene"), stringsAsFactors = FALSE )
+x[is.na(x)] <- ""
+knitr::kable(x, align = "c", caption = "**The geneout.txt file.** Given below is an example of the geneout.txt file.")
+```
+
+'Weight_CF' column has weights of hallmark multiplied by CF or compaction factor for each hallmark respectively. 
+
+
+## "cloneout.txt" file
+
+The file **"cloneout.txt"** contains the results of the simulation and includes the evolution data: all the output data for each clone at each time step (only the first 10 lines are presented): 
+
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Output/cloneout.txt",header = TRUE, sep = "\t", nrows = 10, stringsAsFactors = FALSE )
+x <- x[,c(1:13)] 
+# library(stringr)
+# library(tidyr)
+x[is.na(x)] <- ""
+library(stringr)
+x[] <- lapply(x, str_trunc, 6, ellipsis = "")
+names( x )[ 6 ] = 'Birth_time'
+knitr::kable(x, align = "c", caption = "**The Output data from cloneout.txt file.** Example of output data for all clones. Columns are from 1 to 13.")
+```
+
+1. **Time** - the time step, e.g., 1, 50.
+2. **N\_cells** - the number of cells in this clone, e.g. 1000, 2.
+3. **AvgOrIndx** - "avg" or "index": "avg" is for a line with averaged values across different (index) lines at the same time step; "index" shows the cell's index at the current time step,  e.g., avg, 4,7.
+4. **ID** - the unique ID of clone, e.g., 1, 50.
+5. **Parent_ID** - the parent index,  e.g., 0, 45.
+6. **Birth_time** - the time step of the clone's birth,  e.g., 0, 5.
+7. **c** - the counter of cell divisions for the clone, it equals average counter across all the cells in the clone.
+8. **d**  - the probability of division for the cell, e.g., 0.1, 0.8 [per time-step].
+9. **i**  - the probability of immortalization for the cell, e.g., 0.1, 0.8 [per time-step].
+10. **im**   - the probability of invasion/metastasis for the cell, e.g., 0.1, 0.8 [per time-step].
+11. **a**   - the probability of apoptosis for the cell, e.g., 0.1, 0.8 [per time-step].
+12. **k**   - the probability of death due to the environment, e.g., 0.1, 0.8 [per time-step].
+13. **E**  - the E coefficient for the function of the division probability, e.g., 10^4, 10^5.
+
+ 
+
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Output/cloneout.txt",header = TRUE, sep = "\t", nrows = 18, stringsAsFactors = FALSE )
+x[is.na(x)] <- ""
+x <- x[,c(1,3,14:24)] 
+library(stringr)
+x[,c(1:11,13)] <- lapply(x[,c(1:11,13)], str_trunc, 7, ellipsis = "")
+#names(x)[10] = 'driver_genes'
+knitr::kable(x, align = "c", caption = "**cloneout.txt**. Columns are from 14 to 24.")
+```
+
+14. **N_normal** - the number of normal cells at this time step, e.g., 134, 5432.
+15. **Nmax** - the theoretically maximal number of primary tumor cells, e.g., 10000, 5000.
+16. **N_primary** - the number of primary tumor cells at this time step, e.g., 134, 5432.
+17. **N_metastatic** - the number of metastatic cells at this time step, e.g., 16, 15439.
+18. **Ha** - the value of the hallmark "Apoptosis" for the cell, e.g., 0.1, 0.4444.
+19. **Him** - the value of the hallmark "Invasion / Metastasis" for the cell, e.g., 0.1, 0.4444.
+20. **Hi** - the value of the hallmark "Immortalization" for the cell, e.g., 0.1, 0.4444.
+21. **Hd** - the value of the hallmark "Growth / Anti-growth" for the cell, e.g., 0.1, 0.4444 .
+22. **Hb** - the value of the hallmark "Angiogenesis" for the cell, e.g., 0.1, 0.4444 .
+23. **type** - the type of the cell: 'normal' or 'primary' or 'metastatic'.
+24. **mut_den** - the density of mutations for the cell, it equals to ratio a number of mutated driver genes to a number of all the genes, e.g., 0, 0.32.
+
+ 
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Output/cloneout.txt",header = TRUE, sep = "\t", nrows = 18, stringsAsFactors = FALSE)
+x[is.na(x)] <- ""
+x <- x[,c(1,3,25:28)] # ncol(x)] 
+knitr::kable(x, align = "c", caption = "**cloneout.txt**. Columns are from 25 to 28.")
+```
+25. **driver_genes** - the binary numbers indicate the driver mutation at the gene related to order of genes in onco as well as order of the next columns with genes' names, e.g., '1 0 0 0' means that the first gene has a driver mutation and other genes have no.
+26. **passenger_genes** - the binary numbers indicate the passenger mutation at the gene related to order of genes in onco as well as order of the next columns with genes' names, e.g., '0 0 1 0' means that the third gene has a passanger mutation and other genes have no.
+27. **PointMut_ID** - the index of data row for point mutation data frame saved at the end of simulation in the file **Point_mutations.txt**, e.g., 23, 32.
+28. **CNA_ID** - the index of data row for CNA data frame saved at the end of simulation in the file **CNA.txt**, e.g., 44, 21.
+
+There are two columns (25th and 26th) with the indexes of point mutations and CNAs. 
+Each index corresponds to index in the related data frames for point mutations and for CNAs represented in additional tables below.
+
+ 
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Output/cloneout.txt",header = TRUE, sep = "\t", nrows = 18, stringsAsFactors = FALSE)
+x[is.na(x)] <- ""
+x <- x[,c(1,3,29:32)] # ncol(x)] 
+knitr::kable(x, align = "c", caption = "**cloneout.txt**. Columns are from 29 to 32.")
+```
+
+29-32. **Chr1_CDS_(gene's name)**, for example **Chr1_CDS_APC** - the length of CDS for each gene in the order of names of genes for FIRST parental chromosome of a clone. The CDS length of genes for second parental chromosome can be different in principle. The point mutation is proportional to **CDS_(gene's name)** od each chromosome. 
+
+
+ 
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Output/cloneout.txt",header = TRUE, sep = "\t", nrows = 18, stringsAsFactors = FALSE )
+x[is.na(x)] <- ''
+x <- x[, c( 1,3, 33:36 ) ] 
+library(stringr)
+x[] <- lapply(x, str_trunc, 8, ellipsis = "")
+knitr::kable(x, align = "c", caption = "**cloneout.txt**. Columns are from 33 to 36.")
+```
+
+33-36. **Chr1_Len_(gene's name)**, for example **Chr1_Len_APC** - the length of gene in the order of names of genes for ONLY FIRST chromosome of a clone. The length of genes for second chromosome can be different in principle. The CNA mutation is proportional to **Len_(gene's name)**. 
+
+
+ 
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Output/cloneout.txt",header = TRUE, sep = "\t", nrows = 18, stringsAsFactors = FALSE )
+x[is.na(x)] <- ''
+x <- x[, c( 1,3, 37:40 ) ] 
+library(stringr)
+x[] <- lapply(x, str_trunc, 8, ellipsis = "")
+knitr::kable(x, align = "c", caption = "**cloneout.txt**. Columns are from 37 to 40.")
+```
+
+37. **Chr1_p0** - the probability that during a trial, a cell of the clone has **NO** mutation [per time-step]. Applied to all cells in the clone.
+
+38. **Chr1_prob_point_mut** - the **conditional** probability that if cell will have a mutation it should be a **point mutation**. 
+
+39. **Chr1_prob_del** - the **conditional** probability that if cell will have a mutation it should be a **deletion**. 
+
+40. **Chr1_prob_dup** - the **conditional** probability that if cell will have a mutation it should be a **duplication**. 
+
+
+Last columns (from 41 to the end) show the data related to the **SECOND** parental chromosome with the same set of data as for the first parental chromosome.
+
+ 
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Output/point_mutations.txt",header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+# x[is.na(x)] <- ""
+x = x[ 1 : 20, ]
+knitr::kable(x, align = "c", caption = "Point mutation data frame which will be saved to the file **point_mutations.txt** at the end of simulation.")
+```
+
+
+1. **PointMut_ID** - ID of point mutation, first ID is related to variant allele 'B' and same *second* ID - to the original allele A. 
+2. **Parental_1or2** - indicates either of the two parental chromosomes. 
+3. **Chr** - name of a chromosome.
+4. **Ref_pos** - the reference position of an allele. The reference position is on the coordinate system of the human reference genome. 
+5. **Phys_pos** - the physical position of an allele. The physical length of a (parental) chromosome is extended or shrunk by CNA duplications or deletions, respectively. When a duplication happens, the reference position is divided into two or more physical positions, which are represented by multiple elements in a vector. When a deletion happens and the allele is lost, the lost is represented by “-” on the coordinate system of physical positions. 
+6. **Delta** - difference between the reference and physical positions.
+7. **Copy_number** - the copy number of an allele. 
+8. **Gene_name** - the name of a gene.
+9. **MalfunctionedByPointMut** - logical indicator of whether or not the gene is malfunctioned by the point mutation. 
+10. **mut_order** - indicator of mutation order in the simulation, it's used to detect order of mutations in the clone at each chromosome.
+
+
+
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Output/CNA_mutations.txt",header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+# x[is.na(x)] <- ""
+x = x[ 1 : 20, ]
+knitr::kable(x, align = "c", caption = "**CNA mutation data frame which will be saved to the file **CNA_mutations.txt** at the end of simulation.")
+```
+
+1. **CNA_ID** - ID of CNA. 
+2. **Parental_1or2** - indicates either of the two parental chromosomes. 
+3. **DuplicationOrDeletion** - indicator of duplication or deletion for CNA.
+4. **Chr** - name of a chromosome.
+5. **Reference_start** - the reference position of the CNA start.
+6. **Reference_end** - the reference position of the CNA end.
+7. **Gene_name** - the name(s) of a gene(s).
+8. **MalfunctionedByCNA** - logical indicator of whether or not the gene(s) is malfunctioned by the CNA. 
+9. **mut_order** - indicator of mutation order in the simulation, it's used to detect order of mutations in the clone at each chromosome.
+
+---
+
+ 
+
+
+
+```{r, echo=FALSE, results='asis'}
+x <- read.csv(file = "../inst/extdata/Sim_monitoring.txt",header = TRUE, sep = "\t", stringsAsFactors = FALSE)
+x = x[ 1 : 20, ]
+knitr::kable(x, align = "c", caption = "**Sim_monitoring.txt** file with data getting during a simulation.")
+```
+
+1. **Time** - time step. 
+2. **N_clones** - total number of clone at a time step. 
+3. **N_normal** - total number of normal cells at a time step. 
+4. **N_primary** - total number of primary tumor cells at a time step. 
+5. **N_metastatic** - total number of metastatic cells at a time step. 
+6. **N_point_mutations** - total number of unique point mutations at a time step. 
+7. **N_duplications** - total number of unique duplications  at a time step. 
+8. **N_deletions** - total number of unique deletions at a time step. 
+							
+---
+

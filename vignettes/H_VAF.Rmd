@@ -1,0 +1,196 @@
+---
+title: "Calculation of Variant Allele Frequencies"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Calculation of Variant Allele Frequencies}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+
+## Table of Contents
+
+[User Guide content](A_User_Guide.html)
+
+[Theory of the model](B_Theory.html)
+
+[Quick start guide](C_Quick_start.html)
+
+[Simulation preparation](D_Simulation.html)
+
+[Input data](E_Input.html)
+
+[Output data](F_Output.html)
+
+[Post simulation analisys](G_Analisys.html)
+
+[VAF calculation](H_VAF.html)
+
+[Figures](I_Figures.html)
+
+[Relation to experimental measurements](J_Relation.html)
+
+[Versions](K_Versions.html)
+
+[References](L_References.html)
+
+
+---
+
+
+# Formula for VAF calculation
+
+At the end of a simulation the VAF frequencies are calculated in accordance with formulation:
+
+$$
+VAF^i = 
+\frac{(1-\rho)n^i_{B,N}+ \sum_{s=1}^{\#sp} \tau_s n^i_{B,S}}{(1-\rho)(n^i_{A,N} + n^i_{B,N}) + \sum_{s=1}^{\#sp} \tau_s (n^i_{A,S} + n^i_{B,S}) },
+$$
+
+where:
+
+$i$ is position (site) index,
+
+$s$ is subpopulation (clone's) index,
+
+$\tau$ is subpopulation (clone's) fraction, 
+
+$\rho$ is tumor purity: $\rho = \sum_{s=1}^{\#sp} \tau_s$,
+
+$n$ is copy number,
+
+A denotes an original allele A, B - variant B, N - normal, S - tumor.
+
+In usual application we used for normal cells $n^i_{A,N} = 2$ and $n^i_{B,N} = 0$, so VAF can be calculated as follow:
+
+$$
+VAF^i = 
+\frac{\sum_{s=1}^{\#sp} \tau_s n^i_{B,S}}{2(1-\rho) + \sum_{s=1}^{\#sp} \tau_s (n^i_{A,S} + n^i_{B,S}) }
+$$
+
+
+
+In tugHall, under the given admixture rate of intact normal cells $\rho_N$, values of VAF are calculated using next formulation:
+
+$$
+VAF^i = 
+\frac{(1-\rho_N) \sum_{s=1}^{\#sp} \lambda_s n^i_{B,S}}{2\rho_N + (1-\rho_N) \sum_{s=1}^{\#sp} \lambda_s (n^i_{A,S} + n^i_{B,S}) },
+$$
+
+where $\lambda_s = (N^s_T+N^s_{SN})/(N_T+N_{SN})$, ${N_T}$ and $N_{SN}$ are total number of primary tumor and speckled normal cells respectively at the last time step of a simulation, index $s$ related to cells with mutated site $s$. Observation subpopulation (clone's) fraction $\tau_s$ and simulation one $\lambda_s$ are proportional with $\tau_s = (1-\rho_N) \lambda_s$. VAF calculations are performed for metastatic cells separately from primary tumor and speckled normal cells.
+
+
+# Get Variant allele frequencies
+
+To get Variant allele frequencies (after finishing of a simulation and getting clonout.txt file in /Output/ folder) it is enough to call two functions consequently:
+
+        vf = get_VAF(pnt_mut, data_last )
+
+That saves 'VAF_data.txt' file into '/Output/' folder and it contents information about all the mutation point and its copies numbers for all the clones in a pool.
+Finally, to get VAF it is necessary to call next function:
+
+        VAF  =  get_rho_VAF( vf = vf, 
+                            rho = c( 0.0, 0.1, 0.2, 0.5, 0.7, 0.9 ) , 
+                            file_name = './Output/VAF.txt' )
+where rho is vector of possible values of $\rho_N$ - the given admixture rate of intact normal cells in the sample. 
+
+# Format of VAF files
+
+**./Output/VAF.txt** file has information about the VAFs for each gene and each site in the genes (first 10 lines):
+
+```{r, echo=FALSE, results='asis'}
+x <- read.table(file = "../inst/extdata/Output/VAF.txt",header = TRUE, sep = "\t", nrows = 10)
+x[is.na(x)] <- ""
+x = x[ , c(1:7)]
+knitr::kable(x, align = "c", caption = "**Variant allele frequencies.**")
+```
+
+
+```{r, echo=FALSE, results='asis'}
+x <- read.table(file = "../inst/extdata/Output/VAF.txt",header = TRUE, sep = "\t", nrows = 10)
+x[is.na(x)] <- ""
+x = x[ , c(1:4,8:ncol(x))]
+knitr::kable(x, align = "c", caption = "**Variant allele frequencies (continuous).**")
+```
+
+1. **site** - position at mutated site in the gene,  e.g., 123, 1028.
+
+2. **Chr** - chromosome where a gene is located, e.g., '12', '3'.
+
+3. **Gene** - name of gene, e.g. TP53, KRAS.
+
+4. **rho** - rho parameter in the formula of VAF calculation in the range [0,1], e.g., 0.0, 0.3.
+
+5. **VAF_Primary** - VAF for cells in the primary tumor = VAF_primary_numerator / VAF_primary_denominator, e.g. 0.2345.
+
+6. **VAF_primary_numerator** - numerator in the formula of VAF calculation for tumor primary cells and speckled normal cells, e.g., 0.9997295.
+
+7. **VAF_primary_denominator** - denominator in the formula of VAF calculation for tumor primary cells and speckled normal cells, e.g., 1.9994589.
+
+8. **VAF_Metastatic** VAF for metastatic cells = VAF_metastatic_numerator / VAF_metastatic_denominator, e.g. 0.35. 
+
+9. **VAF_metastatic_numerator** - numerator in the formula of VAF calculation for metastatic cells, e.g., 0.9997295.
+
+10. **VAF_metastatic_denominator** - denominator in the formula of VAF calculation for metastatic cells, e.g., 1.9994589.
+
+ 
+
+
+**./Output/VAF_data.txt** file has information about the point mutations and its locations at chromosome, gene etc. (first 10 lines):
+
+```{r, echo=FALSE, results='asis'}
+x <- read.table(file = "../inst/extdata/Output/VAF_data.txt",header = TRUE, sep = "\t", nrows = 10)
+x[is.na(x)] <- ""
+x = x[ , c(1:8)]
+knitr::kable(x, align = "c", caption = "**Information on point mutations in the clones at final time step.**")
+```
+
+
+```{r, echo=FALSE, results='asis'}
+x <- read.table(file = "../inst/extdata/Output/VAF_data.txt",header = TRUE, sep = "\t", nrows = 10)
+x[is.na(x)] <- ""
+x = x[ , c(1,9:13)]
+knitr::kable(x, align = "c", caption = "**Information on point mutations in the clones at final time step (continuous).**")
+```
+
+ 
+
+```{r, echo=FALSE, results='asis'}
+x <- read.table(file = "../inst/extdata/Output/VAF_data.txt",header = TRUE, sep = "\t", nrows = 10)
+x[is.na(x)] <- ""
+x = x[ , c(1,14:ncol(x))]
+knitr::kable(x, align = "c", caption = "**Information on point mutations in the clones at final time step (continuous).**")
+```
+
+1. **PointMut_ID** - ID of point mutation.
+2. **Parental_1or2** - indicates either of the two parental chromosomes. 
+3. **Chr** - name of a chromosome.
+4. **Ref_pos** - the reference position of an allele. The reference position is on the coordinate system of the human reference genome. 
+5. **Phys_pos** - the physical position of an allele. The physical length of a (parental) chromosome is extended or shrunk by CNA duplications or deletions, respectively. When a duplication happens, the reference position is divided into two or more physical positions, which are represented by multiple elements in a vector. When a deletion happens and the allele is lost, the lost is represented by “-” on the coordinate system of physical positions. 
+6. **Delta** - difference between the reference and physical positions.
+7. **Copy_number** - the copy number of an allele at the chromosome where mutation is happened (allele B). 
+8. **Gene_name** - the name of a gene.
+9. **MalfunctionedByPointMut** - logical indicator of whether or not the gene is malfunctioned by the point mutation. 
+10. **mut_order** - indicator of mutation order in the simulation, it's used to detect order of mutations in the clone at each chromosome.
+11. **N_speckled_normal** - number of speckled normal cells at final time step which have that PointMut_ID.
+12. **N_primary** - number of primary tumor cells at final time step which have that PointMut_ID.
+13. **N_metastatic** - number of metastatic cells at final time step which have that PointMut_ID.
+14. **Copy_number_A** - the copy number of an allele at the chromosome where mutation is NOT happened (allele A). 
+15. **N_speckled_normal_total** - the total amount of speckled normal cells in the pool of simulation at the last time step.
+16. **N_primary_total** - the total amount of primary tumor cells in the pool of simulation at the last time step.
+17. **N_metastatic_total** - the total amount of metastatic cells in the pool of simulation at the last time step.
+
+
+
+
+
+
+

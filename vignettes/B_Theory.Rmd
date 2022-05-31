@@ -1,0 +1,495 @@
+---
+title: "Theory of the models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Theory of the models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Table of Contents
+
+[User Guide content](A_User_Guide.html)
+
+[Theory of the model](B_Theory.html)
+
+[Quick start guide](C_Quick_start.html)
+
+[Simulation preparation](D_Simulation.html)
+
+[Input data](E_Input.html)
+
+[Output data](F_Output.html)
+
+[Post simulation analisys](G_Analisys.html)
+
+[VAF calculation](H_VAF.html)
+
+[Figures](I_Figures.html)
+
+[Relation to experimental measurements](J_Relation.html)
+
+[Versions](K_Versions.html)
+
+[References](L_References.html)
+
+
+---
+
+**tugHall** is a tool based on the model described in the paper
+Iurii S Nagornov,  Mamoru Kato. tugHall: a simulator of cancer-cell evolution based on the hallmarks of cancer and tumor-related genes. 
+[Bioinformatics, V.36, N11, June 2020, pp.3597–3599](https://doi.org/10.1093/bioinformatics/btaa182). 
+The parameters of the model are described in the Supplementary materials of the paper. 
+
+General procedure shows how tugHall.3 calculates mutation(s) for each clone at the time step of birth. 
+Next part related to additional features of **tugHall.3** like:
+
+- copy number alterations and corresponding genes location changes;
+
+- three models: proportional_metastatic, threshold_metastatic and simplified one;
+
+- and acceleration of calculation based on clone approach;
+
+- compaction factor coefficients to reduce hallmarks values.
+
+This version is based on the clone consideration instead initial cell-based version.
+Each clone has one or more cells that allows to accelerate the calculations when number of clones is much less than number of cells.
+
+    Definition of clone: the clone is set of cell with same set of genes, which have same mutated/not mutated sites in genes.
+
+
+## General procedures of clone's birth 
+
+Before a simulation **tugHall.3** collects information about locations of genes of interest using function **define_gene_location()**.
+As a result it has info about the coding region of a gene or the coding sequence (denoted as CDS or length_CDS), 
+and lengths for all the genes including introns and exons (denoted as RNA or length_RNA).
+**tugHall.3** distinguishes the first or second parental chromosome and performs calculations for them separately.
+The **onco** object of OncoGene class is responcible to keep this information about each clone, for example:
+
+1. Genes of interest:
+
+        > onco$name
+        [1] "APC"    "KRAS"   "TP53"   "PIK3CA"
+
+2. Suppressor (s) or oncogene (o) with correspondence to gene names:
+
+        > onco$onsp
+        [1] "s" "o" "s" "o"
+
+3. Length of CDS and RNA for each parental chromosome:
+
+        > onco$cds_1
+        [1] 8532  567 1182 3207
+        > onco$cds_2
+        [1] 8532  567 1182 3207
+        > onco$rna_1
+        [1] 89236 35590  6986 35539
+        > onco$rna_2
+        [1] 89236 35590  6986 35539
+
+where '1' or '2' are corresponding to the first or second parental chromosome.
+
+User-defined probabilities of a mutations at a site at a birth of a cell are denoted as $m0$ (m0), $m_{dup}$ (m_dup) and $m_{del}$ (m_del) 
+for point mutations, duplications and deletions respectively. 
+At the initialization of clones and onco objects for each clone, **tugHall.3** calculates probability of  
+the empty event or NO events which is defined at the time of birth of a cell and it is denoted as $p_0$ (p0) as follow:
+$$
+{ \large
+p_0   = (1-m_0)^{\sum_{j=1}^{N_{genes}}(l_{CDS_j})}  \cdot (1-m_{dup})^{\sum_{j=1}^{N_{genes}}(l_{RNA_j})}  \cdot
+(1-m_{del})^{\sum_{j=1}^{N_{genes}}(l_{RNA_j})}
+}
+$$
+where $N_{genes}$ is a number of genes, $l_{CDS}$ and $l_{RNA}$ are lengths of coding and entire regions of genes
+with calculation for each parental chromosome:
+
+        > onco$p0_1
+        [1] 0.9968154
+        > onco$p0_2
+        [1] 0.9968154
+
+In this case, $(1-m_0)$ is a probability of an absent of point mutation at **ONE** site,
+$(1-m_0)^{\sum_{j=1}^{N_{genes}}(l_{CDS_j})}$ is a probability of an absent of point mutation at **ALL** sites of CDS for all genes,
+similarly for amplifications and deletions.
+So, 
+$(1-p_0)$ is a probability for **at least one mutation event** of point mutation or/and amplification or/and deletion.
+$(1-p_0)$ also contains two, three, and more events at multiple sites at a cell's birth time.
+That is why onco object keeps relative probabilities of point mutation and CNAs:
+        
+        > onco$prob_1
+        [1] 0.4228663 0.0524667 0.5246670
+        > onco$prob_2
+        [1] 0.4228663 0.0524667 0.5246670
+        
+where the values are related to point mutation, deletion and amplification events respectively. 
+During a simulation, the lengths of genes are able to change for new clones, 
+so prob_1(2), p0_1(2) will change also for them.
+
+
+--- 
+
+Flowchart below shows general procedure of simulation for one time step for each clone:
+
+```{r echo=FALSE, fig.height=4, fig.width=6}
+
+library(DiagrammeR)
+grViz("digraph flowchart {
+      # node definitions with substituted label text
+      node [fontname = Helvetica, shape = egg, 
+      style = filled, fillcolor = seashell, color = Indigo,
+      fontcolor = blue, fontsize = 16]  
+      edge [color = Indigo, arrowhead = vee, penwidth = 2]
+      
+      tab1 [label = '@@1']
+      tab2 [label = '@@2']
+      tab3 [label = '@@3']
+      tab4 [label = '@@4']
+      tab5 [label = '@@5']
+
+      # edge definitions with the node IDs
+      tab1 -> tab2;
+      tab2 -> tab3;
+      tab3 -> tab4;
+      tab4 -> tab5
+      }
+
+      [1]: 'Apply trial() function to get N_new_clones'
+      [2]: 'Calculate number of mutations, get N_mut for each new clone'
+      [3]: 'Apply function trial_mutagenesis( N_mut ) to each clone'
+      [4]: 'Update hallmarks and environment data'
+      [5]: 'Save data to ./Output/cloneout.txt file'
+      ")
+```
+
+
+First in **trial()** function, the number of new clones N_new_clones is calculated using binomial distribution:
+
+          N_new_clones = rbinom( 1, 2*N_birth, (1-p0) )
+
+After that in **model()** function a number of mutations N_mut for **each new clone** is defined by next:
+
+          sm  =  m0*sum_CDS  +  m_del*sum_RNA  +  m_dup*sum_RNA
+          N_mut  =  rztpois(N_new_clones, sm )
+
+where **rztpois()** is the function (from 'actuar' package) to get Zero-Truncated Poisson distribution,
+sm is total probability to get mutation including point mutation and CNA.
+
+Finally, types of mutations are defined for each mutation in each clone
+inside the function **trial_mutagenesis( N_mut )** by relative probabilities:
+
+          c( m0*sumCDS,  m_del*sumRNA,  m_dup*sumRNA )
+          
+and all the parameters of the new clones are recalculated based on new genes location information.
+
+---
+
+More precisely, the function **trial()** consists from several trials shown below:
+
+```{r echo=FALSE, fig.height=5, fig.width=6}
+
+library(DiagrammeR)
+grViz("digraph flowchart {
+      # node definitions with substituted label text
+      node [fontname = Helvetica, shape = egg, 
+      style = filled, fillcolor = seashell, color = Indigo,
+      fontcolor = blue, fontsize = 16]  
+      edge [color = Indigo, arrowhead = vee, penwidth = 2]
+      
+      tab1 [label = '@@1']
+      tab2 [label = '@@2']
+      tab3 [label = '@@3']
+      tab4 [label = '@@4']
+      tab5 [label = '@@5']
+      tab6 [label = '@@6']
+      tab7 [label = '@@7']
+
+      # edge definitions with the node IDs
+      tab1 -> tab2;
+      tab2 -> tab3;
+      tab3 -> tab4;
+      tab4 -> tab5;
+      tab5 -> tab6;
+      tab6 -> tab7
+      }
+
+      [1]: 'Trial for environment death'
+      [2]: 'Trial for apoptosis death'
+      [3]: 'Trial for invasion/metastasis transformation'
+      [4]: 'Check number of cells, if N_cells = 0 then delete the clone'
+      [5]: 'Check Heyflick limitation'
+      [6]: 'Division trial, get N_birth'
+      [7]: 'Get number of new clones, N_new_clones'
+      ")
+```
+where each trial can reduce number of cells in a clone, and if N_cells will be nullify during trials then clone should be deleted from a simulation.
+Division trial allows to increase number of cells in a clone and get number of new cells N_birth, which is used to get number of new clones
+originated from one clone.
+This procedure is applied to each clone in a pool of simulation.
+
+Last chart shows how the genes location info is changes due to mutation events:
+
+```{r echo=FALSE, fig.height=5, fig.width=5}
+
+library(DiagrammeR)
+grViz("digraph flowchart {
+      # node definitions with substituted label text
+      node [fontname = Helvetica, shape = egg, 
+      style = filled, fillcolor = seashell, color = Indigo,
+      fontcolor = blue, fontsize = 16]  
+      edge [color = Indigo, arrowhead = vee, penwidth = 2]
+      
+      tab1 [label = '@@1']
+      tab2 [label = '@@2']
+      tab3 [label = '@@3']
+      tab4 [label = '@@4']
+      tab5 [label = '@@5']
+      tab6 [label = '@@6']
+      tab7 [label = '@@7']
+
+      # edge definitions with the node IDs
+      tab1 -> tab2;
+      tab2 -> tab3;
+      tab3 -> tab4;
+      tab4 -> tab5;
+      tab5 -> tab6;
+      tab6 -> tab3;
+      tab6 -> tab7
+      }
+
+      [1]: 'Get type of events'
+      [2]: 'Load genes location'
+      [3]: 'Generate mutation for each event:'
+      [4]: 'Get point mutation OR'
+      [5]: 'Get duplication OR'
+      [6]: 'Get deletion'
+      [7]: 'Update genes info for new clone'
+      ")
+```
+
+
+--- 
+
+## Three models
+
+**tugHall.3** version 3 is able to switch three models to calculate different conditions of a simulation that is described below.
+In the tables we describe all trials with exception of mutation process which is the same for all models.
+The models **proportional_metastatic, threshold_metastatic** were described in the paper
+[Bioinformatics, V.36, N11, June 2020, p.3597](https://doi.org/10.1093/bioinformatics/btaa182) with many details, 
+so here we show only differences between them.
+
+### Proportional_metastatic model
+
+The **proportional_metastatic** model has feature about invasion/metastatic transformation of a cell that is shown in the table:
+
+
+| Trials | Condition | Probability | Event |
+|:------:|:-----:|:---------:|:------:|
+|   Environment death  |  Every time step  |  $k$    | Death     |
+|    |    |  $(1-k)$ |   Nothing  |
+|  Apoptosis  |  Every time step |   $a'$  |   Death  |
+|    |   |   $1 - a'$  |   Nothing  |
+|    Invasion/metastatic transformation  |   $im' > 0$  |     $im'$   |     Transform into exponential growth  |
+|    |   |   $1 - im'$  |   Death  |
+| Hayflick limit| $c>c_{max}$ | $i'$ | Stop division process |
+|    |   |   $1 - i'$  |   Start division process  |
+| Cell division| Every time step | $d'$ | Cell division |
+|    |   |   $1 - d'$  |   Nothing  |
+| <img width=160/> | <img width=160/> |  <img width=160/> | <img width=160/> |
+
+
+Here the probability of apoptosis death is define by formula:
+
+$$
+a' = a - H_a = \frac{1}{1+e^{-s_0 \cdot (x-0.5)}} - H_a,
+$$
+for default value of $s_0 = 10$ that looks like:
+
+```{r echo=FALSE, fig.height=5, fig.width=5}
+library(package = 'tugHall.3')
+x = (0:2000)/1000 -0.5 
+s0 = 10
+y = 1 / (1 + exp(-s0 * (x - 0.5)) )
+plot_2D( x , y, names = c('Mutation rate', 'Probability' ), xr = c(-0.1, 1.2), yr = c(0,1), pch = 20, cex = 0.3 )
+```
+
+The probability of environment death is a constant $k$, the probability of invasion/metastatic transformation is defined by corresponding hallmark:
+$$
+im' = H_{im},
+$$
+the probability of Hayflick limitation is defined by immortalization hallmark 
+$$
+i' = 1-H_i,
+$$
+and finally the probability of cell division is defined by system:
+
+$$
+d' = 
+\begin{cases}
+d_0 + H_d - \frac{N_P}{N_{max}}, \qquad \text{     when logistic growth} \\
+d_0 + H_d, \qquad \qquad \quad\text{     when exponential growth}
+\end{cases}
+$$
+where 
+$$
+N_{max} = \frac{1+F_0\cdot H_b}{E_0}
+$$ 
+is maximal number of primary tumor cells, $N_P$ is a number of primary tumor cells in the pool of simulation, $E_0$ is a restriction coefficient, $H_b$ is angiogenesis hallmark, $F_0$ is a constant.
+
+
+
+### Threshold_metastatic model
+
+
+
+Keeping the same notations for all the parameters and hallmarks, the **threshold_metastatic** model has feature only about invasion/metastatic transformation of a cell that is shown in the table:
+
+
+| Trials | Condition | Probability | Event |
+|:------:|:-----:|:---------:|:------:|
+|   Environment death  |  Every time step  |  $k$    | Death     |
+|    |    |  $(1-k)$ |   Nothing  |
+|  Apoptosis  |  Every time step |   $a'$  |   Death  |
+|    |   |   $1 - a'$  |   Nothing  |
+|    Invasion/metastatic transformation  |   $im' > 0$  |     if   $im' = 1$   |     Transform into exponential growth  |
+|    |   |   $im'$  |   Nothing  |
+|    |   |   $1 - im'$  |   Death  |
+| Hayflick limit| $c>c_{max}$ | $i'$ | Stop division process |
+|    |   |   $1 - i'$  |   Start division process  |
+| Cell division| Every time step | $d'$ | Cell division |
+|    |   |   $1 - d'$  |   Nothing  |
+| <img width=160/> | <img width=160/> |  <img width=160/> | <img width=160/> |
+
+
+
+### Simplified model
+
+
+Keeping the same notations for all the parameters and hallmarks, 
+**Simplified** model has no several trials like apoptosis and Hayflick limitation, and also it has exponential growth by default, so this model is related to simple model of exponential growth with trials as below:
+
+
+| Trials | Condition | Probability | Event |
+|:------:|:-----:|:---------:|:------:|
+|   Environment death  |  Every time step  |  $k$    | Death     |
+|    |    |  $(1-k)$ |   Nothing  |
+|    Invasion/metastatic transformation  |   -  |     -   |     Always exponential growth  |
+| Cell division| Every time step | $d'$ | Cell division |
+|    |   |   $1 - d'$  |   Nothing  |
+| <img width=160/> | <img width=160/> |  <img width=160/> | <img width=160/> |
+
+
+## Acceleration of calculation based on clone approach
+
+For this feature of **tugHall.3** please, be kind see reference paper 
+Nagornov, I., Nishino, J., Kato, M. (2020). tugHall: A Tool to Reproduce Darwinian Evolution of Cancer Cells for Simulation-Based Personalized Medicine. In: Mathematical and Computational Oncology. ISMCO 2020. 
+[Lecture Notes in Computer Science, vol 12508. Springer](https://doi.org/10.1007/978-3-030-64511-3_7)
+
+The current version **tugHall.3** as well as versions 2.0 and 2.1 are based on the clone consideration instead initial cell-based version.
+Each clone has one or more cells that allows to accelerate the calculations when number of clones is much less than number of cells.
+Definition of clone: the clone is set of cell with same set of genes, which have same mutated / not mutated sites in genes.
+
+
+
+## Compaction factor
+
+Compaction factor is used in simulation in order to reduce affect of hallmarks variables.
+In **tugHall** ver 2 (and 1), if all genes related to a hallmark are malfunctioned, then the value of the hallmark variable inevitably takes the maximum value, 1. 
+However, genes given into a model may be too few to make a hallmark variable 1 practically, or the hallmark variable value may not take 1 in reality even if sufficient genes are given. 
+Therefore, we have introduced a “compaction factor” into a hallmark variable. 
+
+Specially, for hallmark variable $H_x$ of hallmark $x$, a compaction factor, $c_x$, is introduced as follows:
+$$
+H_x = c_x  \sum_{i=1}^{n_x}{w_i^x \cdot g_i^x} \\
+\sum_{i=1}^{n_x}{w_i^x} = 1 \quad \text{     normalization condition}\\
+g_i^x = 
+\begin{cases}
+1, \quad \text{     when gene is mulfunctioned} \\
+0 \qquad \text{     otherwise}
+\end{cases}
+$$
+where $n_x$ represents the number of genes related to hallmark $x$.
+$H_x$ can be $H_a$, $H_b$, $H_i$, $H_{im}$ or $H_d$ according to the notations above.
+
+Compaction factors are defined by several parameters in simulator:
+
+- global vector CF with named numbers, for example in tugHall_dataset$CF:
+$$    
+Ha \qquad   Hb  \qquad  Hd  \qquad  Hi  \qquad Him \\
+0.9 \qquad 0.82 \qquad 0.85 \qquad 0.79 \qquad 0.97
+$$
+
+To apply compaction factors to hallmarks values it is necessary to set global logical parameter  
+
+    Compaction_factor = TRUE
+
+In this case **tugHall.3** reads CF vector from the file './Input/CF.txt',
+by default Compaction_factor = TRUE, and to define CF, please, call the function 
+
+    define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
+where file **'CNA/Input/CF.txt'** contents data of compaction factors:
+
+|  Hallmark's name | Factor  |
+|:---|:---|
+| apoptosis | 0.9 |
+| growth | 	0.85 |
+| immortalization | 	0.79 |
+| angiogenesis | 	0.82 |
+| invasion | 0.97 |
+| <img width=160/> | <img width=140/> |  
+
+To check all the parameters, it is better run the function:
+
+    print_parameters()
+
+## Copy number alterations
+
+The most significant change in 
+**tugHall.3** version 3 is its ability to calculate the copy number alterations (CNA) caused by deletions and duplications. 
+CNAs may malfunction genes and change variant allele frequencies if the point mutations are located on CNAs.
+
+Before a simulation the genes location information is loaded from the file 
+'./Input/CCDS.current.txt' that is a copy of the file from 
+[CCDS database](https://ftp.ncbi.nlm.nih.gov/pub/CCDS/current_human/) of National Institute of Health in USA. 
+According to the list of genes like
+
+    genes_list = c("CCDS4107.1", "CCDS8702.1", "CCDS43171.1", "CCDS11118.1")
+    
+in the function define_gene_location() we can define related info for the genes of interest.
+
+During the simulation this information is changed by CNA and point mutations.
+The several parameters affect on these processes:
+
+|  Probability variable and value | Description  |  Units  |
+|:---|:---|:---|
+| **m =  1E-6**    | Point mutation probability  $m'$ | per cell's division per base pair |
+| **uo = 0.5**     | Gene malfunction probability by point mutation for oncogene $u_o$ | per mutation  |
+| **us = 0.5**     | Gene malfunction probability by point mutation for suppressor $u_s$ |  per mutation |
+| **m_dup      =  0.01**     | CNA duplication probability $m_{dup}$ | per cell's division  |
+| **m_del      =  0.01**     | CNA deletion probability $m_{del}$ |  per cell's division  |
+| **lambda_dup =  7000**        | CNA duplication average length $\lambda_{dup}$  | the geometrical distribution for the length  |
+| **lambda_del =  5000**        | CNA deletion average length $\lambda_{del}$  |  the geometrical distribution for the length |
+| **uo,dup = 0.8**     | Gene malfunction probability by CNA duplication for oncogene $u_{o,dup}$ |  per mutation |
+| **us,dup = 0**     | Gene malfunction probability by CNA duplication for suppressor, $u_{s,dup}$. Currently, 0 is assumed. | per mutation  |
+| **uo,del = 0**     | Gene malfunction probability by CNA deletion for oncogene $u_{o,del}$. Currently, 0 is assumed. | per mutation  |
+| **us,del = 0.8**     | Gene malfunction probability by CNA deletion for suppressor, $u_{s,del}$.  | per mutation  |
+| <img width=160/> | <img width=340/> |  <img width=200/> |
+
+The length of each CNA is defined by Poisson distribution with parameters **lambda_dup** and **lambda_del** for duplication and deletion respectively.
+The probabilities of malfunction for suppressor and oncogenes are defined by parameters
+**uo,dup**, **us,dup**, **uo,del**, **us,del** with notation **s** for suppressor and **o** for oncogene, **del** for deletion and **dup** for duplication.
+
+
+
+
+
+
+
+
+

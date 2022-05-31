@@ -1,0 +1,122 @@
+---
+title: "Analisys of results"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analisys of results}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Table of Contents
+
+[User Guide content](A_User_Guide.html)
+
+[Theory of the model](B_Theory.html)
+
+[Quick start guide](C_Quick_start.html)
+
+[Simulation preparation](D_Simulation.html)
+
+[Input data](E_Input.html)
+
+[Output data](F_Output.html)
+
+[Post simulation analisys](G_Analisys.html)
+
+[VAF calculation](H_VAF.html)
+
+[Figures](I_Figures.html)
+
+[Relation to experimental measurements](J_Relation.html)
+
+[Versions](K_Versions.html)
+
+[References](L_References.html)
+
+
+---
+
+## Input for analysis stage
+
+If a simulation is just finished then all the parameters are defined, otherwise, please, define all the parameters by calling functions (Input and Output directories should be in the working one):
+
+      define_files_names()
+      define_gene_location()
+      define_parameters( read_fl = TRUE , file_name = './Input/parameters.txt' )
+      define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
+      print_parameters()   # to check all the parameters
+
+To analyze the output data, the user has to obtain the results of the simulation in the **./Output/cloneout.txt** file.
+
+## Analysis of the results
+
+To get results of simulation, please, call the function:
+
+      dtst = get_flow_data(cloneoutfile, genefile )
+      data_avg  =  dtst$data_avg
+      data_flow  =  dtst$data_flow
+      time_max = dtst$time_max
+      data_last = dtst$data_last
+      cna_mut = dtst$cna_mut
+      pnt_mut = dtst$pnt_mut
+      pnt_mut_B = dtst$pnt_mut_B
+      onco = dtst$onco
+      hall = dtst$hall
+
+To get VAF data just call two functions:
+
+      vf = get_VAF(pnt_mut, data_last )
+This function saves data to the file './Output/VAF_data.txt'
+
+      VAF  =  get_rho_VAF( vf = vf, rho = c( 0.0, 0.1, 0.2, 0.5, 0.7, 0.9 ) , file_name = './Output/VAF.txt' )
+
+This function saves data to the file './Output/VAF.txt'
+
+To get order of genes dysfunction just call the function:
+
+      rdr_dysf  =  get_order_of_genes_dysfunction( pnt_mut = pnt_mut, data_last, cna_mut,
+                                          file_name = './Output/order_genes_dysfunction.txt')
+
+It saves data.frame to the file './Output/order_genes_dysfunction.txt'
+
+
+## Plot of the results
+
+To plot the results (also see [Figures](I_Figures.html)), please, call special plotting functions:
+  
+          plot_order_dysfunction( rdr_dysf , pos = c(10,200), logscale = 'y', cex = 1. )
+  
+
+To see several plots of average data during an evolution: 
+
+          plot_average_simulation_data( data_avg, time_max )
+  
+And finally to see evolution of each clone in a simulation:
+
+For major clones:
+
+          plot_clone_evolution( data_flow, threshold = c(0.01, 1 ), lwd = 2.0,
+                                hue = c(" ", "random", "red", "orange", "yellow",
+                                        "green", "blue", "purple", "pink", "monochrome")[1],
+                                luminosity = c(" ", "random", "light", "bright", "dark")[4],
+                                yr = NA , add_initial = TRUE, 
+                                log_scale = TRUE, change_par = FALSE )
+
+For minor clones:
+
+          plot_clone_evolution( data_flow, threshold = c(0.0, 0.01), lwd = 2.0,
+                                hue = c(" ", "random", "red", "orange", "yellow",
+                                        "green", "blue", "purple", "pink", "monochrome")[1],
+                                luminosity = c(" ", "random", "light", "bright", "dark")[4],
+                                yr = NA , add_initial = FALSE, log_scale = TRUE )
+
+
+
