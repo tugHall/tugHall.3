@@ -37,7 +37,7 @@ How to use **tugHall** and how to analyze data, kindly see user-guides in **Docu
 General changes
 ---
 
-This version is based on the clone consideration instead cell-based version 1.1.
+This version 3 is based on the clone consideration instead cell-based version 1.1.
 Each clone has one or more cells, that allows to accelerate the calculations when number of clones is much less than number of cells.
 Definition of clone: the clone is set of cell with same set of genes, which have same mutated / not mutated sites in genes.
 
