@@ -6,57 +6,44 @@ tugHall version 3.0
 **tugHall** _(**tu**mor **g**ene-**Hall**mark)_ is a cancer-cell evolution model simulator, wherein gene mutations are linked to the hallmarks of cancer, 
 which influence tumor cell behaviors. 
 
-
-
 This is an _**R**_-based script to simulate the cancer cell evolution in the framework of the model proposed by _**Prof. Mamoru Kato**_,
 _Head of Bioinformatics Department, Research Institute, National Cancer Center, Tokyo, JAPAN_.
 
 Authors and contributor list:
 ---
-_**Iurii Nagornov**_
+_**Iurii Nagornov**_ (Maintainer, Author)
 
-_**Jo Nishino**_
+_**Jo Nishino**_ (Contributor)
 
-_**Eisaku Furukawa**_
+_**Eisaku Furukawa**_ (Contributor)
 
-_**Mamoru Kato**_
+_**Mamoru Kato**_ (Author)
 
 _Division of Bioinformatics, Research Institute, National Cancer Center Japan, Tokyo, Japan_
 
 All questions and requests can be sent to inagonov@ncc.go.jp
 
-Project source can be downloaded from websites
----
-https://github.com/tugHall/  -  the developing resource
-
 Short description
 ---
 The wide availability of recent cancer genomic data requires a coherent model that can sort out the relevant findings to systematically explain the clonal evolution and resultant intra-tumor heterogeneity (ITH). Here, we present a new mathematical model designed to computationally simulate the evolution of cancer cells. The model connects well-known cancer hallmarks with the specific mutational states of tumor-related genes. The cell behavior phenotypes are stochastically determined and the hallmarks interfere probabilistically with the phenotypic probabilities. In turn, the hallmark variables depend on the mutational states of tumor-related genes. Thus, it is expected our software can be used to deepen our understanding of cancer-cell evolution and generation of ITH.
 
-How to use **tugHall** and how to analyze data, kindly see user-guides in **Documentation** folder in preferred format *Rmd, pdf, html*.
+How to use **tugHall.3** and how to analyze data, kindly see vignettes.
 
 
-General changes
----
+## Cite package tugHall.3
 
-This version 3 is based on the clone consideration instead cell-based version 1.1.
-Each clone has one or more cells, that allows to accelerate the calculations when number of clones is much less than number of cells.
-Definition of clone: the clone is set of cell with same set of genes, which have same mutated / not mutated sites in genes.
+For publication, please, be kind to use next references related to tugHall software:
 
-Changes in comparison with tugHall v.2.1 
----
+- Model description and first version of tugHall
 
-This version can calculate the copy number alterations (CNA) caused by deletions and duplications in comparison with version 2.1. 
-CNAs may malfunction genes and change variant allele frequencies if the point mutations are located on CNAs.
+Iurii S Nagornov,  Mamoru Kato. tugHall: a simulator of cancer-cell evolution based on the hallmarks of cancer and tumor-related genes. 
+[Bioinformatics, V.36, N11, June 2020, pp. 3597–3599](https://doi.org/10.1093/bioinformatics/btaa182)
 
+- Clone-based version of tugHall 2.0 and 2.1 with acceleration of calculation speed
 
-Content of package
----
+Nagornov, I., Nishino, J., Kato, M. (2020). tugHall: A Tool to Reproduce Darwinian Evolution of Cancer Cells for Simulation-Based Personalized Medicine. In: Mathematical and Computational Oncology. ISMCO 2020. 
+[Lecture Notes in Computer Science, vol 12508. Springer](https://doi.org/10.1007/978-3-030-64511-3_7)
 
-* **tugHall_3.0.R** is a R-script of simulation, which uses scripts in **/Code/** folder.
-* **/Code/** is the directory with scripts to simulate and to analyze data. 
-* **/Input/** and **/Output/** are the directories for input and output data during a simulation. 
-* **/Documentation/** is a directory with documentation to use tugHall software and to analyze data of simulation.   
-* **/Figures/** is the folder with figures of plots of last simulation, which are used in user-guides also. 
-* **/TESTs/** is the directory with tests and it's results. Description of tests is in the folder. 
+- for reference of tugHall.3 package, please, cite both papers and corresponding github repository.
+
 
