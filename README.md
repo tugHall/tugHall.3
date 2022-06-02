@@ -21,7 +21,7 @@ _**Mamoru Kato**_ (Author)
 
 _Division of Bioinformatics, Research Institute, National Cancer Center Japan, Tokyo, Japan_
 
-All questions and requests can be sent to inagonov@ncc.go.jp
+All questions and requests can be sent to inagonov@ncc.go.jp or nagornov.yuri@gmail.com 
 
 Short description
 ---
@@ -44,6 +44,8 @@ Iurii S Nagornov,  Mamoru Kato. tugHall: a simulator of cancer-cell evolution ba
 Nagornov, I., Nishino, J., Kato, M. (2020). tugHall: A Tool to Reproduce Darwinian Evolution of Cancer Cells for Simulation-Based Personalized Medicine. In: Mathematical and Computational Oncology. ISMCO 2020. 
 [Lecture Notes in Computer Science, vol 12508. Springer](https://doi.org/10.1007/978-3-030-64511-3_7)
 
-- for reference of tugHall.3 package, please, cite both papers and corresponding github repository.
+- for reference of tugHall.3 package, please, cite both papers and corresponding github repository: 
+
+https://github.com/tugHall/tugHall.3 
 
 
