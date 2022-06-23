@@ -481,7 +481,11 @@ The several parameters affect on these processes:
 | **us,del = 0.8**     | Gene malfunction probability by CNA deletion for suppressor, $u_{s,del}$.  | per mutation  |
 | <img width=160/> | <img width=340/> |  <img width=200/> |
 
-The length of each CNA is defined by Poisson distribution with parameters **lambda_dup** and **lambda_del** for duplication and deletion respectively.
+The length of each CNA is defined by exponential distribution with parameters **lambda_dup** and **lambda_del** for duplication and deletion respectively, so probability to get CNA with length $l_{cna}$:
+$$
+P(l_{cna}) = e^{ - \frac{ l_{cna} }{\lambda_{cna} } },
+$$
+where $\lambda_{cna}$ is **lambda_dup** or **lambda_del**.
 The probabilities of malfunction for suppressor and oncogenes are defined by parameters
 **uo,dup**, **us,dup**, **uo,del**, **us,del** with notation **s** for suppressor and **o** for oncogene, **del** for deletion and **dup** for duplication.
 
