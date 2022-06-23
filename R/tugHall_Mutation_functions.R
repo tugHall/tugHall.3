@@ -309,7 +309,7 @@ get_cna_mutation <- function( onco1, dupOrdel, gm_1_2 ){
     ### Function to get position of point mutation related to gm (gene_map) info for each chr
     prntl  =  sample( c(1,2), size = 1, replace = TRUE, prob = c( sum(onco1$cds_1), sum(onco1$cds_2) ))
     lambda =  ifelse( dupOrdel == 'dup', lambda_dup, lambda_del )
-    l_cna  =  round( rexp(10, 1/lambda) ) +1 # rpois( n = 1, lambda ) + 1   # length of CNA
+    l_cna  =  round( rexp(1, 1/lambda) ) +1 # rpois( n = 1, lambda ) + 1   # length of CNA
 
     gm     =  gm_1_2[[ prntl ]]
 
