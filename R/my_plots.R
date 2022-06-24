@@ -7,37 +7,30 @@
 
 # Plot 2D --------------------------------------------------------------------
 
-#' Function to plot 2D figure of points y = y(x)
+#' @describeIn plot_2D_lines Function to plot 2D figure of points y = y(x)
+#' @description \code{plot_2D()} function used to plot 2D figure of points y = y(x)
 #'
-#' @param x Input data for axes X
 #' @param y Input data for axes Y
-#' @param names Vector of two characters with names for X and Y axes
-#' @param pch Parameter pch for plot function
-#' @param col Colors of points
-#' @param cex Parameter cex for plot function
-#' @param xr Range for X
-#' @param yr Range for Y
-#' @param safe_pdf Indicator to save plot to a file or not
-#' @param filename Name of file to save plot if safe_pdf == TRUE
-#' @param change_par Indicator to change par() or not for a plot. By default change_par = TRUE, after plot it will be returned to initial values
+#' @param pch Parameter pch for plot function corresponding types of dots
 #'
-#' @return NULL, making 2D plot using points
+#' @return \code{plot_2D()} function returns NULL, making 2D plot using points
 #' @export
 #'
 #' @examples
 #' plot_2D( x=-5:5, y=-3:7 )
 plot_2D   <-  function( x, y, names = c( 'X', 'Y' ), pch = 18, col = 'blue', cex = 1.2,
                         xr = c(-10,10), yr = c(-10,10),
-                        safe_pdf = FALSE, filename = './plot.pdf', change_par = TRUE ){
-    sapply( X = c('grDevices', 'graphics' ), FUN = function( x ) check_pkg( x ) )
-    define_par_for_plot( change_par_back = change_par )
+                        safe_pdf = FALSE, filename = './plot.pdf',
+                        par_list = list( xpd=TRUE, cex.lab=2, lwd = 2, mar = c(5, 5, 5, 5),
+                                         tcl = 0.5, cex.axis = 1.75,  mgp = c(2.2, 0.5, 0),
+                                         font.axis = 2, font.lab = 2 )     ){
+    local_par( .new  = par_list )
     rp = 1
     if ( safe_pdf )    {
         pdf( filename, width = 8, height = 8 )
         rp = 2
     }
     for( i in 1:rp ){
-        par( mgp = c(2.2, 0.5, 0), font.axis = 2, font.lab = 2 )
         plot( x, y, pch = pch, xlab = names[1], xlim = xr, ylim = yr,
               ylab = names[2], axes = FALSE, cex.lab = 1.5, col = col,
               cex = cex )
@@ -52,14 +45,16 @@ plot_2D   <-  function( x, y, names = c( 'X', 'Y' ), pch = 18, col = 'blue', cex
 }
 
 
-#' Function to plot 2D figure of lines  \code{ y_i = DF[, nl[ i ] ] ) }, i - index
+#' Function to plot 2D figure of lines
+#' @description \code{plot_2D_lines()} function returns NULL and plot 2D figure of lines from data.frame DF like \cr
+#' \code{ y_i = DF[, nl[ i ] ] ) }, nl - indexes of columns
 #'
 #' @param x Input data for axes X
 #' @param DF data.frame with data to plot
 #' @param nl indexes of columns in DF to plot
 #' @param names Vector of two characters with names for X and Y axes
 #' @param legend_names Name of legend
-#' @param col Vector of colors for lines
+#' @param col Vector of colors for lines or dots
 #' @param cex Parameter cex for plot function
 #' @param lwd Vector of width of lines
 #' @param lt Vector of types of lines
@@ -68,9 +63,13 @@ plot_2D   <-  function( x, y, names = c( 'X', 'Y' ), pch = 18, col = 'blue', cex
 #' @param safe_pdf Indicator to save plot to a file or not
 #' @param filename Name of file to save plot if safe_pdf == TRUE
 #' @param type Parameter type in plot function
-#' @param logscale Parameter logscale in plot function
+#' @param logscale Parameter logscale in plot function, can be '' or 'y' or 'x'
 #' @param draw_key Indicator to draw key or not
-#' @param change_par Indicator to change par() or not for a plot. By default change_par = TRUE, after plot it will be returned to initial values
+#' @param par_list List of parameters to set locally for \code{par()} function.
+#' By default \code{ par_list = list( xpd=TRUE, cex.lab=2, lwd = 2, mar = c(5, 5, 5, 5), } \cr
+#' \code{ tcl = 0.5, cex.axis = 1.75,  mgp = c(2.2, 0.5, 0), font.axis = 2, font.lab = 2 )}
+#' @param cex.legend Character expansion factor for text of legend on the plot
+#'
 #'
 #' @return NULL, making 2D plot using lines
 #' @export
@@ -89,17 +88,18 @@ plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
                               cex = 1.2, lwd = 2.0,
                               lt = c(1:6), xr = c(-10,10), yr = c(-10,10),
                         safe_pdf = FALSE, filename = './plot.pdf',
-                        type = 'l' , logscale = '' , draw_key  =  TRUE, change_par = TRUE ){
+                        type = 'l' , logscale = '' , draw_key  =  TRUE,
+                        par_list = list( xpd=TRUE, cex.lab=2, lwd = 2, mar = c(5, 5, 5, 5),
+                                         tcl = 0.5, cex.axis = 1.75,  mgp = c(2.2, 0.5, 0),
+                                         font.axis = 2, font.lab = 2 ), cex.legend = 1.3 ){
 
-    sapply( X = c( 'grDevices', 'graphics' ), FUN = function( x ) check_pkg( x ) )
-    define_par_for_plot( change_par_back = change_par )
+    local_par( .new  = par_list )
     rp = 1
     if ( safe_pdf )    {
         pdf( filename, width = 8, height = 8 )
         rp = 2
     }
     for( i in 1:rp ){
-        par( mgp = c(2.2, 0.5, 0), font.axis = 2, font.lab = 2 )
         ### Plot the first line:
         y = DF[, nl[1] ]
         plot( x, y, xlab = names[1], xlim = xr, ylim = yr,
@@ -122,7 +122,7 @@ plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
         if ( draw_key ){
             key = names( DF[ nl ] )
             if( legend_names[1] != '') key = legend_names
-            legend( x = 'bottom', legend = key,
+            legend( x = 'bottom', legend = key, cex = cex.legend,
                     horiz = TRUE, xpd = TRUE,  inset = c(0, 1.03), box.col = "white",
                     lty = lt[ 1:length(nl) ], col = col[ 1:length(nl) ]  )
         }
@@ -131,15 +131,14 @@ plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
 }
 
 
-#' Function to plot order of genes dysfunction as a step function with number of cells related to each order
+#' @describeIn plot_2D_lines  Function to plot order of genes dysfunction as a step function with number of cells related to each order
+#' @description \code{plot_order_dysfunction()} function draw the order of genes dysfunction
+#' as a step function with number of cells related to each order
 #'
 #' @param rdr_dysf Order of genes dysfunction as a data.frame
 #' @param pos Coordinates of list of order of genes dysfunction
-#' @param logscale Parameter logscale for plot function
-#' @param cex Parameter cex for plot function
-#' @param change_par Indicator to change par() or not for a plot. By default change_par = TRUE, after plot it will be returned to initial values
 #'
-#' @return NULL, making plot with step function of order of genes' dysfunction
+#' @return \code{plot_order_dysfunction()} returns NULL making plot with step function of order of genes' dysfunction
 #' @export
 #'
 #' @examples
@@ -147,9 +146,13 @@ plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
 #' plot_order_dysfunction( rdr_dysf , logscale = '', pos = c(8, 5000), cex = 1.4)
 #' plot_order_dysfunction( rdr_dysf , logscale = 'y', pos = c(10, 100), cex = 1.2)
 plot_order_dysfunction  <-  function( rdr_dysf , pos = c(0,100),
-                                      logscale = 'y', cex = 1, change_par = TRUE ){
-    sapply( X = c( 'grDevices', 'graphics' ), FUN = function( x ) check_pkg( x ) )
-    define_par_for_plot( change_par_back = change_par )
+                                      logscale = 'y', cex = 1,
+                                      par_list = list( xpd=TRUE, cex.lab=2, lwd = 2, mar = c(5, 5, 5, 5),
+                                      tcl = 0.5, cex.axis = 1.75,  mgp = c(2.2, 0.5, 0),
+                                      font.axis = 2, font.lab = 2 ),
+                                      cex.legend = 1.3 ){
+
+    local_par( .new  = par_list )
     tbl_rdr_dysf  =  aggregate( N_cells ~ order, data = rdr_dysf, FUN = sum )
     tbl_rdr_dysf  =  tbl_rdr_dysf[ order( tbl_rdr_dysf$N_cells, decreasing = T ), ]
 
@@ -159,7 +162,8 @@ plot_order_dysfunction  <-  function( rdr_dysf , pos = c(0,100),
                    names = c( 'Index', 'Number of cells' ),
                    yr = c(1, max( tbl_rdr_dysf$N_cells ) * cfcnt ),
                    xr = c(0.1, round( nrow( tbl_rdr_dysf )+5, digits = -1) ),
-                   type = 's', logscale = logscale,  draw_key  =  FALSE )
+                   type = 's', logscale = logscale,  draw_key  =  FALSE,
+                   par_list = par_list, cex.legend = cex.legend )
     txt = NULL
     for( i in 1:nrow( tbl_rdr_dysf) ) {
         txt  = paste( txt, paste( i, tbl_rdr_dysf$order[ i ] ) , '\n', collapse = '   ')
@@ -172,19 +176,20 @@ plot_order_dysfunction  <-  function( rdr_dysf , pos = c(0,100),
 # Plot clones evolution ---------------------------------------------------
 
 
-#' Function to plot clone evolution
+#' @describeIn plot_2D_lines  Function to plot clone evolution
+#' @description \code{plot_clone_evolution()} function draw the clones' evolution as cells numbers for each clone
 #'
 #' @param data_flow data.frame with results of simulation at each time step
 #' @param threshold Vector two numbers from 0 to 1 to show clones with relative final numbers of cells in the range of threshold
-#' @param lwd Line width in the plot function
-#' @param hue Parameter hue in the function randomColor from library randomcoloR
-#' @param luminosity Parameter luminosity in the function randomColor from library randomcoloR
-#' @param yr Range for Y axes
-#' @param add_initial Indicator to add or do not add initial clones to plot
-#' @param log_scale Indicator to use log_scale or not for Y axes
-#' @param change_par Indicator to change par() or not for a plot. By default change_par = TRUE, after plot it will be returned to initial values
+#' @param hue Parameter hue in the function randomColor from library randomcoloR. \cr
+#' \code{hue = c(" ", "random", "red", "orange", "yellow", "green", "blue", "purple", "pink", "monochrome")[1]},
+#' so by default ' ' (blank space)
+#' @param luminosity Parameter luminosity in the function randomColor from library randomcoloR. \cr
+#' It can be \code{luminosity = c(" ", "random", "light", "bright", "dark")[5]}, so by default 'dark'
+#' @param add_initial Logical indicator to add or do not add initial clones to plot
+#' @param log_scale Logical indicator to use logarithmic scale or not for Y axes
 #'
-#' @return NULL, making plot with clones evolution
+#' @return \code{plot_clone_evolution()} function returns NULL making plot with clones evolution
 #' @export
 #'
 #' @examples
@@ -196,9 +201,10 @@ plot_clone_evolution  <-  function( data_flow, threshold = c(0.05,1.0), lwd = 2.
                                             "green", "blue", "purple", "pink", "monochrome")[1],
                                     luminosity = c(" ", "random", "light", "bright", "dark")[5] ,
                                     yr = NA , add_initial = TRUE, log_scale = FALSE,
-                                    change_par = TRUE ){
-    sapply( X = c( 'grDevices', 'graphics', 'randomcoloR' ), FUN = function( x ) check_pkg( x ) )
-    define_par_for_plot( change_par_back = change_par )
+                                    par_list = list( xpd=TRUE, cex.lab=2, lwd = 2, mar = c(5, 5, 5, 5),
+                                                     tcl = 0.5, cex.axis = 1.75,  mgp = c(2.2, 0.5, 0),
+                                                     font.axis = 2, font.lab = 2 )
+                                     ){
     clones_flow  =  data_flow[ ,c('Time', 'ID', 'ParentID', 'Birth_time', 'N_cells' ) ]
     Nmax  =  max( clones_flow$N_cells )
     time_max  =  max( clones_flow$Time )
@@ -235,7 +241,8 @@ plot_clone_evolution  <-  function( data_flow, threshold = c(0.05,1.0), lwd = 2.
     df_pl  =  as.data.frame( DF[[ 1 ]] )
     plot_2D_lines( x = df_pl$x, DF = df_pl, nl = 2, names = c( 'Time step', 'Number of cells'),
                     xr = c( 1, round( time_max+4, digits = -1 ) ), yr = yr, draw_key = FALSE,
-                   logscale = ifelse( log_scale, 'y', '' ) )
+                   logscale = ifelse( log_scale, 'y', '' ),
+                   par_list = par_list )
 
     if ( length( w ) > 1 ){
         for( i in 2:length( w ) ){

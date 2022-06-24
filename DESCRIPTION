@@ -21,6 +21,7 @@ Imports:
     randomcoloR,
     stats,
     stringr,
+    withr,
     utils
 Suggests: 
     rmarkdown,

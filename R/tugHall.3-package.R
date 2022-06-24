@@ -28,5 +28,6 @@
 #' @importFrom utils read.delim
 #' @importFrom utils read.table
 #' @importFrom utils write.table
+#' @importFrom withr local_par
 ## usethis namespace: end
 NULL
