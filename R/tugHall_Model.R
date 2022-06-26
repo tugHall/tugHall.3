@@ -57,17 +57,17 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
     pnt_clones = NULL
     cna = CNA_Mutations$new()
     cna_clones = NULL
-    mut_order  <<-  0            #  mutation order to reproduce gene map
-    assign("mut_order", mut_order, envir = .GlobalEnv)
-    assign("onco", onco, envir = .GlobalEnv)
-    assign("env", env, envir = .GlobalEnv)
-    assign("pnt", pnt, envir = .GlobalEnv)
-    assign("pnt_clones", pnt_clones, envir = .GlobalEnv)
-    assign("cna", cna, envir = .GlobalEnv)
-    assign("cna_clones", cna_clones, envir = .GlobalEnv)
-    assign("hall", hall, envir = .GlobalEnv)
-    assign("uo", uo, envir = .GlobalEnv)
-    assign("us", us, envir = .GlobalEnv)
+    # mut_order  =  0
+    assign("mut_order", 0, envir = pck.env )  #  mutation order to reproduce gene map
+    assign("onco", onco, envir = .GlobalEnv )
+    assign("env", env, envir = .GlobalEnv )
+    assign("pnt", pnt, envir = .GlobalEnv )
+    assign("pnt_clones", pnt_clones, envir = .GlobalEnv )
+    assign("cna", cna, envir = .GlobalEnv )
+    assign("cna_clones", cna_clones, envir = .GlobalEnv )
+    assign("hall", hall, envir = .GlobalEnv )
+    assign("uo", uo, envir = .GlobalEnv )
+    assign("us", us, envir = .GlobalEnv )
     clone1 = clone$new(gene_size=length(onco$cds_1),
                        m=m0, s=s0, k=k0, E=E0)          # clone1  -  empty object of clone
     clones = init_clones(clonefile, clone1)           # clones - the clones with hallmarks from cellfile - cellinit.txt - initial cells

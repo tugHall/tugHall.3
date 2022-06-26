@@ -207,8 +207,8 @@ generate_pnt  <-  function( prntl, gene, pos, onco1, Chr, mutation = NA ) {
     } else {
         pnt0$MalfunctionedByPointMut  =  TRUE
     }
-    mut_order  <<-  mut_order  +  1
-    pnt0$mut_order  =  mut_order
+    pck.env$mut_order  =  pck.env$mut_order  +  1
+    pnt0$mut_order  =  pck.env$mut_order
 
     pnt_clones <<- c( pnt_clones, pnt0 )
 
@@ -408,8 +408,8 @@ generate_cna  <-  function( prntl, genes, start_end, onco1, dupOrdel ) {
     u = get_u_cna( genes, dupOrdel )
     cna0$MalfunctionedByCNA  =  ifelse( ( runif(1) < u ), TRUE, FALSE )
 
-    mut_order  <<-  mut_order  +  1
-    cna0$mut_order  =  mut_order
+    pck.env$mut_order  =  pck.env$mut_order  +  1
+    cna0$mut_order  =  pck.env$mut_order
 
     cna_clones <<- c( cna_clones, cna0 )
 

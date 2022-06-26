@@ -91,7 +91,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                               hue = c(" ", "random", "red", "orange", "yellow",
                                       "green", "blue", "purple", "pink", "monochrome")[1],
                               luminosity = c(" ", "random", "light", "bright", "dark")[4],
-                              yr = NA , add_initial = TRUE, log_scale = TRUE, change_par = FALSE )
+                              yr = NA , add_initial = TRUE, log_scale = TRUE )
 
         # Minor clones but large amount of them
         readline('Next? ')
