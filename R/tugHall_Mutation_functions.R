@@ -192,8 +192,8 @@ generate_pnt  <-  function( prntl, gene, pos, onco1, Chr, mutation = NA ) {
     ### Function to generate object of point mutation pnt
     pnt0 = Point_Mutations$new()
     pnt0$Gene_name = gene
-    pnt0$PointMut_ID =  ifelse( length(pnt_clones) == 0, 1,
-                                pnt_clones[[ length(pnt_clones) ]]$PointMut_ID + 2 )
+    pnt0$PointMut_ID =  ifelse( length( pck.env$pnt_clones ) == 0, 1,
+                                pck.env$pnt_clones[[ length( pck.env$pnt_clones ) ]]$PointMut_ID + 2 )
     pnt0$Allele = 'B'  # Mutation occurs on allele B
     pnt0$Parental_1or2  =  as.integer(prntl)
     pnt0$Chr = Chr
@@ -210,10 +210,10 @@ generate_pnt  <-  function( prntl, gene, pos, onco1, Chr, mutation = NA ) {
     pck.env$mut_order  =  pck.env$mut_order  +  1
     pnt0$mut_order  =  pck.env$mut_order
 
-    pnt_clones <<- c( pnt_clones, pnt0 )
+    pck.env$pnt_clones = c( pck.env$pnt_clones, pnt0 )
 
     pnt1  =  copy_pnt_no_mutation( pnt0 )
-    pnt_clones <<- c( pnt_clones, pnt1 )
+    pck.env$pnt_clones = c( pck.env$pnt_clones, pnt1 )
 
     return( pnt0 )
 }
@@ -233,8 +233,8 @@ generate_to_copy_pnt  <-  function( pnt ) {
     ### Function to generate object of point mutation pnt with data from input pnt
     pnt0 = Point_Mutations$new()
     pnt0$Gene_name = pnt$Gene_name
-    pnt0$PointMut_ID =  ifelse( length(pnt_clones) == 0, 1,
-                                pnt_clones[[ length(pnt_clones) ]]$PointMut_ID + 2 )
+    pnt0$PointMut_ID =  ifelse( length( pck.env$pnt_clones ) == 0, 1,
+                                pck.env$pnt_clones[[ length( pck.env$pnt_clones ) ]]$PointMut_ID + 2 )
     pnt0$Allele = pnt$Allele
     pnt0$Parental_1or2  =  pnt$Parental_1or2
     pnt0$Chr = pnt$Chr
@@ -246,10 +246,10 @@ generate_to_copy_pnt  <-  function( pnt ) {
 
     pnt0$mut_order  =  pnt$mut_order
 
-    pnt_clones <<- c( pnt_clones, pnt0 )
+    pck.env$pnt_clones  =  c( pck.env$pnt_clones, pnt0 )
 
     pnt1  =  copy_pnt_no_mutation( pnt0 )
-    pnt_clones <<- c( pnt_clones, pnt1 )
+    pck.env$pnt_clones  =  c( pck.env$pnt_clones, pnt1 )
 
     return( pnt0 )
 }
@@ -351,14 +351,14 @@ mixed_mut_order   <-   function( clone1 ) {
         for (i in 1:length( clone1$PointMut_ID )) {
             order_tp_num[i,'type']   =  'pnt'
             order_tp_num[i,'ID']     =  as.numeric( clone1$PointMut_ID[i] )
-            order_tp_num[i,'order']  =  pnt_clones[[ order_tp_num[i,'ID'] ]]$mut_order   ### pn[order_tp_num[i,'ID'], 'mut_order']
+            order_tp_num[i,'order']  =  pck.env$pnt_clones[[ order_tp_num[i,'ID'] ]]$mut_order   ### pn[order_tp_num[i,'ID'], 'mut_order']
         }
     }
 
     if ( length( clone1$CNA_ID ) > 0 & clone1$CNA_ID  != 0 ){
         for (j in 1:length( clone1$CNA_ID ) ) {
             order_tp_num[j+i,'ID']      =   clone1$CNA_ID[ j ]
-            cn1   =   cna_clones[[ order_tp_num[ j+i, 'ID' ] ]]
+            cn1   =   pck.env$cna_clones[[ order_tp_num[ j+i, 'ID' ] ]]
             order_tp_num[j+i,'order']   =   cn1$mut_order ###  cn[order_tp_num[ j+i, 'ID' ], 'mut_order']
             order_tp_num[j+i,'type']    =   cn1$dupOrdel  ###  as.character( cn[order_tp_num[ j+i, 'ID' ], 'dupOrdel'] )
         }
@@ -397,8 +397,8 @@ mixed_mut_order   <-   function( clone1 ) {
 generate_cna  <-  function( prntl, genes, start_end, onco1, dupOrdel ) {
     ### Function to generate object of point mutation cna
     cna0 = CNA_Mutations$new()
-    cna0$CNA_ID =  ifelse( length(cna_clones) == 0, 1,
-                           cna_clones[[ length(cna_clones) ]]$CNA_ID + 1 )
+    cna0$CNA_ID =  ifelse( length( pck.env$cna_clones ) == 0, 1,
+                           pck.env$cna_clones[[ length( pck.env$cna_clones ) ]]$CNA_ID + 1 )
     cna0$Parental_1or2  =  prntl
     cna0$dupOrdel = dupOrdel
     cna0$Chr = gene_map$Chr[ which( gene_map$Gene == genes[1] )[1] ]
@@ -411,7 +411,7 @@ generate_cna  <-  function( prntl, genes, start_end, onco1, dupOrdel ) {
     pck.env$mut_order  =  pck.env$mut_order  +  1
     cna0$mut_order  =  pck.env$mut_order
 
-    cna_clones <<- c( cna_clones, cna0 )
+    pck.env$cna_clones = c( pck.env$cna_clones, cna0 )
 
     return( cna0 )
 }
@@ -446,7 +446,7 @@ modify_gene_map  <-  function( clone1 , onco1 ){
         cn1  =  NULL
         if ( mixed_order[l, 'type'] == 'del' ) {
 
-            cn1        =  cna_clones[[  mixed_order$ID[l] ]]   # cn[ mixed_order$ID[l], ]
+            cn1        =  pck.env$cna_clones[[  mixed_order$ID[l] ]]   # cn[ mixed_order$ID[l], ]
             Ref_start  =  cn1$Ref_start
             Ref_end    =  cn1$Ref_end
             Chr        =  cn1$Chr
@@ -464,7 +464,7 @@ modify_gene_map  <-  function( clone1 , onco1 ){
 
         if ( mixed_order[l, 'type'] == 'dup' ) {
 
-            cn1        =  cna_clones[[  mixed_order$ID[l] ]]   ###  cn[ mixed_order$ID[l], ]
+            cn1        =  pck.env$cna_clones[[  mixed_order$ID[l] ]]   ###  cn[ mixed_order$ID[l], ]
             Ref_start  =  cn1$Ref_start
             Ref_end    =  cn1$Ref_end
             Chr        =  cn1$Chr
@@ -482,7 +482,7 @@ modify_gene_map  <-  function( clone1 , onco1 ){
 
         if ( mixed_order[l, 'type'] == 'pnt' ) {
 
-            pn1        =  pnt_clones[[ mixed_order$ID[l] ]]   ###  pn[ mixed_order$ID[l], ]
+            pn1        =  pck.env$pnt_clones[[ mixed_order$ID[l] ]]   ###  pn[ mixed_order$ID[l], ]
             pos_pnt1   =  pn1$Ref_pos
             Chr        =  pn1$Chr
 

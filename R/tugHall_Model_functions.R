@@ -310,8 +310,8 @@ trial_mutagenesis <- function( clone1, num_mut, onco1 ) {
             Chr   = unlist( pm[[4]] )
             pnt0 = generate_pnt( prntl, gene, pos, onco1, Chr )
             if ( (clone1$PointMut_ID == 0)[1] ) {
-                id   =  pnt_clones[[ length(pnt_clones) ]]$PointMut_ID
-            } else  id   =  c( clone1$PointMut_ID, pnt_clones[[ length(pnt_clones) ]]$PointMut_ID )
+                id   =  pck.env$pnt_clones[[ length( pck.env$pnt_clones ) ]]$PointMut_ID
+            } else  id   =  c( clone1$PointMut_ID, pck.env$pnt_clones[[ length( pck.env$pnt_clones ) ]]$PointMut_ID )
             clone1$PointMut_ID  =  id   # pnt_clone is generated in the generate_pnt function
 
             if ( pnt0$MalfunctionedByPointMut ){
@@ -330,8 +330,8 @@ trial_mutagenesis <- function( clone1, num_mut, onco1 ) {
             start_end   = unlist( cna_mut[[4]] )
             cna0 = generate_cna( prntl, genes, start_end, onco1, t )
             if ( (clone1$CNA_ID == 0)[1] ) {
-                id   =  cna_clones[[ length(cna_clones) ]]$CNA_ID
-            } else  id   =  c( clone1$CNA_ID, cna_clones[[ length(cna_clones) ]]$CNA_ID )
+                id   =  pck.env$cna_clones[[ length( pck.env$cna_clones ) ]]$CNA_ID
+            } else  id   =  c( clone1$CNA_ID, pck.env$cna_clones[[ length( pck.env$cna_clones ) ]]$CNA_ID )
             clone1$CNA_ID  =  id
 
             if ( cna0$MalfunctionedByCNA ){
@@ -350,13 +350,13 @@ trial_mutagenesis <- function( clone1, num_mut, onco1 ) {
             sp_A = FALSE
             if ( clone1$PointMut_ID != 0 ){
                 sp = sapply( clone1$PointMut_ID , FUN = function( x )  {
-                    chk_pnt_mut( pnt1  =  pnt_clones[[ x ]], Ref_start = start_end[1],
+                    chk_pnt_mut( pnt1  =  pck.env$pnt_clones[[ x ]], Ref_start = start_end[1],
                                  Ref_end = start_end[2], Chr = Chr, prntl  =  prntl )
                 })
                 ### to check original allele A do/don't match into CNA:
                 prntl_inv  =  ifelse( prntl  ==  1, 2, 1 )
                 sp_A = sapply( clone1$PointMut_ID , FUN = function( x )  {
-                    chk_pnt_mut( pnt1  =  pnt_clones[[ x ]], Ref_start = start_end[1],
+                    chk_pnt_mut( pnt1  =  pck.env$pnt_clones[[ x ]], Ref_start = start_end[1],
                                  Ref_end = start_end[2], Chr = Chr, prntl  =  prntl_inv )
                 })
 
@@ -372,16 +372,16 @@ trial_mutagenesis <- function( clone1, num_mut, onco1 ) {
                 ### circle and function to copy pnt for a NEW clone
                 for( q in clone1$PointMut_ID[ sp | sp_A ] ){
                     # pnt_clone is generated in the generate_to_copy_pnt function
-                    pnt0 = generate_to_copy_pnt( pnt = pnt_clones[[ q ]] )
+                    pnt0 = generate_to_copy_pnt( pnt = pck.env$pnt_clones[[ q ]] )
                     x  =  which( clone1$PointMut_ID == q )
                     clone1$PointMut_ID[ x ]  =  pnt0$PointMut_ID
                 }
                 ### end of the new part of the code
 
                 sapply( clone1$PointMut_ID[ sp ],
-                        FUN = function( x ) change_pnt_by_cna( pnt1  =  pnt_clones[[x]], start_end, t )  )
+                        FUN = function( x ) change_pnt_by_cna( pnt1  =  pck.env$pnt_clones[[ x ]], start_end, t )  )
                 sapply( clone1$PointMut_ID[ sp_A ],
-                        FUN = function( x ) change_allele_A_by_cna( pnt1  =  pnt_clones[[x+1]], start_end, t )  )
+                        FUN = function( x ) change_allele_A_by_cna( pnt1  =  pck.env$pnt_clones[[ x+1 ]], start_end, t )  )
 
             }
 
@@ -445,8 +445,8 @@ init_pnt_clones   <- function( clones, onco_clones ) {
 
                 ### Add pnt mutation ID to a clone:
                 if ( (clone1$PointMut_ID == 0)[1] ) {
-                    id   =  pnt_clones[[ length(pnt_clones) ]]$PointMut_ID
-                } else  id   =  c( clone1$PointMut_ID, pnt_clones[[ length(pnt_clones) ]]$PointMut_ID )
+                    id   =  pck.env$pnt_clones[[ length( pck.env$pnt_clones ) ]]$PointMut_ID
+                } else  id   =  c( clone1$PointMut_ID, pck.env$pnt_clones[[ length( pck.env$pnt_clones ) ]]$PointMut_ID )
                 clone1$PointMut_ID  =  id
             }
         }
@@ -863,7 +863,7 @@ write_monitor  <- function( outfile = file_monitor, start = FALSE , env, clones 
             if ( point_mut_list[ 1 ] == 0 ) l_pm  =  length( point_mut_list ) - 1 else l_pm  =  length( point_mut_list )
             cna_list  =  sort( unique( as.numeric( unlist( sapply( X = 1:length( clones ), FUN = function( x ) clones[[ x ]]$CNA_ID ) ) ) ) )
             if ( cna_list[ 1 ] == 0 ) cna_list  =  cna_list[ -1 ]
-            dupdel  =  unlist( sapply( X = cna_list, FUN = function( x ) cna_clones[[ x ]]$dupOrdel ) )
+            dupdel  =  unlist( sapply( X = cna_list, FUN = function( x ) pck.env$cna_clones[[ x ]]$dupOrdel ) )
             l_dup   =  length( which( dupdel  ==  'dup' ) )
             l_del   =  length( which( dupdel  ==  'del' ) )
             data <- c( env$T, length( clones ), env$N, env$P, env$M, l_pm, l_dup, l_del )
@@ -929,7 +929,7 @@ write_weights <- function(outfile, hall) {
 #' pnt_clones = tugHall_dataset$pnt_clones
 #' if ( !dir.exists('./Output') ) dir.create('./Output')
 #' write_pnt_clones(pnt_clones, file_out = 'Output/point_mutations.txt')
-write_pnt_clones <- function(pnt_clones, file_out = 'Output/point_mutations.txt'){
+write_pnt_clones <- function( pnt_clones, file_out = 'Output/point_mutations.txt' ){
     # if ( is.null(pnt_clones) ) return( print( 'Empty data.' ) )
     pn  <-  NULL
     if ( !is.null( pnt_clones ) ){
