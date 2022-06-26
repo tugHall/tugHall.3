@@ -668,8 +668,8 @@ Point_Mutations <- setRefClass(
 #' @field Ref_start numeric. Reference start position
 #' @field Ref_end numeric. Reference final position
 #' @field Gene_names character. Names of genes involved in CNA
-#' @field MalfunctionedByCNA logical.
-#' @field mut_order numeric. True for driver mutation and False for passenger mutation
+#' @field MalfunctionedByCNA logical. True for driver mutation and False for passenger mutation
+#' @field mut_order numeric. Order of mutations in the lists of point mutations and CNA mutations
 #'
 #' @return NULL
 #' @export

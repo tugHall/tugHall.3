@@ -25,9 +25,9 @@ Class 'CNA_Mutations'
 
 \item{\code{Gene_names}}{character. Names of genes involved in CNA}
 
-\item{\code{MalfunctionedByCNA}}{logical.}
+\item{\code{MalfunctionedByCNA}}{logical. True for driver mutation and False for passenger mutation}
 
-\item{\code{mut_order}}{numeric. True for driver mutation and False for passenger mutation}
+\item{\code{mut_order}}{numeric. Order of mutations in the lists of point mutations and CNA mutations}
 }}
 
 
