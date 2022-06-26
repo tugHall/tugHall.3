@@ -2,42 +2,30 @@
 pck.env = new.env( parent = emptyenv() )
 attr( pck.env, "name" ) = "tugHall.Environment"
 
-# assign( 'd', 2, envir = pck.env )
 
-
-#' Check Environment
+#' Get results of simulation storaged in pck.env or tugHall.Environment environment
 #'
 #' @return NULL
 #' @export
 #'
 #' @examples
 #' NULL
-makeEnvVar  <-  function( d = pck.env$d ){
+get_tugHall.Environment  <-  function(){
 
-    # assign( 'd', 2, envir = pck.env )
-    pck.env$d  =  d + 5
+    # local_environment( env = pck.env )
 
-    return(  )
-}
-
-#' @describeIn chkEnv Print d from packag environment
-#'
-#' @return NULL
-#' @export
-#'
-#' @examples
-#' NULL
-print_pck_data  <-  function(){
-
-    local_environment( env = pck.env )
-
-    print( search() )
-    print('---------------')
     print( ls( pck.env ) )
     print('---------------')
 
-    print( pck.env$d )
-    print('---------------')
+    results  =  list()
+    l = ls( pck.env )
+    if ( length( l ) > 0 ){
+        for( i in 1:length( l ) ){
+            results[[ l[i] ]]  =  pck.env[[ l[i] ]]
+        }
+    }
+
+    return( results )
 
 }
 
@@ -45,11 +33,11 @@ print_pck_data  <-  function(){
 # Define global variables in tugHall.3:
 utils::globalVariables( c( 'CF', 'Compaction_factor', 'E0', 'F0', 'censore_n',
                            'censore_t', 'clonefile', 'cloneoutfile',
-                           'cna_clones', 'd0', 'env', 'file_monitor',
+                            'd0', 'env', 'file_monitor',
                            'gene_map', 'genefile', 'geneoutfile', 'hall', 'k0',
                            'lambda_del', 'lambda_dup', 'logoutfile', 'm0',
                            'm_del', 'm_dup', 'model_name', 'monitor',
-                           'n_repeat', 'onco', 'pnt_clones', 's0',
+                           'n_repeat', 'onco', 's0',
                            'time_stop', 'uo', 'uo_del', 'uo_dup',
                            'us', 'us_del', 'us_dup' ) )
 

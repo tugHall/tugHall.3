@@ -57,8 +57,8 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
     pck.env$pnt_clones = NULL
     cna = CNA_Mutations$new()
     pck.env$cna_clones = NULL
-    # mut_order  =  0
-    assign("mut_order", 0, envir = pck.env )  #  mutation order to reproduce gene map
+    pck.env$mut_order  =  0
+    # assign("mut_order", 0, envir = pck.env )  #  mutation order to reproduce gene map
     # assign("onco", onco, envir = pck.env )
     assign("env", env, envir = .GlobalEnv )
     assign("pnt", pnt, envir = .GlobalEnv )
@@ -147,6 +147,8 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
 
     # write_pnt_clones( pnt_clones, file = 'Output/point_mutations.txt' )
     # write_pnt_clones( cna_clones, file = 'Output/CNA_mutations.txt' )
+
+    pck.env$clones  =  clones
 
     return( list( clones , pck.env$onco_clones ) )
 }
