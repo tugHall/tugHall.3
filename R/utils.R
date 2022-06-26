@@ -2,7 +2,7 @@
 pck.env = new.env( parent = emptyenv() )
 attr( pck.env, "name" ) = "tugHall.Environment"
 
-assign( 'd', 2, envir = pck.env )
+# assign( 'd', 2, envir = pck.env )
 
 
 #' Check Environment

@@ -71,19 +71,19 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
     clone1 = clone$new(gene_size=length( pck.env$onco$cds_1 ),
                        m=m0, s=s0, k=k0, E=E0)          # clone1  -  empty object of clone
     clones = init_clones(clonefile, clone1)           # clones - the clones with hallmarks from cellfile - cellinit.txt - initial cells
-    onco_clones = init_onco_clones( pck.env$onco, clones )    # onco_clones - the onco related to each clone in clones
+    pck.env$onco_clones = init_onco_clones( pck.env$onco, clones )    # onco_clones - the onco related to each clone in clones
     write_geneout(geneoutfile, hall, Compaction_factor, CF)                  # write the geneout.txt file with initial hallmarks
     write_weights("Output/Weights.txt", hall)                 # write the weights of genes for hallmarks
     write_header( cloneoutfile, env, pck.env$onco )                   #
     if ( monitor ) write_monitor( start = TRUE )
     cells_number <- sum_N_P_M(env, clones)                 # to calculate cells numbers - N,M
-    init_pnt_clones( clones, onco_clones )              # initialization of pnt_clones for point mutations
+    init_pnt_clones( clones, pck.env$onco_clones )              # initialization of pnt_clones for point mutations
 
     lapply(clones,update_Hallmarks)                     # to calculate the Hallmarks and probabilities for initial cells
     hall$updateEnviron(env, clones)                     # make averaging for cells
     isFirst = TRUE
     if ( model_name == 'simplified' ) lapply( clones, FUN = function( clone1 ) clone1$invasion = TRUE )
-    write_cloneout( cloneoutfile, env, clones, isFirst, onco_clones )     #  write initial clones
+    write_cloneout( cloneoutfile, env, clones, isFirst, pck.env$onco_clones )     #  write initial clones
 
     print( paste0("The probability of an absence of the mutations is p0 = ", as.character( pck.env$onco$p0_1 ) ))
     time_start  =  Sys.time()
@@ -97,7 +97,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
         clones_new <- NULL
         onco_clones_new <- NULL
 
-        N_clones_new = unlist( mapply( trial, clones, onco_clones ) )
+        N_clones_new = unlist( mapply( trial, clones, pck.env$onco_clones ) )
 
         survived_clones = NULL
 
@@ -105,7 +105,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
             if (N_clones_new[i] > 0) {
                 for (j in 1:N_clones_new[i])  {
                     clones_new = c(clones_new,clone_copy(clones[[i]]) )
-                    onco_clones_new = c(onco_clones_new, onco_copy(onco_clones[[i]]))
+                    onco_clones_new = c(onco_clones_new, onco_copy( pck.env$onco_clones[[i]] ))
                     onco_clones_new[[length(onco_clones_new)]]$id = clones_new[[length(clones_new)]]$id
                 }
             }
@@ -130,7 +130,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
 
         # the new generation = the survived clones + new_clones
         clones = c(clones[survived_clones],clones_new)
-        onco_clones = c(onco_clones[survived_clones],onco_clones_new)
+        pck.env$onco_clones = c( pck.env$onco_clones[survived_clones], onco_clones_new )
 
         cells_number <- sum_N_P_M(env, clones)                 # to calculate cells numbers - N,M for next step
         lapply(clones,update_Hallmarks)
@@ -138,7 +138,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
 
         env$T = env$T + 1                                    # to next step
 
-        write_cloneout( cloneoutfile, env, clones, isFirst, onco_clones )
+        write_cloneout( cloneoutfile, env, clones, isFirst, pck.env$onco_clones )
         #print(c(env$T,env$N,env$M,env$last_id, length(clones), "N_clones_new = ", N_clones_new))
         if ( monitor ) write_monitor( start = FALSE, env = env, clones = clones )
         time_current  =  Sys.time()
@@ -148,7 +148,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
     # write_pnt_clones( pnt_clones, file = 'Output/point_mutations.txt' )
     # write_pnt_clones( cna_clones, file = 'Output/CNA_mutations.txt' )
 
-    return( list( clones , onco_clones ) )
+    return( list( clones , pck.env$onco_clones ) )
 }
 
 
