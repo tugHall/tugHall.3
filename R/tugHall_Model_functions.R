@@ -315,9 +315,9 @@ trial_mutagenesis <- function( clone1, num_mut, onco1 ) {
             clone1$PointMut_ID  =  id   # pnt_clone is generated in the generate_pnt function
 
             if ( pnt0$MalfunctionedByPointMut ){
-                clone1$gene[ which( onco$name == gene ) ] = 1
+                clone1$gene[ which( pck.env$onco$name == gene ) ] = 1
             } else {
-                clone1$pasgene[ which( onco$name == gene ) ] = 1
+                clone1$pasgene[ which( pck.env$onco$name == gene ) ] = 1
             }
             gm[[ prntl ]]  =  add_pnt_mutation( gm = gm[[ prntl ]], pos_pnt = pos, Chr = Chr )
         }
@@ -335,9 +335,9 @@ trial_mutagenesis <- function( clone1, num_mut, onco1 ) {
             clone1$CNA_ID  =  id
 
             if ( cna0$MalfunctionedByCNA ){
-                clone1$gene[ sapply(genes, FUN = function(x) which(onco$name == x) ) ] = 1
+                clone1$gene[ sapply(genes, FUN = function(x) which(pck.env$onco$name == x) ) ] = 1
             } else {
-                clone1$pasgene[ sapply(genes, FUN = function(x) which(onco$name == x) ) ] = 1
+                clone1$pasgene[ sapply(genes, FUN = function(x) which(pck.env$onco$name == x) ) ] = 1
             }
 
             ### Change the gene_map related chromosome
@@ -720,12 +720,13 @@ write_log <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile
 #' define_compaction_factor()
 #' write_geneout(outfile = geneoutfile, hall, Compaction_factor, CF)
 write_geneout <- function(outfile, hall, Compaction_factor, CF) {
-    gene <- c(onco$name[hall$Ha], onco$name[hall$Hi], onco$name[hall$Hd], onco$name[hall$Hb], onco$name[hall$Him])
-    hall_mark <- c(rep("apoptosis", length(onco$name[hall$Ha])),
-                   rep("immortalization", length(onco$name[hall$Hi])),
-                   rep("growth|anti-growth", length(onco$name[hall$Hd])),
-                   rep("angiogenesis", length(onco$name[hall$Hb])),
-                   rep("invasion", length(onco$name[hall$Him])))
+    gene <- c(pck.env$onco$name[hall$Ha], pck.env$onco$name[hall$Hi], pck.env$onco$name[hall$Hd],
+              pck.env$onco$name[hall$Hb], pck.env$onco$name[hall$Him])
+    hall_mark <- c(rep("apoptosis", length(pck.env$onco$name[hall$Ha])),
+                   rep("immortalization", length(pck.env$onco$name[hall$Hi])),
+                   rep("growth|anti-growth", length(pck.env$onco$name[hall$Hd])),
+                   rep("angiogenesis", length(pck.env$onco$name[hall$Hb])),
+                   rep("invasion", length(pck.env$onco$name[hall$Him])))
     weight_CF <- c(hall$Ha_w, hall$Hi_w, hall$Hd_w, hall$Hb_w, hall$Him_w)
     if ( Compaction_factor ) {
         weight <- c(hall$Ha_w / CF$Ha, hall$Hi_w / CF$Hi, hall$Hd_w / CF$Hd, hall$Hb_w / CF$Hb, hall$Him_w / CF$Him)
@@ -733,8 +734,8 @@ write_geneout <- function(outfile, hall, Compaction_factor, CF) {
     else {
         weight <- weight_CF
     }
-    sup_or_onc <- c(onco$onsp[hall$Ha], onco$onsp[hall$Hi], onco$onsp[hall$Hd], onco$onsp[hall$Hb],
-                    onco$onsp[hall$Him])
+    sup_or_onc <- c(pck.env$onco$onsp[hall$Ha], pck.env$onco$onsp[hall$Hi], pck.env$onco$onsp[hall$Hd],
+                    pck.env$onco$onsp[hall$Hb], pck.env$onco$onsp[hall$Him] )
     df <- data.frame(gene=gene, hall_mark=hall_mark, weight=weight, weight_CF=weight_CF, sup_or_onc=sup_or_onc)
     write.table(df, outfile, quote=F, row.names=F, sep='\t')
 }
@@ -806,7 +807,7 @@ get_type  <-  function( clone1 ){
 write_cloneout <- function( outfile, env, clones, isFirst, onco_clones ) {
     data  =  c(env$T, 'avg', '-',  '-', '-', '-', env$c, env$d, env$i, env$im, env$a, env$k, env$E, env$N,
                env$Nmax, env$P, env$M, env$Ha, env$Him, env$Hi, env$Hd, env$Hb, '-', env$mutden,
-               rep('-', 12 + 4*length( onco$name ) )      # rep('-',17)
+               rep('-', 12 + 4*length( pck.env$onco$name ) )      # rep('-',17)
     )
 
     write(data, outfile, append=TRUE, ncolumns = length(data), sep="\t")
@@ -890,27 +891,27 @@ write_monitor  <- function( outfile = file_monitor, start = FALSE , env, clones 
 #' write_weights(outfile = './Output/weights.txt', hall)
 write_weights <- function(outfile, hall) {
     #data <- c("Hallmarks", "Designation", onco$name)
-    data <- data.frame( "Gene" = onco$name)
+    data <- data.frame( "Gene" = pck.env$onco$name)
     data$Gene <-   as.character(data$Gene)
 
-    w <- rep(0.0, onco$len)
-    for (j in 1:onco$len) { if ( length( which(j==hall$Ha) ) > 0  ) w[j] = hall$Ha_w[which(j==hall$Ha)]  }
+    w <- rep(0.0, pck.env$onco$len)
+    for (j in 1:pck.env$onco$len) { if ( length( which(j==hall$Ha) ) > 0  ) w[j] = hall$Ha_w[which(j==hall$Ha)]  }
     data <- cbind(data, "Apoptosis ($H_a$)" = w)
 
-    w <- rep(0.0, onco$len)
-    for (j in 1:onco$len) { if ( length( which(j==hall$Hb) ) > 0  ) w[j] = hall$Hb_w[which(j==hall$Hb)]  }
+    w <- rep(0.0, pck.env$onco$len)
+    for (j in 1:pck.env$onco$len) { if ( length( which(j==hall$Hb) ) > 0  ) w[j] = hall$Hb_w[which(j==hall$Hb)]  }
     data <- cbind(data, "Angiogenesis ($H_b$)" = w)
 
-    w <- rep(0.0, onco$len)
-    for (j in 1:onco$len) { if ( length( which(j==hall$Hd) ) > 0  ) w[j] = hall$Hd_w[which(j==hall$Hd)]  }
+    w <- rep(0.0, pck.env$onco$len)
+    for (j in 1:pck.env$onco$len) { if ( length( which(j==hall$Hd) ) > 0  ) w[j] = hall$Hd_w[which(j==hall$Hd)]  }
     data <- cbind(data, "Growth / Anti-growth ($H_d$)" = w)
 
-    w <- rep(0.0, onco$len)
-    for (j in 1:onco$len) { if ( length( which(j==hall$Hi) ) > 0  ) w[j] = hall$Hi_w[which(j==hall$Hi)]  }
+    w <- rep( 0.0, pck.env$onco$len )
+    for (j in 1:pck.env$onco$len) { if ( length( which(j==hall$Hi) ) > 0  ) w[j] = hall$Hi_w[which(j==hall$Hi)]  }
     data <- cbind(data, "Immortalization ($H_i$)" = w)
 
-    w <- rep(0.0, onco$len)
-    for (j in 1:onco$len) { if ( length( which(j==hall$Him) ) > 0  ) w[j] = hall$Him_w[which(j==hall$Him)]  }
+    w <- rep(0.0, pck.env$onco$len)
+    for (j in 1:pck.env$onco$len) { if ( length( which(j==hall$Him) ) > 0  ) w[j] = hall$Him_w[which(j==hall$Him)]  }
     data <- cbind(data, "Invasion / Metastasis ($H_{im}$)" = w)
 
     write.table(data, outfile, sep="\t", row.names = FALSE)
@@ -968,15 +969,15 @@ init_clones <- function(clonefile, clone1) {
     clones = NULL
     n <- as.numeric(name)
     if (!is.na(n) && is.numeric(n)) {
-        factor = n / sum(clone1$m*onco$cds_1)
+        factor = n / sum(clone1$m * pck.env$onco$cds_1)
         f2 = 1.0
         while (TRUE) {
-            if (sum(floor(clone1$m*onco$cds_1*factor*f2 + 0.5)) >= n) {
+            if (sum(floor(clone1$m * pck.env$onco$cds_1*factor*f2 + 0.5)) >= n) {
                 break
             }
             f2 = f2 + 0.1
         }
-        nums = floor(clone1$m*onco$cds_1*factor*f2 + 0.5)
+        nums = floor(clone1$m * pck.env$onco$cds_1*factor*f2 + 0.5)
         clones = NULL
         for (i in 1:n) {
             clones = c(clones, clone_copy(clone1))
@@ -998,8 +999,8 @@ init_clones <- function(clonefile, clone1) {
 
         for (i in 1:n) {
             clone2 = clone_copy(clone1)
-            p <- match(onco$name, str_trim(strsplit(as.character(data[i,2]),",")[[1]]))
-            clone2$gene[seq(1,length(onco$name))[!is.na(p)]] = 1
+            p <- match( pck.env$onco$name, str_trim(strsplit(as.character(data[i,2]),",")[[1]]))
+            clone2$gene[seq(1,length( pck.env$onco$name))[!is.na(p)]] = 1
             clone2$N_cells = as.numeric(data[i,3])
             clones = c(clones, clone2)
         }

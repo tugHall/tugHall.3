@@ -277,7 +277,7 @@ get_u_cna <- function( genes, dupOrdel ){
     # input: genes, u_del or u_dup for oncogenes and suppressors
     u = NULL
     for (gene in genes ) {
-        os = onco$onsp[ which( onco$name == gene) ]
+        os = pck.env$onco$onsp[ which( pck.env$onco$name == gene) ]
         u1 = ifelse( dupOrdel == 'dup',
                      ifelse( os == 'o', uo_dup, us_dup ),   # for duplication
                      ifelse( os == 'o', uo_del, us_del ) )  # for deletion
