@@ -88,7 +88,7 @@ define_gene_location  <-  function( file_input  =  'Input/CCDS.current.txt',
 #' @param  uo_del Gene malfunction probability by CNA deletion    for oncogene, numeric type only
 #' @param  us_del Gene malfunction probability by CNA deletion    for suppressor, numeric type only
 #' @param  monitor The indicator to make monitor file during a simulation or do not make, logical type only
-#' @param CF Compaction factor, logical type only. True means 'to use', False means 'do not use' Compaction factor for hallmarks variables
+#' @param Compaction_factor Compaction factor, logical indicator. True means 'to use', False means 'do not use' Compaction factor for hallmarks variables
 #' @param model Name of the model to use. Can be  'proportional_metastatic' or 'threshold_metastatic' or 'simplified'
 #' @param read_fl Indicator to read file or not, logical type only
 #' @param file_name File name to rad all the parameters, it is used only if read_fl == TRUE
@@ -105,7 +105,7 @@ define_parameters  <-  function( E0 =  1E-4, F0 =  10, m0 =  1E-7, uo =  0.9, us
                                  censore_t = 50, m_dup  = 1E-8, m_del  = 1E-8,
                                  lambda_dup  = 5000, lambda_del  = 7000,
                                  uo_dup  = 0.8, us_dup  = 0.5, uo_del  = 0, us_del  = 0.8,
-                                 CF  =  TRUE,
+                                 Compaction_factor  =  TRUE,
                                  model  =  c( 'proportional_metastatic', 'threshold_metastatic', 'simplified' )[ 1 ],
                                  time_stop = 120,
                                  read_fl = FALSE, file_name ='./Input/parameters.txt',
@@ -129,8 +129,7 @@ define_parameters  <-  function( E0 =  1E-4, F0 =  10, m0 =  1E-7, uo =  0.9, us
         k0 <- as.character( data_log[ which( data_log$var == 'k0' ), 2 ] )   # Environmental death probability
         if ( is.na( k0 ) ) {
             k0 <<- 1 - (1 + d0) ^ (-1)
-        }
-        else {
+        } else {
             k0 <<-  as.numeric( k0 )
         }
         ### Additional parameters of simulation
@@ -149,7 +148,7 @@ define_parameters  <-  function( E0 =  1E-4, F0 =  10, m0 =  1E-7, uo =  0.9, us
     } else {
 
         # Model definition:
-        Compaction_factor  <<-  CF
+        Compaction_factor  <<-  Compaction_factor
         model_name         <<-  model
         # Parameters:
         E0 <<-  E0       # parameter in the division probability
@@ -218,11 +217,11 @@ print_parameters  <-  function(){
         'Gene malfunction probability by CNA deletion for oncogene  uo_del  = ', uo_del ,  '\n',
         'Gene malfunction probability by CNA deletion for suppressor  us_del  = ', us_del,  '\n',
         'Compaction factor is applied if variable Compaction_factor ==  TRUE \n',
-        'Compaction factor for apoptosis hallmark CF$Ha = ', CF$Ha, ' \n',
-        'Compaction factor for angiogenesis hallmark CF$Hb = ', CF$Hb, ' \n',
-        'Compaction factor for growth/antigrowth hallmark CF$Hd = ', CF$Hd, ' \n',
-        'Compaction factor for immortalization hallmark CF$Hi = ', CF$Hi, ' \n',
-        'Compaction factor for invasion/metastasis hallmark CF$Him = ', CF$Him,
+        'Compaction factor for apoptosis hallmark CF$Ha = ', pck.env$CF$Ha, ' \n',
+        'Compaction factor for angiogenesis hallmark CF$Hb = ', pck.env$CF$Hb, ' \n',
+        'Compaction factor for growth/antigrowth hallmark CF$Hd = ', pck.env$CF$Hd, ' \n',
+        'Compaction factor for immortalization hallmark CF$Hi = ', pck.env$CF$Hi, ' \n',
+        'Compaction factor for invasion/metastasis hallmark CF$Him = ', pck.env$CF$Him,
         '\n Monitoring: \n indicator monitor  =  ', monitor, '\n \n '
     )
 
@@ -271,7 +270,7 @@ define_compaction_factor  <-  function( cf = data.frame( Ha = 1, Hb = 1, Hd = 1,
         cf$Him  =  data_log$value[ data_log$var == 'invasion' ]
     }
 
-    CF  <<-  cf
+    pck.env$CF  =  cf
 }
 
 

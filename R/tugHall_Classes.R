@@ -496,11 +496,11 @@ hallmark <- setRefClass(
             Him_w <<- Him0_w / Him_sum
 
             if ( Compaction_factor ){
-                Ha_w  <<-  CF$Ha  * Ha_w
-                Hi_w  <<-  CF$Hi  * Hi_w
-                Hd_w  <<-  CF$Hd  * Hd_w
-                Hb_w  <<-  CF$Hb  * Hb_w
-                Him_w <<-  CF$Him * Him_w
+                Ha_w  <<-  pck.env$CF$Ha  * Ha_w
+                Hi_w  <<-  pck.env$CF$Hi  * Hi_w
+                Hd_w  <<-  pck.env$CF$Hd  * Hd_w
+                Hb_w  <<-  pck.env$CF$Hb  * Hb_w
+                Him_w <<-  pck.env$CF$Him * Him_w
 
             }
 

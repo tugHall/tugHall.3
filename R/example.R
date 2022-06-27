@@ -27,7 +27,8 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                         stringr = c('str_length', 'str_split', 'str_sub', 'str_trim'),
                         utils = c('read.delim', 'read.table', 'write.table', 'globalVariables' ),
                         grDevices = c('dev.off', 'pdf', 'rgb'),
-                        graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title' ) )
+                        graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title' ),
+                        withr  =  c('local_environment', 'local_par' ))
 
     for( pck in names( packages ) ){
         library( package = pck, character.only = TRUE, include.only = packages[[ pck ]])
@@ -119,7 +120,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                   gene_map = gene_map,
                   data_flow = data_flow,
                   time_max = time_max,
-                  CF = CF,
+                  CF = pck.env$CF,
                   vf = vf,
                   VAF_rho = VAF,
                   rdr_dysf = rdr_dysf

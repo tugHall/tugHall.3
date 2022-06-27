@@ -34,6 +34,9 @@
 #' }
 model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
                   E0, F0, m0, uo, us, s0, k0, censore_n, censore_t, d0) {
+
+    local_environment( env = pck.env )
+
     write_log(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
               E0, F0, m0, uo, us, s0, k0,
               m_dup, m_del, lambda_dup, lambda_del, # CNA parameters
@@ -72,7 +75,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
                        m=m0, s=s0, k=k0, E=E0)          # clone1  -  empty object of clone
     clones = init_clones(clonefile, clone1)           # clones - the clones with hallmarks from cellfile - cellinit.txt - initial cells
     pck.env$onco_clones = init_onco_clones( pck.env$onco, clones )    # onco_clones - the onco related to each clone in clones
-    write_geneout(geneoutfile, pck.env$hall, Compaction_factor, CF)                  # write the geneout.txt file with initial hallmarks
+    write_geneout(geneoutfile, pck.env$hall, Compaction_factor, pck.env$CF)                  # write the geneout.txt file with initial hallmarks
     write_weights("Output/Weights.txt", pck.env$hall)                 # write the weights of genes for hallmarks
     write_header( cloneoutfile, pck.env$env, pck.env$onco )                   #
     if ( monitor ) write_monitor( start = TRUE )
