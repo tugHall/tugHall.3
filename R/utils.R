@@ -1,12 +1,43 @@
 
+pck.env = new.env( parent = emptyenv() )
+attr( pck.env, "name" ) = "tugHall.Environment"
+
+
+#' Get results of simulation storaged in pck.env or tugHall.Environment environment
+#'
+#' @return NULL
+#' @export
+#'
+#' @examples
+#' NULL
+get_tugHall.Environment  <-  function(){
+
+    # local_environment( env = pck.env )
+
+    print( ls( pck.env ) )
+    print('---------------')
+
+    results  =  list()
+    l = ls( pck.env )
+    if ( length( l ) > 0 ){
+        for( i in 1:length( l ) ){
+            results[[ l[i] ]]  =  pck.env[[ l[i] ]]
+        }
+    }
+
+    return( results )
+
+}
+
+
 # Define global variables in tugHall.3:
 utils::globalVariables( c( 'CF', 'Compaction_factor', 'E0', 'F0', 'censore_n',
                            'censore_t', 'clonefile', 'cloneoutfile',
-                           'cna_clones', 'd0', 'env', 'file_monitor',
+                            'd0', 'env', 'file_monitor',
                            'gene_map', 'genefile', 'geneoutfile', 'hall', 'k0',
                            'lambda_del', 'lambda_dup', 'logoutfile', 'm0',
                            'm_del', 'm_dup', 'model_name', 'monitor',
-                           'n_repeat', 'onco', 'pnt_clones', 's0',
+                           'n_repeat', 'onco', 's0',
                            'time_stop', 'uo', 'uo_del', 'uo_dup',
                            'us', 'us_del', 'us_dup' ) )
 
@@ -151,29 +182,5 @@ gen_colors  <-  function(nm = 12){
 check_pkg  <-  function( pkg ){
     msg  =  paste0( 'Package ', pkg, ' must be installed to use this function. \n ' )
     if ( !requireNamespace( pkg , quietly = TRUE ) )    stop( msg, call. = FALSE )
-}
-
-
-
-#' Function to change par for plots and after plotting it returns par values
-#'
-#' @param change_par_back logical. If TRUE it changes par options back after finishing a function call
-#'
-#' @return Change par() options and returns it (after finishing the function) to values before a function has started
-#'
-#' @export
-#' @examples
-#' define_par_for_plot( change_par_back = TRUE )
-define_par_for_plot  <-  function( change_par_back ){
-
-    if ( change_par_back ){
-        op = par( no.readonly=TRUE )
-        par(xpd=TRUE, cex.lab=2, lwd = 2, mar = c(5, 5, 5, 5),
-            tcl = 0.5, cex.axis = 1.75,  mgp = c(3, 0.6, 0))
-        on.exit( par( op ) )
-    } else {
-        par(xpd=TRUE, cex.lab=2, lwd = 2, mar = c(5, 5, 5, 5),
-            tcl = 0.5, cex.axis = 1.75,  mgp = c(3, 0.6, 0))
-    }
 }
 

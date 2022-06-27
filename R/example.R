@@ -57,8 +57,8 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
     onco_clones   =  smlt[[ 2 ]]
 
     if ( verbose ) print('Save point mutations and CNA to the files in Output folder. ')
-    write_pnt_clones( pnt_clones, file_out = 'Output/point_mutations.txt' )
-    write_pnt_clones( cna_clones, file_out = 'Output/CNA_mutations.txt' )
+    write_pnt_clones( pck.env$pnt_clones, file_out = 'Output/point_mutations.txt' )
+    write_pnt_clones( pck.env$cna_clones, file_out = 'Output/CNA_mutations.txt' )
 
     if ( verbose ) print('Get data of the last simulation from cloneout file. ')
     dtst = get_flow_data(cloneoutfile, genefile )
@@ -91,7 +91,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                               hue = c(" ", "random", "red", "orange", "yellow",
                                       "green", "blue", "purple", "pink", "monochrome")[1],
                               luminosity = c(" ", "random", "light", "bright", "dark")[4],
-                              yr = NA , add_initial = TRUE, log_scale = TRUE, change_par = FALSE )
+                              yr = NA , add_initial = TRUE, log_scale = TRUE )
 
         # Minor clones but large amount of them
         readline('Next? ')
@@ -109,8 +109,8 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                   hall = hall,
                   onco = onco,
                   env  = env,
-                  pnt_clones = pnt_clones,
-                  cna_clones = cna_clones,
+                  pnt_clones = pck.env$pnt_clones,
+                  cna_clones = pck.env$cna_clones,
                   cna_mut = cna_mut,
                   pnt_mut = pnt_mut,
                   pnt_mut_B = pnt_mut_B,
