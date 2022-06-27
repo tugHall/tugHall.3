@@ -122,8 +122,8 @@ define_parameters  <-  function( E0 =  1E-4, F0 =  10, m0 =  1E-7, uo =  0.9, us
         E0 <<-  as.numeric( data_log[ which( data_log$var == 'E' ), 2 ] )       # parameter in the division probability
         F0 <<-  as.numeric( data_log[ which( data_log$var == 'F' ), 2 ] )       # parameter in the division probability
         m0 <<-  as.numeric( data_log[ which( data_log$var == 'm0' ), 2 ] )     # mutation probability
-        uo <<-  as.numeric( data_log[ which( data_log$var == 'uo' ), 2 ] )        # oncogene mutation probability
-        us <<-  as.numeric( data_log[ which( data_log$var == 'us' ), 2 ] )        # suppressor mutation probability
+        pck.env$uo  =  as.numeric( data_log[ which( data_log$var == 'uo' ), 2 ] )        # oncogene mutation probability
+        pck.env$us  =  as.numeric( data_log[ which( data_log$var == 'us' ), 2 ] )        # suppressor mutation probability
         s0 <<-  as.numeric( data_log[ which( data_log$var == 's' ), 2 ] )         # parameter in the sigmoid function
         d0 <<-  as.numeric( data_log[ which( data_log$var == 'd0' ), 2 ] )      # Initial probability to divide cells
         k0 <- as.character( data_log[ which( data_log$var == 'k0' ), 2 ] )   # Environmental death probability
@@ -154,8 +154,8 @@ define_parameters  <-  function( E0 =  1E-4, F0 =  10, m0 =  1E-7, uo =  0.9, us
         E0 <<-  E0       # parameter in the division probability
         F0 <<-  F0         # parameter in the division probability
         m0 <<-  m0      # mutation probability
-        uo <<-  uo        # oncogene mutation probability
-        us <<-  us        # suppressor mutation probability
+        pck.env$uo  =  uo        # oncogene mutation probability
+        pck.env$us  =  us        # suppressor mutation probability
         s0 <<-  s0         # parameter in the sigmoid function
         k0 <<-  k0        # Environmental death probability
         d0 <<-  d0       # Initial probability to divide cells
@@ -197,8 +197,8 @@ print_parameters  <-  function(){
         'parameter of the division probability E0 =  ', E0, '\n',
         'another parameter of the division probability F0  = ',  F0, '\n',
         'mutation probability m0 =  ', m0, '\n',
-        'oncogene mutation probability uo = ', uo, '\n',
-        'suppressor mutation probability  us  =  ', us, '\n',
+        'oncogene mutation probability uo = ', pck.env$uo, '\n',
+        'suppressor mutation probability  us  =  ', pck.env$us, '\n',
         'parameter in the sigmoid function  s0  =  ', s0, '\n',
         'Environmental death probability  k0 =  ',  k0, '\n',
         'Initial probability to divide cells  d0  =  ',  d0, '\n',

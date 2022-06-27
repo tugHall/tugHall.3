@@ -49,7 +49,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
     repeat{
         n_c  =  n_c + 1
         if ( verbose ) print('Start simulation, please, wait for a while ... or see Sim_monitoring.txt file in working folder ')
-        smlt = model(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile, E0, F0, m0, uo, us, s0, k0, censore_n, censore_t, d0)
+        smlt = model(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile, E0, F0, m0, s0, k0, censore_n, censore_t, d0)
 
         if ( file.exists( cloneoutfile ) ) break
         if ( n_c  >=  n_repeat )           break

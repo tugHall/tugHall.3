@@ -10,8 +10,6 @@
 #' @param E0 Parameter in the division probability, numeric type only
 #' @param F0 Parameter in the division probability, numeric type only
 #' @param m0 Mutation probability for point mutation, numeric type only
-#' @param uo Oncogene mutation probability, numeric type only
-#' @param us Suppressor mutation probability, numeric type only
 #' @param s0 Parameter in the sigmoid function, numeric type only
 #' @param k0 Environmental death probability, numeric type only
 #' @param d0 Initial probability to divide cells, numeric type only
@@ -30,10 +28,10 @@
 #' time_stop = 3  #  Duration of simulation time is 3 sec
 #' \dontrun{
 #' res = model( genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
-#' E0, F0, m0, uo, us, s0, k0, censore_n, censore_t, d0 )
+#' E0, F0, m0, s0, k0, censore_n, censore_t, d0 )
 #' }
 model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
-                  E0, F0, m0, uo, us, s0, k0, censore_n, censore_t, d0) {
+                  E0, F0, m0, s0, k0, censore_n, censore_t, d0) {
 
     local_environment( env = pck.env )
 
@@ -69,8 +67,8 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
     # assign("cna", cna, envir = .GlobalEnv )
     # assign("cna_clones", cna_clones, envir = .GlobalEnv )
     # assign("hall", hall, envir = .GlobalEnv )
-    assign("uo", uo, envir = .GlobalEnv )
-    assign("us", us, envir = .GlobalEnv )
+    # assign("uo", uo, envir = .GlobalEnv )
+    # assign("us", us, envir = .GlobalEnv )
     clone1 = clone$new(gene_size=length( pck.env$onco$cds_1 ),
                        m=m0, s=s0, k=k0, E=E0)          # clone1  -  empty object of clone
     clones = init_clones(clonefile, clone1)           # clones - the clones with hallmarks from cellfile - cellinit.txt - initial cells

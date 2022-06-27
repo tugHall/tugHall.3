@@ -13,8 +13,6 @@ model(
   E0,
   F0,
   m0,
-  uo,
-  us,
   s0,
   k0,
   censore_n,
@@ -38,10 +36,6 @@ model(
 \item{F0}{Parameter in the division probability, numeric type only}
 
 \item{m0}{Mutation probability for point mutation, numeric type only}
-
-\item{uo}{Oncogene mutation probability, numeric type only}
-
-\item{us}{Suppressor mutation probability, numeric type only}
 
 \item{s0}{Parameter in the sigmoid function, numeric type only}
 
@@ -68,6 +62,6 @@ define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
 time_stop = 3  #  Duration of simulation time is 3 sec
 \dontrun{
 res = model( genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
-E0, F0, m0, uo, us, s0, k0, censore_n, censore_t, d0 )
+E0, F0, m0, s0, k0, censore_n, censore_t, d0 )
 }
 }
