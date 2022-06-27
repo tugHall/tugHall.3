@@ -54,12 +54,12 @@ define_gene_location  <-  function( file_input  =  'Input/CCDS.current.txt',
                                                       'CCDS43171.1', 'CCDS11118.1' ) ){
 
     ### Make a map of genes with sorting of start position for each chromosome:
-    gene_map  <<-   make_map(f_out    =  'Input/gene_map.txt',
+    pck.env$gene_map  =   make_map(f_out    =  'Input/gene_map.txt',
                              ls   =  genes_list,
                              f_in =  file_input )
-    gene_map  <<-  order_gene_map( gene_map )  ### We have to be sure in the sorting of start position for each chromosome
+    pck.env$gene_map  =  order_gene_map( pck.env$gene_map )  ### We have to be sure in the sorting of start position for each chromosome
 
-    write.table(gene_map, file = 'Output/gene_MAP.txt', col.names = TRUE,
+    write.table(pck.env$gene_map, file = 'Output/gene_MAP.txt', col.names = TRUE,
                 sep = "\t", row.names = FALSE)
 }
 

@@ -117,7 +117,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                   pnt_mut_B = pnt_mut_B,
                   data_avg = data_avg,
                   data_last = data_last,
-                  gene_map = gene_map,
+                  gene_map = pck.env$gene_map,
                   data_flow = data_flow,
                   time_max = time_max,
                   CF = pck.env$CF,

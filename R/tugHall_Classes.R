@@ -313,9 +313,9 @@ oncogene <- setRefClass(
 
             # Get length of CDS and gene's length from gene_map:
             for ( i in 1:length(name0) ) {
-                w     =  which( gene_map$Gene == name0[ i ] )
-                cds0  =  c( cds0, sum( gene_map$End[w]  -  gene_map$Start[w] + 1 ) )
-                rna0  =  c( rna0, max( gene_map$End[w] ) - min( gene_map$Start[w]) + 1  )
+                w     =  which( pck.env$gene_map$Gene == name0[ i ] )
+                cds0  =  c( cds0, sum( pck.env$gene_map$End[w]  -  pck.env$gene_map$Start[w] + 1 ) )
+                rna0  =  c( rna0, max( pck.env$gene_map$End[w] ) - min( pck.env$gene_map$Start[w]) + 1  )
             }
 
             id   <<- 1
