@@ -53,7 +53,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
     pck.env$hall = hallmark$new()        # make a vector hall with hallmarks parameters
     pck.env$hall$read( genefile, pck.env$onco$name, normalization = TRUE )     # read from the genefile - 'gene_hallmarks.txt'
     pck.env$env = environ$new(F0)               # new vector for average values of cells
-    pnt = Point_Mutations$new()
+    # pnt = Point_Mutations$new()
     pck.env$pnt_clones = NULL
     cna = CNA_Mutations$new()
     pck.env$cna_clones = NULL
@@ -61,7 +61,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
     # assign("mut_order", 0, envir = pck.env )  #  mutation order to reproduce gene map
     # assign("onco", onco, envir = pck.env )
     # assign("env", env, envir = .GlobalEnv )
-    assign("pnt", pnt, envir = .GlobalEnv )
+    # assign("pnt", pnt, envir = .GlobalEnv )
     # assign("pnt_clones", pnt_clones, envir = .GlobalEnv )
     assign("cna", cna, envir = .GlobalEnv )
     # assign("cna_clones", cna_clones, envir = .GlobalEnv )
