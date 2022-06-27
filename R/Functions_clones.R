@@ -25,7 +25,7 @@ get_flow_data <- function(cloneoutfile, genefile, mainDir = getwd(), sbdr_Output
     # Get data about onco and hallmarks
     onco   = oncogene$new()        # make the vector onco about the hallmarks
     onco$read( genefile )          # read the input info to the onco from genefile - 'gene_cds2.txt'
-    hall   = hallmark$new()        # make a vector hall with hallmarks parameters
+    hall   =  hallmark$new()        # make a vector hall with hallmarks parameters
     hall$read( genefile, onco$name )     # read from the genefile - 'gene_cds2.txt'
 
     ## Get data from output file

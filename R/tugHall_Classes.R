@@ -570,7 +570,7 @@ hallmark <- setRefClass(
 #' update_Hallmarks( clone )
 update_Hallmarks <- function(clone1) {
     # Hallmark
-    hall$updateClone(clone1, env$F)
+    pck.env$hall$updateClone(clone1, env$F)
 }
 
 

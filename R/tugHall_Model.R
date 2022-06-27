@@ -50,8 +50,8 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
 
     pck.env$onco = oncogene$new()        # make the vector onco about the hallmarks
     pck.env$onco$read(genefile)          # read the input info to the onco from genefile - 'gene_cds2.txt'
-    hall = hallmark$new()        # make a vector hall with hallmarks parameters
-    hall$read( genefile, pck.env$onco$name, normalization = TRUE )     # read from the genefile - 'gene_hallmarks.txt'
+    pck.env$hall = hallmark$new()        # make a vector hall with hallmarks parameters
+    pck.env$hall$read( genefile, pck.env$onco$name, normalization = TRUE )     # read from the genefile - 'gene_hallmarks.txt'
     env = environ$new(F0)               # new vector for average values of cells
     pnt = Point_Mutations$new()
     pck.env$pnt_clones = NULL
@@ -65,22 +65,22 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
     # assign("pnt_clones", pnt_clones, envir = .GlobalEnv )
     assign("cna", cna, envir = .GlobalEnv )
     # assign("cna_clones", cna_clones, envir = .GlobalEnv )
-    assign("hall", hall, envir = .GlobalEnv )
+    # assign("hall", hall, envir = .GlobalEnv )
     assign("uo", uo, envir = .GlobalEnv )
     assign("us", us, envir = .GlobalEnv )
     clone1 = clone$new(gene_size=length( pck.env$onco$cds_1 ),
                        m=m0, s=s0, k=k0, E=E0)          # clone1  -  empty object of clone
     clones = init_clones(clonefile, clone1)           # clones - the clones with hallmarks from cellfile - cellinit.txt - initial cells
     pck.env$onco_clones = init_onco_clones( pck.env$onco, clones )    # onco_clones - the onco related to each clone in clones
-    write_geneout(geneoutfile, hall, Compaction_factor, CF)                  # write the geneout.txt file with initial hallmarks
-    write_weights("Output/Weights.txt", hall)                 # write the weights of genes for hallmarks
+    write_geneout(geneoutfile, pck.env$hall, Compaction_factor, CF)                  # write the geneout.txt file with initial hallmarks
+    write_weights("Output/Weights.txt", pck.env$hall)                 # write the weights of genes for hallmarks
     write_header( cloneoutfile, env, pck.env$onco )                   #
     if ( monitor ) write_monitor( start = TRUE )
     cells_number <- sum_N_P_M(env, clones)                 # to calculate cells numbers - N,M
     init_pnt_clones( clones, pck.env$onco_clones )              # initialization of pnt_clones for point mutations
 
     lapply(clones,update_Hallmarks)                     # to calculate the Hallmarks and probabilities for initial cells
-    hall$updateEnviron(env, clones)                     # make averaging for cells
+    pck.env$hall$updateEnviron(env, clones)                     # make averaging for cells
     isFirst = TRUE
     if ( model_name == 'simplified' ) lapply( clones, FUN = function( clone1 ) clone1$invasion = TRUE )
     write_cloneout( cloneoutfile, env, clones, isFirst, pck.env$onco_clones )     #  write initial clones
@@ -134,7 +134,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
 
         cells_number <- sum_N_P_M(env, clones)                 # to calculate cells numbers - N,M for next step
         lapply(clones,update_Hallmarks)
-        hall$updateEnviron(env, clones)                      # to average probabilities and hallmarks
+        pck.env$hall$updateEnviron(env, clones)                      # to average probabilities and hallmarks
 
         env$T = env$T + 1                                    # to next step
 
