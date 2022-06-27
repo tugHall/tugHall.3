@@ -22,40 +22,40 @@
 sum_cell <- function(env, clones) {
     if (length(clones) > 0) {
         avg = apply(matrix(unlist(lapply(clones, sum_mutation)),ncol=length(clones)),1,sum)  #  /length(clones)
-        sNMP  =  env$N + env$M + env$P
-        env$c = avg[1] / sNMP
-        env$d = avg[2] / sNMP
-        env$i = avg[3] / sNMP
-        env$a = avg[4] / sNMP
-        env$k = avg[5] / sNMP
-        env$E = avg[6] / sNMP
-        env$Nmax = avg[7] / sNMP
-        env$im = avg[8] / sNMP
-        env$Ha = avg[9] / sNMP
-        env$Him = avg[10] / sNMP
-        env$Hi = avg[11] / sNMP
-        env$Hb = avg[12] / sNMP
-        env$Hd = avg[13] / sNMP
-        env$type = avg[14] / sNMP
-        env$mutden = avg[15] / sNMP
+        sNMP  =  pck.env$env$N + pck.env$env$M + pck.env$env$P
+        pck.env$env$c = avg[1] / sNMP
+        pck.env$env$d = avg[2] / sNMP
+        pck.env$env$i = avg[3] / sNMP
+        pck.env$env$a = avg[4] / sNMP
+        pck.env$env$k = avg[5] / sNMP
+        pck.env$env$E = avg[6] / sNMP
+        pck.env$env$Nmax = avg[7] / sNMP
+        pck.env$env$im = avg[8] / sNMP
+        pck.env$env$Ha = avg[9] / sNMP
+        pck.env$env$Him = avg[10] / sNMP
+        pck.env$env$Hi = avg[11] / sNMP
+        pck.env$env$Hb = avg[12] / sNMP
+        pck.env$env$Hd = avg[13] / sNMP
+        pck.env$env$type = avg[14] / sNMP
+        pck.env$env$mutden = avg[15] / sNMP
     } else {
-        env$M = 0
-        env$N = 0
-        env$P = 0
-        env$c = 0
-        env$d = 0
-        env$i = 0
-        env$a = 0
-        env$k = 0
-        env$E = 0
-        env$Nmax = 0
-        env$im = 0
-        env$Ha = 0
-        env$Him = 0
-        env$Hi = 0
-        env$Hb = 0
-        env$Hd = 0
-        env$type = 0
+        pck.env$env$M = 0
+        pck.env$env$N = 0
+        pck.env$env$P = 0
+        pck.env$env$c = 0
+        pck.env$env$d = 0
+        pck.env$env$i = 0
+        pck.env$env$a = 0
+        pck.env$env$k = 0
+        pck.env$env$E = 0
+        pck.env$env$Nmax = 0
+        pck.env$env$im = 0
+        pck.env$env$Ha = 0
+        pck.env$env$Him = 0
+        pck.env$env$Hi = 0
+        pck.env$env$Hb = 0
+        pck.env$env$Hd = 0
+        pck.env$env$type = 0
     }
     # env$posdriver = rep("", length(onco$name))
     # env$pospasngr = rep("", length(onco$name))
@@ -102,10 +102,10 @@ sum_mutation <- function(clone1) {
 sum_N_P_M <- function(env, clones) {
     if (length(clones) > 0) {
         avg = apply(matrix(unlist(lapply(clones, number_N_P_M)),ncol=length(clones)),1,sum)  #  /length(clones)
-        env$N = avg[ 1 ]
-        env$P = avg[ 2 ]
-        env$M = avg[ 3 ]
-        return(env$N + env$P + env$M)
+        pck.env$env$N = avg[ 1 ]
+        pck.env$env$P = avg[ 2 ]
+        pck.env$env$M = avg[ 3 ]
+        return(pck.env$env$N + pck.env$env$P + pck.env$env$M)
     }
 }
 
@@ -599,16 +599,16 @@ chk_pnt_mut  <-  function( pnt1 , Ref_start, Ref_end, Chr, prntl ){
 #' define_parameters()
 #' clone_copy(clone1)
 clone_copy <- function(clone1) {
-    env$last_id = env$last_id + 1
+    pck.env$env$last_id = pck.env$env$last_id + 1
 
-    return(clone$new(id=env$last_id, parent=clone1$id, c=clone1$c, d=clone1$d,
+    return(clone$new(id=pck.env$env$last_id, parent=clone1$id, c=clone1$c, d=clone1$d,
                      i=clone1$i, mutden=clone1$mutden, a=clone1$a,
                      k=clone1$k, E=clone1$E, Nmax=clone1$Nmax,
                      gene=clone1$gene, pasgene=clone1$pasgene,
                      PointMut_ID = clone1$PointMut_ID, CNA_ID = clone1$CNA_ID,
                      # posdriver=clone1$posdriver, pospasngr=clone1$pospasngr,
                      invasion=clone1$invasion, primary=clone1$primary,
-                     s=clone1$s, birthday=env$T)) #,
+                     s=clone1$s, birthday=pck.env$env$T)) #,
     # len = clone1$len ))
 }
 
@@ -1016,8 +1016,8 @@ init_clones <- function(clonefile, clone1) {
         clones[[i]]$calcApoptosis()
         if ( sum( clones[[ i ]]$gene ) > 0 ) clones[[ i ]]$primary = TRUE
     }
-    env$last_id = n
-    return(as.list(clones))
+    pck.env$env$last_id = n
+    return( as.list( clones ) )
 }
 
 #' Function to make list of objects of class 'OncoGene' and generate initial onco settings for all clones (onco_clones)

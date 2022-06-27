@@ -108,7 +108,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                   onco_clones = onco_clones,
                   hall = hall,
                   onco = onco,
-                  env  = env,
+                  env  = pck.env$env,
                   pnt_clones = pck.env$pnt_clones,
                   cna_clones = pck.env$cna_clones,
                   cna_mut = cna_mut,

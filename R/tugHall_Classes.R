@@ -534,7 +534,7 @@ hallmark <- setRefClass(
             clone1$d = clone1$Hd + d0     # d0 is defined in parameters
             if ( clone1$d > 1 ) { clone1$d = 1 }
             if ( !clone1$invasion ) {
-                clone1$d = clone1$d - clone1$E * env$P
+                clone1$d = clone1$d - clone1$E * pck.env$env$P
                 if ( clone1$d < 0 ) { clone1$d = 0 }
             }
 
@@ -570,7 +570,7 @@ hallmark <- setRefClass(
 #' update_Hallmarks( clone )
 update_Hallmarks <- function(clone1) {
     # Hallmark
-    pck.env$hall$updateClone(clone1, env$F)
+    pck.env$hall$updateClone(clone1, pck.env$env$F)
 }
 
 

@@ -33,7 +33,7 @@ get_tugHall.Environment  <-  function(){
 # Define global variables in tugHall.3:
 utils::globalVariables( c( 'CF', 'Compaction_factor', 'E0', 'F0', 'censore_n',
                            'censore_t', 'clonefile', 'cloneoutfile',
-                            'd0', 'env', 'file_monitor',
+                            'd0', 'file_monitor',
                            'gene_map', 'genefile', 'geneoutfile', 'k0',
                            'lambda_del', 'lambda_dup', 'logoutfile', 'm0',
                            'm_del', 'm_dup', 'model_name', 'monitor',
