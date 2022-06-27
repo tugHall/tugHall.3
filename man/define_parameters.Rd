@@ -69,7 +69,7 @@ define_parameters(
 
 \item{us_del}{Gene malfunction probability by CNA deletion    for suppressor, numeric type only}
 
-\item{Compaction_factor}{Compaction factor, logical indicator. True means 'to use', False means 'do not use' Compaction factor for hallmarks variables}
+\item{Compaction_factor}{Logical indicator for Compaction factor CF. True means 'to use', False means 'do not use' Compaction factor for hallmarks variables}
 
 \item{model}{Name of the model to use. Can be  'proportional_metastatic' or 'threshold_metastatic' or 'simplified'}
 

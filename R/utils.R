@@ -31,15 +31,22 @@ get_tugHall.Environment  <-  function(){
 
 
 # Define global variables in tugHall.3:
-utils::globalVariables( c( 'Compaction_factor', 'E0', 'F0', 'censore_n',
-                           'censore_t', 'clonefile', 'cloneoutfile',
-                            'd0', 'file_monitor',
-                            'genefile', 'geneoutfile', 'k0',
-                           'lambda_del', 'lambda_dup', 'logoutfile', 'm0',
-                           'm_del', 'm_dup', 'model_name', 'monitor',
-                           'n_repeat', 'onco', 's0',
-                           'time_stop', 'uo', 'uo_del', 'uo_dup',
-                           'us', 'us_del', 'us_dup' ) )
+utils::globalVariables( c(  'clonefile', 'cloneoutfile',
+                            'file_monitor',
+                            'genefile', 'geneoutfile',
+                           'logoutfile'
+                           ) )
+
+
+
+check_files <- function( dir = './', file = '' ){
+
+
+    file1 = file.path( dir, '/Check_trial/', file )
+    file2 = file.path( dir,   '/Env_trial/', file )
+    diffr:: diffr( file1 , file2 )
+
+}
 
 
 

@@ -4,21 +4,7 @@
 \alias{model}
 \title{Main function 'model' to simulate clones' evolution}
 \usage{
-model(
-  genefile,
-  clonefile,
-  geneoutfile,
-  cloneoutfile,
-  logoutfile,
-  E0,
-  F0,
-  m0,
-  s0,
-  k0,
-  censore_n,
-  censore_t,
-  d0
-)
+model(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile)
 }
 \arguments{
 \item{genefile}{Name of file with input data of hallmarks}
@@ -41,11 +27,11 @@ model(
 
 \item{k0}{Environmental death probability, numeric type only}
 
+\item{d0}{Initial probability to divide cells, numeric type only}
+
 \item{censore_n}{Max cell number where the program forcibly stops, integer type only}
 
 \item{censore_t}{Max time where the program forcibly stops, integer type only}
-
-\item{d0}{Initial probability to divide cells, numeric type only}
 }
 \value{
 List of (clones, onco_clones), where clones - list of objects of class 'Clone', and onco_clones - list of objects of class 'OncoGene'. During a simulation it saves data to geneoutfile.

@@ -30,8 +30,8 @@
 #' res = model( genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
 #' E0, F0, m0, s0, k0, censore_n, censore_t, d0 )
 #' }
-model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
-                  E0, F0, m0, s0, k0, censore_n, censore_t, d0) {
+model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile ){
+#                   E0, F0, m0, s0, k0, censore_n, censore_t, d0 ) {
 
     local_environment( env = pck.env )
 

@@ -88,7 +88,7 @@ define_gene_location  <-  function( file_input  =  'Input/CCDS.current.txt',
 #' @param  uo_del Gene malfunction probability by CNA deletion    for oncogene, numeric type only
 #' @param  us_del Gene malfunction probability by CNA deletion    for suppressor, numeric type only
 #' @param  monitor The indicator to make monitor file during a simulation or do not make, logical type only
-#' @param Compaction_factor Compaction factor, logical indicator. True means 'to use', False means 'do not use' Compaction factor for hallmarks variables
+#' @param Compaction_factor Logical indicator for Compaction factor CF. True means 'to use', False means 'do not use' Compaction factor for hallmarks variables
 #' @param model Name of the model to use. Can be  'proportional_metastatic' or 'threshold_metastatic' or 'simplified'
 #' @param read_fl Indicator to read file or not, logical type only
 #' @param file_name File name to rad all the parameters, it is used only if read_fl == TRUE
@@ -114,66 +114,66 @@ define_parameters  <-  function( E0 =  1E-4, F0 =  10, m0 =  1E-7, uo =  0.9, us
         data_log  =  read.table( file = file_name, sep = '\t', stringsAsFactors = FALSE )
         names( data_log )  =  c( 'var', 'value' )
         # Model definition
-        Compaction_factor  <<-  as.logical( data_log[ which( data_log$var == 'Compaction_factor' ), 2 ] )
-        model_name         <<-  data_log[ which( data_log$var == 'model_name' ), 2 ]
-        time_stop          <<-  as.numeric( data_log[ which( data_log$var == 'time_stop' ), 2 ] )  # max time in seconds
-        n_repeat           <<-  as.numeric( data_log[ which( data_log$var == 'n_repeat' ), 2 ] )  # max number of repetitions
+        pck.env$Compaction_factor  =  as.logical( data_log[ which( data_log$var == 'Compaction_factor' ), 2 ] )
+        pck.env$model_name         =  data_log[ which( data_log$var == 'model_name' ), 2 ]
+        pck.env$time_stop          =  as.numeric( data_log[ which( data_log$var == 'time_stop' ), 2 ] )  # max time in seconds
+        pck.env$n_repeat           =  as.numeric( data_log[ which( data_log$var == 'n_repeat' ), 2 ] )  # max number of repetitions
         # Parameters:
-        E0 <<-  as.numeric( data_log[ which( data_log$var == 'E' ), 2 ] )       # parameter in the division probability
-        F0 <<-  as.numeric( data_log[ which( data_log$var == 'F' ), 2 ] )       # parameter in the division probability
-        m0 <<-  as.numeric( data_log[ which( data_log$var == 'm0' ), 2 ] )     # mutation probability
-        pck.env$uo  =  as.numeric( data_log[ which( data_log$var == 'uo' ), 2 ] )        # oncogene mutation probability
-        pck.env$us  =  as.numeric( data_log[ which( data_log$var == 'us' ), 2 ] )        # suppressor mutation probability
-        s0 <<-  as.numeric( data_log[ which( data_log$var == 's' ), 2 ] )         # parameter in the sigmoid function
-        d0 <<-  as.numeric( data_log[ which( data_log$var == 'd0' ), 2 ] )      # Initial probability to divide cells
-        k0 <- as.character( data_log[ which( data_log$var == 'k0' ), 2 ] )   # Environmental death probability
+        pck.env$E0  =  as.numeric( data_log[ which( data_log$var ==  'E' ), 2 ] )     # parameter in the division probability
+        pck.env$F0  =  as.numeric( data_log[ which( data_log$var ==  'F' ), 2 ] )     # parameter in the division probability
+        pck.env$m0  =  as.numeric( data_log[ which( data_log$var == 'm0' ), 2 ] )     # mutation probability
+        pck.env$uo  =  as.numeric( data_log[ which( data_log$var == 'uo' ), 2 ] )     # oncogene mutation probability
+        pck.env$us  =  as.numeric( data_log[ which( data_log$var == 'us' ), 2 ] )     # suppressor mutation probability
+        pck.env$s0  =  as.numeric( data_log[ which( data_log$var ==  's' ), 2 ] )     # parameter in the sigmoid function
+        pck.env$d0  =  as.numeric( data_log[ which( data_log$var == 'd0' ), 2 ] )     # Initial probability to divide cells
+        k0         = as.character( data_log[ which( data_log$var == 'k0' ), 2 ] )     # Environmental death probability
         if ( is.na( k0 ) ) {
-            k0 <<- 1 - (1 + d0) ^ (-1)
+            pck.env$k0  =  1 - (1 + pck.env$d0 ) ^ (-1)
         } else {
-            k0 <<-  as.numeric( k0 )
+            pck.env$k0  =  as.numeric( k0 )
         }
         ### Additional parameters of simulation
-        censore_n <<- as.numeric( data_log[ which( data_log$var == 'censore_n' ), 2 ] )       # Max cell number where the program forcibly stops
-        censore_t <<- as.numeric( data_log[ which( data_log$var == 'censore_t' ), 2 ] )       # Max time where the program forcibly stops
+        pck.env$censore_n  =  as.numeric( data_log[ which( data_log$var == 'censore_n' ), 2 ] )       # Max cell number where the program forcibly stops
+        pck.env$censore_t  =  as.numeric( data_log[ which( data_log$var == 'censore_t' ), 2 ] )       # Max time where the program forcibly stops
         ### New parameters for CNA:
-        m_dup  <<- as.numeric( data_log[ which( data_log$var == 'm_dup' ), 2 ] ) # mutation probability for duplication
-        m_del  <<- as.numeric( data_log[ which( data_log$var == 'm_del' ), 2 ] ) # mutation probability for deletion
-        lambda_dup  <<- as.numeric( data_log[ which( data_log$var == 'lambda_dup' ), 2 ] )  # CNA duplication average length (of the geometrical distribution for the length)
-        lambda_del  <<- as.numeric( data_log[ which( data_log$var == 'lambda_del' ), 2 ] )  # CNA deletion average length
-        uo_dup  <<- as.numeric( data_log[ which( data_log$var == 'uo_dup' ), 2 ] ) # Gene malfunction probability by CNA duplication for oncogene
-        us_dup  <<- as.numeric( data_log[ which( data_log$var == 'us_dup' ), 2 ] )   # Gene malfunction probability by CNA duplication for suppressor
-        uo_del  <<- as.numeric( data_log[ which( data_log$var == 'uo_del' ), 2 ] )   # Gene malfunction probability by CNA deletion    for oncogene
-        us_del  <<- as.numeric( data_log[ which( data_log$var == 'us_del' ), 2 ] ) # Gene malfunction probability by CNA deletion    for suppressor
-        monitor <<- as.logical( data_log[ which( data_log$var == 'monitor' ), 2 ] )
+        pck.env$m_dup  =  as.numeric( data_log[ which( data_log$var == 'm_dup' ), 2 ] ) # mutation probability for duplication
+        pck.env$m_del  =  as.numeric( data_log[ which( data_log$var == 'm_del' ), 2 ] ) # mutation probability for deletion
+        pck.env$lambda_dup  =  as.numeric( data_log[ which( data_log$var == 'lambda_dup' ), 2 ] )  # CNA duplication average length (of the geometrical distribution for the length)
+        pck.env$lambda_del  =  as.numeric( data_log[ which( data_log$var == 'lambda_del' ), 2 ] )  # CNA deletion average length
+        pck.env$uo_dup  =  as.numeric( data_log[ which( data_log$var == 'uo_dup' ), 2 ] ) # Gene malfunction probability by CNA duplication for oncogene
+        pck.env$us_dup  =  as.numeric( data_log[ which( data_log$var == 'us_dup' ), 2 ] )   # Gene malfunction probability by CNA duplication for suppressor
+        pck.env$uo_del  =  as.numeric( data_log[ which( data_log$var == 'uo_del' ), 2 ] )   # Gene malfunction probability by CNA deletion    for oncogene
+        pck.env$us_del  =  as.numeric( data_log[ which( data_log$var == 'us_del' ), 2 ] ) # Gene malfunction probability by CNA deletion    for suppressor
+        pck.env$monitor  =  as.logical( data_log[ which( data_log$var == 'monitor' ), 2 ] )
     } else {
 
         # Model definition:
-        Compaction_factor  <<-  Compaction_factor
-        model_name         <<-  model
+        pck.env$Compaction_factor   =   Compaction_factor
+        pck.env$model_name          =   model
         # Parameters:
-        E0 <<-  E0       # parameter in the division probability
-        F0 <<-  F0         # parameter in the division probability
-        m0 <<-  m0      # mutation probability
-        pck.env$uo  =  uo        # oncogene mutation probability
-        pck.env$us  =  us        # suppressor mutation probability
-        s0 <<-  s0         # parameter in the sigmoid function
-        k0 <<-  k0        # Environmental death probability
-        d0 <<-  d0       # Initial probability to divide cells
+        pck.env$E0  =   E0       # parameter in the division probability
+        pck.env$F0  =   F0         # parameter in the division probability
+        pck.env$m0  =   m0      # mutation probability
+        pck.env$uo  =   uo        # oncogene mutation probability
+        pck.env$us  =   us        # suppressor mutation probability
+        pck.env$s0  =   s0         # parameter in the sigmoid function
+        pck.env$k0  =   k0        # Environmental death probability
+        pck.env$d0  =   d0       # Initial probability to divide cells
         ### Additional parameters of simulation
-        censore_n <<- censore_n       # Max cell number where the program forcibly stops
-        censore_t <<- censore_t         # Max time where the program forcibly stops
-        time_stop  <<-  time_stop     # Max time in seconds of running after that the program forcibly stops
-        n_repeat     <<-   n_repeat     # Max number of repetition of the program until the NON-ZERO output will be getting
+        pck.env$censore_n  =  censore_n       # Max cell number where the program forcibly stops
+        pck.env$censore_t  =  censore_t         # Max time where the program forcibly stops
+        pck.env$time_stop  =  time_stop     # Max time in seconds of running after that the program forcibly stops
+        pck.env$n_repeat   =  n_repeat     # Max number of repetition of the program until the NON-ZERO output will be getting
         ### New parameters for CNA:
-        m_dup  <<- m_dup # mutation probability for duplication
-        m_del  <<- m_del # mutation probability for deletion
-        lambda_dup  <<- lambda_dup  # CNA duplication average length (of the geometrical distribution for the length)
-        lambda_del  <<- lambda_del  # CNA deletion average length
-        uo_dup  <<- uo_dup # Gene malfunction probability by CNA duplication for oncogene
-        us_dup  <<- us_dup   # Gene malfunction probability by CNA duplication for suppressor
-        uo_del  <<- uo_del   # Gene malfunction probability by CNA deletion    for oncogene
-        us_del  <<- us_del # Gene malfunction probability by CNA deletion    for suppressor
-        monitor <<- monitor  # The indicator to make monitor file during a simulation or do not make
+        pck.env$m_dup   =  m_dup # mutation probability for duplication
+        pck.env$m_del   =  m_del # mutation probability for deletion
+        pck.env$lambda_dup   =  lambda_dup  # CNA duplication average length (of the geometrical distribution for the length)
+        pck.env$lambda_del   =  lambda_del  # CNA deletion average length
+        pck.env$uo_dup   =  uo_dup # Gene malfunction probability by CNA duplication for oncogene
+        pck.env$us_dup   =  us_dup   # Gene malfunction probability by CNA duplication for suppressor
+        pck.env$uo_del   =  uo_del   # Gene malfunction probability by CNA deletion    for oncogene
+        pck.env$us_del   =  us_del # Gene malfunction probability by CNA deletion    for suppressor
+        pck.env$monitor  =  monitor  # The indicator to make monitor file during a simulation or do not make
     }
 }
 
@@ -191,43 +191,43 @@ print_parameters  <-  function(){
 
     msg  =  c(
         'Model definition:  \n ' ,
-        'Compaction_factor = ', Compaction_factor, '\n',
-        'model_name  =  ', model_name, '\n',
+        'Compaction_factor = ', pck.env$Compaction_factor, '\n',
+        'model_name  =  ', pck.env$model_name, '\n',
         'Parameters:  \n',
-        'parameter of the division probability E0 =  ', E0, '\n',
-        'another parameter of the division probability F0  = ',  F0, '\n',
-        'mutation probability m0 =  ', m0, '\n',
+        'parameter of the division probability E0 =  ', pck.env$E0, '\n',
+        'another parameter of the division probability F0  = ',  pck.env$F0, '\n',
+        'mutation probability m0 =  ', pck.env$m0, '\n',
         'oncogene mutation probability uo = ', pck.env$uo, '\n',
         'suppressor mutation probability  us  =  ', pck.env$us, '\n',
-        'parameter in the sigmoid function  s0  =  ', s0, '\n',
-        'Environmental death probability  k0 =  ',  k0, '\n',
-        'Initial probability to divide cells  d0  =  ',  d0, '\n',
+        'parameter in the sigmoid function  s0  =  ', pck.env$s0, '\n',
+        'Environmental death probability  k0 =  ',  pck.env$k0, '\n',
+        'Initial probability to divide cells  d0  =  ',  pck.env$d0, '\n',
         'Additional parameters of simulation  \n ',
-        'Max cell number where the program forcibly stops  censore_n  = ',  censore_n,  '\n',
-        'Max time steps where the program forcibly stops  censore_t  = ',  censore_t,  '\n',
-        'Max time (in seconds) where the program forcibly stops time_stop  =  ',  time_stop,  '\n',
-        'Max number of repetition of the program until the NON-ZERO output will be getting, n_repeat  =  ', n_repeat ,   '\n',
+        'Max cell number where the program forcibly stops  censore_n  = ',  pck.env$censore_n,  '\n',
+        'Max time steps where the program forcibly stops  censore_t  = ',  pck.env$censore_t,  '\n',
+        'Max time (in seconds) where the program forcibly stops time_stop  =  ',  pck.env$time_stop,  '\n',
+        'Max number of repetition of the program until the NON-ZERO output will be getting, n_repeat  =  ', pck.env$n_repeat ,   '\n',
         'New parameters for CNA:  \n',
-        'mutation probability for duplication  m_dup  =  ', m_dup ,  '\n',
-        'mutation probability for deletion',  m_del,  '\n',
-        'CNA duplication average length (of the geometrical distribution for the length)  lambda_dup  =  ', lambda_dup ,  '\n',
-        'CNA deletion average length  lambda_del  = ', lambda_del ,  '\n',
-        'Gene malfunction probability by CNA duplication for oncogene  uo_dup  =  ', uo_dup ,  '\n',
-        'Gene malfunction probability by CNA duplication for suppressor  us_dup  =  ', us_dup ,  '\n',
-        'Gene malfunction probability by CNA deletion for oncogene  uo_del  = ', uo_del ,  '\n',
-        'Gene malfunction probability by CNA deletion for suppressor  us_del  = ', us_del,  '\n',
+        'mutation probability for duplication  m_dup  =  ', pck.env$m_dup ,  '\n',
+        'mutation probability for deletion',  pck.env$m_del,  '\n',
+        'CNA duplication average length (of the geometrical distribution for the length)  lambda_dup  =  ', pck.env$lambda_dup ,  '\n',
+        'CNA deletion average length  lambda_del  = ', pck.env$lambda_del ,  '\n',
+        'Gene malfunction probability by CNA duplication for oncogene  uo_dup  =  ', pck.env$uo_dup ,  '\n',
+        'Gene malfunction probability by CNA duplication for suppressor  us_dup  =  ', pck.env$us_dup ,  '\n',
+        'Gene malfunction probability by CNA deletion for oncogene  uo_del  = ', pck.env$uo_del ,  '\n',
+        'Gene malfunction probability by CNA deletion for suppressor  us_del  = ', pck.env$us_del,  '\n',
         'Compaction factor is applied if variable Compaction_factor ==  TRUE \n',
         'Compaction factor for apoptosis hallmark CF$Ha = ', pck.env$CF$Ha, ' \n',
         'Compaction factor for angiogenesis hallmark CF$Hb = ', pck.env$CF$Hb, ' \n',
         'Compaction factor for growth/antigrowth hallmark CF$Hd = ', pck.env$CF$Hd, ' \n',
         'Compaction factor for immortalization hallmark CF$Hi = ', pck.env$CF$Hi, ' \n',
         'Compaction factor for invasion/metastasis hallmark CF$Him = ', pck.env$CF$Him,
-        '\n Monitoring: \n indicator monitor  =  ', monitor, '\n \n '
+        '\n Monitoring: \n indicator monitor  =  ', pck.env$monitor, '\n \n '
     )
 
     cat( paste0( msg, collapse = ' ' ) )
 
-    if ( model_name  ==  'simplified' ) {
+    if ( pck.env$model_name  ==  'simplified' ) {
         msg  =  c(
             'The model is simplified that means next: \n ',
             '    1) all the hallmarks are defined but do not affect \n ',
