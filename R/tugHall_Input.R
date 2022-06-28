@@ -118,6 +118,7 @@ define_parameters  <-  function( E0 =  1E-4, F0 =  10, m0 =  1E-7, uo =  0.9, us
         pck.env$model_name         =  data_log[ which( data_log$var == 'model_name' ), 2 ]
         pck.env$time_stop          =  as.numeric( data_log[ which( data_log$var == 'time_stop' ), 2 ] )  # max time in seconds
         pck.env$n_repeat           =  as.numeric( data_log[ which( data_log$var == 'n_repeat' ), 2 ] )  # max number of repetitions
+        
         # Parameters:
         pck.env$E0  =  as.numeric( data_log[ which( data_log$var ==  'E' ), 2 ] )     # parameter in the division probability
         pck.env$F0  =  as.numeric( data_log[ which( data_log$var ==  'F' ), 2 ] )     # parameter in the division probability
@@ -127,6 +128,7 @@ define_parameters  <-  function( E0 =  1E-4, F0 =  10, m0 =  1E-7, uo =  0.9, us
         pck.env$s0  =  as.numeric( data_log[ which( data_log$var ==  's' ), 2 ] )     # parameter in the sigmoid function
         pck.env$d0  =  as.numeric( data_log[ which( data_log$var == 'd0' ), 2 ] )     # Initial probability to divide cells
         k0         = as.character( data_log[ which( data_log$var == 'k0' ), 2 ] )     # Environmental death probability
+
         if ( is.na( k0 ) ) {
             pck.env$k0  =  1 - (1 + pck.env$d0 ) ^ (-1)
         } else {
