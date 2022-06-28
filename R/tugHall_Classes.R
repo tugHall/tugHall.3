@@ -313,9 +313,9 @@ oncogene <- setRefClass(
 
             # Get length of CDS and gene's length from gene_map:
             for ( i in 1:length(name0) ) {
-                w     =  which( gene_map$Gene == name0[ i ] )
-                cds0  =  c( cds0, sum( gene_map$End[w]  -  gene_map$Start[w] + 1 ) )
-                rna0  =  c( rna0, max( gene_map$End[w] ) - min( gene_map$Start[w]) + 1  )
+                w     =  which( pck.env$gene_map$Gene == name0[ i ] )
+                cds0  =  c( cds0, sum( pck.env$gene_map$End[w]  -  pck.env$gene_map$Start[w] + 1 ) )
+                rna0  =  c( rna0, max( pck.env$gene_map$End[w] ) - min( pck.env$gene_map$Start[w]) + 1  )
             }
 
             id   <<- 1
@@ -496,11 +496,11 @@ hallmark <- setRefClass(
             Him_w <<- Him0_w / Him_sum
 
             if ( Compaction_factor ){
-                Ha_w  <<-  CF$Ha  * Ha_w
-                Hi_w  <<-  CF$Hi  * Hi_w
-                Hd_w  <<-  CF$Hd  * Hd_w
-                Hb_w  <<-  CF$Hb  * Hb_w
-                Him_w <<-  CF$Him * Him_w
+                Ha_w  <<-  pck.env$CF$Ha  * Ha_w
+                Hi_w  <<-  pck.env$CF$Hi  * Hi_w
+                Hd_w  <<-  pck.env$CF$Hd  * Hd_w
+                Hb_w  <<-  pck.env$CF$Hb  * Hb_w
+                Him_w <<-  pck.env$CF$Him * Him_w
 
             }
 
@@ -534,7 +534,7 @@ hallmark <- setRefClass(
             clone1$d = clone1$Hd + d0     # d0 is defined in parameters
             if ( clone1$d > 1 ) { clone1$d = 1 }
             if ( !clone1$invasion ) {
-                clone1$d = clone1$d - clone1$E * env$P
+                clone1$d = clone1$d - clone1$E * pck.env$env$P
                 if ( clone1$d < 0 ) { clone1$d = 0 }
             }
 
@@ -570,7 +570,7 @@ hallmark <- setRefClass(
 #' update_Hallmarks( clone )
 update_Hallmarks <- function(clone1) {
     # Hallmark
-    hall$updateClone(clone1, env$F)
+    pck.env$hall$updateClone(clone1, pck.env$env$F)
 }
 
 

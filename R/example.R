@@ -14,6 +14,8 @@
 #' simulation_example( verbose = FALSE , to_plot = FALSE )
 simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
 
+    # local_environment( env = pck.env )
+
     if ( !is.na( seed ) ) set.seed( seed = seed )
 
     if ( verbose ) print('This code will be executed: ')
@@ -27,7 +29,8 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                         stringr = c('str_length', 'str_split', 'str_sub', 'str_trim'),
                         utils = c('read.delim', 'read.table', 'write.table', 'globalVariables' ),
                         grDevices = c('dev.off', 'pdf', 'rgb'),
-                        graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title' ) )
+                        graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title' ),
+                        withr  =  c('local_environment', 'local_par' ))
 
     for( pck in names( packages ) ){
         library( package = pck, character.only = TRUE, include.only = packages[[ pck ]])
@@ -48,7 +51,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
     repeat{
         n_c  =  n_c + 1
         if ( verbose ) print('Start simulation, please, wait for a while ... or see Sim_monitoring.txt file in working folder ')
-        smlt = model(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile, E0, F0, m0, uo, us, s0, k0, censore_n, censore_t, d0)
+        smlt = model(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile )
 
         if ( file.exists( cloneoutfile ) ) break
         if ( n_c  >=  n_repeat )           break
@@ -75,7 +78,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
 
 
     if ( verbose ) print('Also get VAF data and save them into file Output/VAF_data.txt ' )
-    vf = get_VAF(pnt_mut, data_last )
+    vf = get_VAF( pnt_mut, data_last )
     VAF  =  get_rho_VAF( vf = vf, rho = c( 0.0, 0.1, 0.2, 0.5, 0.7, 0.9 ) , file_name = './Output/VAF.txt' )
 
     rdr_dysf  =  get_order_of_genes_dysfunction( pnt_mut = pnt_mut, data_last, cna_mut,
@@ -108,7 +111,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                   onco_clones = onco_clones,
                   hall = hall,
                   onco = onco,
-                  env  = env,
+                  env  = pck.env$env,
                   pnt_clones = pck.env$pnt_clones,
                   cna_clones = pck.env$cna_clones,
                   cna_mut = cna_mut,
@@ -116,10 +119,10 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                   pnt_mut_B = pnt_mut_B,
                   data_avg = data_avg,
                   data_last = data_last,
-                  gene_map = gene_map,
+                  gene_map = pck.env$gene_map,
                   data_flow = data_flow,
                   time_max = time_max,
-                  CF = CF,
+                  CF = pck.env$CF,
                   vf = vf,
                   VAF_rho = VAF,
                   rdr_dysf = rdr_dysf
