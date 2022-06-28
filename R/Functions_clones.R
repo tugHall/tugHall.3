@@ -23,10 +23,10 @@
 get_flow_data <- function(cloneoutfile, genefile, mainDir = getwd(), sbdr_Output = '/Output' ) {
 
     # Get data about onco and hallmarks
-    onco   = oncogene$new()        # make the vector onco about the hallmarks
-    onco$read( genefile )          # read the input info to the onco from genefile - 'gene_cds2.txt'
-    hall   =  hallmark$new()        # make a vector hall with hallmarks parameters
-    hall$read( genefile, onco$name )     # read from the genefile - 'gene_cds2.txt'
+    onco   =  pck.env$onco  #  oncogene$new()        # make the vector onco about the hallmarks
+    # onco$read( genefile )          # read the input info to the onco from genefile - 'gene_cds2.txt'
+    hall   =  pck.env$hall    #  hallmark$new()        # make a vector hall with hallmarks parameters
+    #  hall$read( genefile, onco$name )     # read from the genefile - 'gene_cds2.txt'
 
     ## Get data from output file
     data_out  <-  read_file( file_name = cloneoutfile )   # read.table( cloneoutfile, sep="\t", header = TRUE )
@@ -50,9 +50,9 @@ get_flow_data <- function(cloneoutfile, genefile, mainDir = getwd(), sbdr_Output
     rm( data_out )
     dr  =  file.path( mainDir, sbdr_Output )
     cna_mut  =  read_file( file_name = paste0( dr, '/CNA_mutations.txt' ) )
-      # read.table( file = 'Output/CNA_mutations.txt', sep = '\t', header = TRUE )
+      #  read.table( file = 'Output/CNA_mutations.txt', sep = '\t', header = TRUE )
     pnt_mut  =  read_file( file_name = paste0( dr, '/point_mutations.txt' ) )
-      #read.table( file = 'Output/point_mutations.txt', sep = '\t', header = TRUE )
+      #  read.table( file = 'Output/point_mutations.txt', sep = '\t', header = TRUE )
 
     return( list( onco = onco, hall = hall, data_avg = data_avg,
                   data_flow = data_flow, time_max = time_max, data_last = data_last,

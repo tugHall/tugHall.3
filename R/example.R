@@ -14,6 +14,8 @@
 #' simulation_example( verbose = FALSE , to_plot = FALSE )
 simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
 
+    # local_environment( env = pck.env )
+
     if ( !is.na( seed ) ) set.seed( seed = seed )
 
     if ( verbose ) print('This code will be executed: ')
@@ -76,7 +78,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
 
 
     if ( verbose ) print('Also get VAF data and save them into file Output/VAF_data.txt ' )
-    vf = get_VAF(pnt_mut, data_last )
+    vf = get_VAF( pnt_mut, data_last )
     VAF  =  get_rho_VAF( vf = vf, rho = c( 0.0, 0.1, 0.2, 0.5, 0.7, 0.9 ) , file_name = './Output/VAF.txt' )
 
     rdr_dysf  =  get_order_of_genes_dysfunction( pnt_mut = pnt_mut, data_last, cna_mut,
