@@ -3,7 +3,6 @@
 #' Main function 'model' to simulate clones' evolution
 #'
 #' @param genefile Name of file with input data of hallmarks
-#' @param cloneoutfile Name of file with cloneout data
 #'
 #' @return List of (clones, onco_clones), where clones - list of objects of class 'Clone', and onco_clones - list of objects of class 'OncoGene'. During a simulation it saves data to geneoutfile.
 #' @export
@@ -16,9 +15,9 @@
 #' define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
 #' time_stop = 3  #  Duration of simulation time is 3 sec
 #' \dontrun{
-#' res = model( genefile, cloneoutfile )
+#' res = model( genefile )
 #' }
-model <- function(genefile, cloneoutfile ){
+model <- function(genefile ){
 #                   E0, F0, m0, s0, k0, censore_n, censore_t, d0 ) {
 
     local_environment( env = pck.env )

@@ -4,12 +4,10 @@
 \alias{model}
 \title{Main function 'model' to simulate clones' evolution}
 \usage{
-model(genefile, cloneoutfile)
+model(genefile)
 }
 \arguments{
 \item{genefile}{Name of file with input data of hallmarks}
-
-\item{cloneoutfile}{Name of file with cloneout data}
 }
 \value{
 List of (clones, onco_clones), where clones - list of objects of class 'Clone', and onco_clones - list of objects of class 'OncoGene'. During a simulation it saves data to geneoutfile.
@@ -25,6 +23,6 @@ define_parameters( read_fl = TRUE , file_name = './Input/parameters.txt' )
 define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
 time_stop = 3  #  Duration of simulation time is 3 sec
 \dontrun{
-res = model( genefile, cloneoutfile )
+res = model( genefile )
 }
 }

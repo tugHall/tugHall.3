@@ -51,9 +51,9 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
     repeat{
         n_c  =  n_c + 1
         if ( verbose ) print('Start simulation, please, wait for a while ... or see Sim_monitoring.txt file in working folder ')
-        smlt = model(genefile, cloneoutfile )
+        smlt = model(genefile  )
 
-        if ( file.exists( cloneoutfile ) ) break
+        if ( file.exists( pck.env$cloneoutfile ) ) break
         if ( n_c  >=  n_repeat )           break
     }
     clones        =  smlt[[ 1 ]]
@@ -64,7 +64,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
     write_pnt_clones( pck.env$cna_clones, file_out = 'Output/CNA_mutations.txt' )
 
     if ( verbose ) print('Get data of the last simulation from cloneout file. ')
-    dtst = get_flow_data(cloneoutfile, genefile )
+    dtst = get_flow_data( pck.env$cloneoutfile, genefile )
     data_avg  =  dtst$data_avg
     data_flow  =  dtst$data_flow
     time_max = dtst$time_max

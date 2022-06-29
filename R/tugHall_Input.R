@@ -27,9 +27,9 @@ define_files_names  <-  function( mainDir = getwd(), sbdr_Input = '/Input', sbdr
     pck.env$clonefile    =   paste0( mainDir, sbdr_Input, '/cloneinit.txt'      )    # initial Cells
 
     ### Output files
-    pck.env$geneoutfile  =   paste0( mainDir, sbdr_Output, '/geneout.txt'       )    # Gene Out file with Hallmarks
-    cloneoutfile   <<-   paste0( mainDir, sbdr_Output, '/cloneout.txt'      )    # output information of simulation
-    pck.env$logoutfile  =  paste0( mainDir, sbdr_Output, '/log.txt'     )    # log file to save the input information of simulation - "log.txt"
+    pck.env$geneoutfile    =   paste0( mainDir, sbdr_Output, '/geneout.txt'       )    # Gene Out file with Hallmarks
+    pck.env$cloneoutfile   =   paste0( mainDir, sbdr_Output, '/cloneout.txt'      )    # output information of simulation
+    pck.env$logoutfile     =   paste0( mainDir, sbdr_Output, '/log.txt'     )    # log file to save the input information of simulation - "log.txt"
     ### Output/Weights.txt               # file with gene weights for hallmarks
     pck.env$file_monitor   =   './Sim_monitoring.txt'
 }
