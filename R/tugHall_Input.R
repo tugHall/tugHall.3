@@ -14,11 +14,13 @@
 #' define_files_names()
 define_files_names  <-  function( mainDir = getwd(), sbdr_Input = '/Input', sbdr_Output = '/Output' ){
 
+    pck.env$mainDir  =  mainDir
+
     if (! file.exists( paste0( mainDir, sbdr_Output ) ) ){  dir.create( file.path( mainDir, sbdr_Output ) ) }
 
     if (! file.exists( paste0( mainDir, sbdr_Input ) ) ){  dir.create( file.path( mainDir, sbdr_Input ) ) }
 
-    if (! file.exists( paste0( mainDir, '/Figures' ) ) ){  dir.create( file.path( mainDir, 'Figures' ) ) }
+    # if (! file.exists( paste0( mainDir, '/Figures' ) ) ){  dir.create( file.path( mainDir, 'Figures' ) ) }
 
     ### Files to output and input data
     genefile       <<-   paste0( mainDir, sbdr_Input, '/gene_hallmarks.txt' )    # gene file
@@ -118,7 +120,7 @@ define_parameters  <-  function( E0 =  1E-4, F0 =  10, m0 =  1E-7, uo =  0.9, us
         pck.env$model_name         =  data_log[ which( data_log$var == 'model_name' ), 2 ]
         pck.env$time_stop          =  as.numeric( data_log[ which( data_log$var == 'time_stop' ), 2 ] )  # max time in seconds
         pck.env$n_repeat           =  as.numeric( data_log[ which( data_log$var == 'n_repeat' ), 2 ] )  # max number of repetitions
-        
+
         # Parameters:
         pck.env$E0  =  as.numeric( data_log[ which( data_log$var ==  'E' ), 2 ] )     # parameter in the division probability
         pck.env$F0  =  as.numeric( data_log[ which( data_log$var ==  'F' ), 2 ] )     # parameter in the division probability

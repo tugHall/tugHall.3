@@ -684,13 +684,18 @@ write_log <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile
                       uo_dup, us_dup, uo_del, us_del,       # CNA parameters
                       censore_n, censore_t, d0, Compaction_factor, model_name,
                       time_stop, n_repeat, monitor ) {
-    data <- c("genefile", "clonefile", "geneoutfile", "cloneoutfile", "logoutfile",
+    data <- c('Working_folder', "genefile", "clonefile", "geneoutfile", "cloneoutfile", "logoutfile",
               "E0", "F0", "m0", "uo", "us", "s0", "k0",
               "m_dup", "m_del", "lambda_dup", "lambda_del",
               "uo_dup", "us_dup", "uo_del", "us_del",
               "censore_n", "censore_t", "d0", 'Compaction_factor', 'model_name',
               'time_stop', 'n_repeat', 'monitor' )
-    data <- rbind( data, c(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
+    data <- rbind( data, c(pck.env$mainDir,
+                           str_remove( genefile, pck.env$mainDir),
+                           str_remove( clonefile, pck.env$mainDir),
+                           str_remove( geneoutfile, pck.env$mainDir),
+                           str_remove( cloneoutfile, pck.env$mainDir),
+                           str_remove( logoutfile, pck.env$mainDir),
                            E0, F0, m0, uo, us, s0, k0,
                            m_dup, m_del, lambda_dup, lambda_del, # CNA parameters
                            uo_dup, us_dup, uo_del, us_del,       # CNA parameters
