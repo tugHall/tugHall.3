@@ -4,12 +4,10 @@
 \alias{model}
 \title{Main function 'model' to simulate clones' evolution}
 \usage{
-model(genefile, geneoutfile, cloneoutfile)
+model(genefile, cloneoutfile)
 }
 \arguments{
 \item{genefile}{Name of file with input data of hallmarks}
-
-\item{geneoutfile}{Name of file with hallmark data}
 
 \item{cloneoutfile}{Name of file with cloneout data}
 }
@@ -27,6 +25,6 @@ define_parameters( read_fl = TRUE , file_name = './Input/parameters.txt' )
 define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
 time_stop = 3  #  Duration of simulation time is 3 sec
 \dontrun{
-res = model( genefile, clonefile, geneoutfile, cloneoutfile )
+res = model( genefile, cloneoutfile )
 }
 }
