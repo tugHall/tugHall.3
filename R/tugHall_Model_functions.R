@@ -855,7 +855,7 @@ write_cloneout <- function( outfile, env, clones, isFirst, onco_clones ) {
 #' pnt_clones = tugHall_dataset$pnt_clones
 #' write_monitor( outfile = './Sim_monitoring.txt', start = TRUE , env, clones )
 #' write_monitor( outfile = './Sim_monitoring.txt', start = FALSE , env, clones )
-write_monitor  <- function( outfile = file_monitor, start = FALSE , env, clones ){
+write_monitor  <- function( outfile, start = FALSE , env, clones ){
 
     if ( start ) {
         header <- c('Time', 'N_clones', 'N_normal', 'N_primary', 'N_metastatic',

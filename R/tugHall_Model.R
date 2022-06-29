@@ -76,7 +76,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile ){
     write_geneout(geneoutfile, pck.env$hall, Compaction_factor, pck.env$CF)                  # write the geneout.txt file with initial hallmarks
     write_weights("Output/Weights.txt", pck.env$hall)                 # write the weights of genes for hallmarks
     write_header( cloneoutfile, pck.env$env, pck.env$onco )                   #
-    if ( monitor ) write_monitor( start = TRUE )
+    if ( monitor ) write_monitor( outfile = pck.env$file_monitor, start = TRUE )
     cells_number <- sum_N_P_M( pck.env$env, clones )                 # to calculate cells numbers - N,M
     init_pnt_clones( clones, pck.env$onco_clones )              # initialization of pnt_clones for point mutations
 
@@ -141,7 +141,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile ){
 
         write_cloneout( cloneoutfile, pck.env$env, clones, isFirst, pck.env$onco_clones )
         #print(c(env$T,env$N,env$M,env$last_id, length(clones), "N_clones_new = ", N_clones_new))
-        if ( monitor ) write_monitor( start = FALSE, env = pck.env$env, clones = clones )
+        if ( monitor ) write_monitor( outfile = pck.env$file_monitor, start = FALSE, env = pck.env$env, clones = clones )
         time_current  =  Sys.time()
 
     }

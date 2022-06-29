@@ -31,7 +31,7 @@ define_files_names  <-  function( mainDir = getwd(), sbdr_Input = '/Input', sbdr
     cloneoutfile   <<-   paste0( mainDir, sbdr_Output, '/cloneout.txt'      )    # output information of simulation
     logoutfile     <<-   paste0( mainDir, sbdr_Output, '/log.txt'     )    # log file to save the input information of simulation - "log.txt"
     ### Output/Weights.txt               # file with gene weights for hallmarks
-    file_monitor   <<-   './Sim_monitoring.txt'
+    pck.env$file_monitor   =   './Sim_monitoring.txt'
 }
 ### Define the gene map - chromosomal locations --------------------------
 
