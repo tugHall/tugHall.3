@@ -6,7 +6,6 @@
 #' @param clonefile Name of file with initial clones data
 #' @param geneoutfile Name of file with hallmark data
 #' @param cloneoutfile Name of file with cloneout data
-#' @param logoutfile File name of log file
 #' @param E0 Parameter in the division probability, numeric type only
 #' @param F0 Parameter in the division probability, numeric type only
 #' @param m0 Mutation probability for point mutation, numeric type only
@@ -27,10 +26,9 @@
 #' define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
 #' time_stop = 3  #  Duration of simulation time is 3 sec
 #' \dontrun{
-#' res = model( genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
-#' E0, F0, m0, s0, k0, censore_n, censore_t, d0 )
+#' res = model( genefile, clonefile, geneoutfile, cloneoutfile )
 #' }
-model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile ){
+model <- function(genefile, clonefile, geneoutfile, cloneoutfile ){
 #                   E0, F0, m0, s0, k0, censore_n, censore_t, d0 ) {
 
     local_environment( env = pck.env )

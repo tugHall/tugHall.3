@@ -4,7 +4,7 @@
 \alias{model}
 \title{Main function 'model' to simulate clones' evolution}
 \usage{
-model(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile)
+model(genefile, clonefile, geneoutfile, cloneoutfile)
 }
 \arguments{
 \item{genefile}{Name of file with input data of hallmarks}
@@ -14,8 +14,6 @@ model(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile)
 \item{geneoutfile}{Name of file with hallmark data}
 
 \item{cloneoutfile}{Name of file with cloneout data}
-
-\item{logoutfile}{File name of log file}
 
 \item{E0}{Parameter in the division probability, numeric type only}
 
@@ -47,7 +45,6 @@ define_parameters( read_fl = TRUE , file_name = './Input/parameters.txt' )
 define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
 time_stop = 3  #  Duration of simulation time is 3 sec
 \dontrun{
-res = model( genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
-E0, F0, m0, s0, k0, censore_n, censore_t, d0 )
+res = model( genefile, clonefile, geneoutfile, cloneoutfile )
 }
 }
