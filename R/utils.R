@@ -31,7 +31,7 @@ get_tugHall.Environment  <-  function(){
 
 
 # Define global variables in tugHall.3:
-utils::globalVariables( c(  'clonefile', 'cloneoutfile',
+utils::globalVariables( c(  'cloneoutfile',
                             'genefile', 'geneoutfile'
                            ) )
 

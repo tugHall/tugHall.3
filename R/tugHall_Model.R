@@ -3,17 +3,8 @@
 #' Main function 'model' to simulate clones' evolution
 #'
 #' @param genefile Name of file with input data of hallmarks
-#' @param clonefile Name of file with initial clones data
 #' @param geneoutfile Name of file with hallmark data
 #' @param cloneoutfile Name of file with cloneout data
-#' @param E0 Parameter in the division probability, numeric type only
-#' @param F0 Parameter in the division probability, numeric type only
-#' @param m0 Mutation probability for point mutation, numeric type only
-#' @param s0 Parameter in the sigmoid function, numeric type only
-#' @param k0 Environmental death probability, numeric type only
-#' @param d0 Initial probability to divide cells, numeric type only
-#' @param censore_n Max cell number where the program forcibly stops, integer type only
-#' @param censore_t Max time where the program forcibly stops, integer type only
 #'
 #' @return List of (clones, onco_clones), where clones - list of objects of class 'Clone', and onco_clones - list of objects of class 'OncoGene'. During a simulation it saves data to geneoutfile.
 #' @export
@@ -28,7 +19,7 @@
 #' \dontrun{
 #' res = model( genefile, clonefile, geneoutfile, cloneoutfile )
 #' }
-model <- function(genefile, clonefile, geneoutfile, cloneoutfile ){
+model <- function(genefile, geneoutfile, cloneoutfile ){
 #                   E0, F0, m0, s0, k0, censore_n, censore_t, d0 ) {
 
     local_environment( env = pck.env )

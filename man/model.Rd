@@ -4,32 +4,14 @@
 \alias{model}
 \title{Main function 'model' to simulate clones' evolution}
 \usage{
-model(genefile, clonefile, geneoutfile, cloneoutfile)
+model(genefile, geneoutfile, cloneoutfile)
 }
 \arguments{
 \item{genefile}{Name of file with input data of hallmarks}
 
-\item{clonefile}{Name of file with initial clones data}
-
 \item{geneoutfile}{Name of file with hallmark data}
 
 \item{cloneoutfile}{Name of file with cloneout data}
-
-\item{E0}{Parameter in the division probability, numeric type only}
-
-\item{F0}{Parameter in the division probability, numeric type only}
-
-\item{m0}{Mutation probability for point mutation, numeric type only}
-
-\item{s0}{Parameter in the sigmoid function, numeric type only}
-
-\item{k0}{Environmental death probability, numeric type only}
-
-\item{d0}{Initial probability to divide cells, numeric type only}
-
-\item{censore_n}{Max cell number where the program forcibly stops, integer type only}
-
-\item{censore_t}{Max time where the program forcibly stops, integer type only}
 }
 \value{
 List of (clones, onco_clones), where clones - list of objects of class 'Clone', and onco_clones - list of objects of class 'OncoGene'. During a simulation it saves data to geneoutfile.

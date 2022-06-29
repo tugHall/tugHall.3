@@ -24,7 +24,7 @@ define_files_names  <-  function( mainDir = getwd(), sbdr_Input = '/Input', sbdr
 
     ### Files to output and input data
     genefile       <<-   paste0( mainDir, sbdr_Input, '/gene_hallmarks.txt' )    # gene file
-    clonefile      <<-   paste0( mainDir, sbdr_Input, '/cloneinit.txt'      )    # initial Cells
+    pck.env$clonefile    =   paste0( mainDir, sbdr_Input, '/cloneinit.txt'      )    # initial Cells
 
     ### Output files
     geneoutfile    <<-   paste0( mainDir, sbdr_Output, '/geneout.txt'       )    # Gene Out file with Hallmarks
