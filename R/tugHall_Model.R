@@ -2,19 +2,7 @@
 
 #' Main function 'model' to simulate clones' evolution
 #'
-#' @param genefile Name of file with input data of hallmarks
-#' @param clonefile Name of file with initial clones data
-#' @param geneoutfile Name of file with hallmark data
-#' @param cloneoutfile Name of file with cloneout data
-#' @param logoutfile File name of log file
-#' @param E0 Parameter in the division probability, numeric type only
-#' @param F0 Parameter in the division probability, numeric type only
-#' @param m0 Mutation probability for point mutation, numeric type only
-#' @param s0 Parameter in the sigmoid function, numeric type only
-#' @param k0 Environmental death probability, numeric type only
-#' @param d0 Initial probability to divide cells, numeric type only
-#' @param censore_n Max cell number where the program forcibly stops, integer type only
-#' @param censore_t Max time where the program forcibly stops, integer type only
+#'
 #'
 #' @return List of (clones, onco_clones), where clones - list of objects of class 'Clone', and onco_clones - list of objects of class 'OncoGene'. During a simulation it saves data to geneoutfile.
 #' @export
@@ -27,10 +15,9 @@
 #' define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
 #' time_stop = 3  #  Duration of simulation time is 3 sec
 #' \dontrun{
-#' res = model( genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
-#' E0, F0, m0, s0, k0, censore_n, censore_t, d0 )
+#' res = model( )
 #' }
-model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile ){
+model <- function( ){
 #                   E0, F0, m0, s0, k0, censore_n, censore_t, d0 ) {
 
     local_environment( env = pck.env )
@@ -76,7 +63,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile ){
     write_geneout(geneoutfile, pck.env$hall, Compaction_factor, pck.env$CF)                  # write the geneout.txt file with initial hallmarks
     write_weights("Output/Weights.txt", pck.env$hall)                 # write the weights of genes for hallmarks
     write_header( cloneoutfile, pck.env$env, pck.env$onco )                   #
-    if ( monitor ) write_monitor( start = TRUE )
+    if ( monitor ) write_monitor( outfile = pck.env$file_monitor, start = TRUE )
     cells_number <- sum_N_P_M( pck.env$env, clones )                 # to calculate cells numbers - N,M
     init_pnt_clones( clones, pck.env$onco_clones )              # initialization of pnt_clones for point mutations
 
@@ -141,7 +128,7 @@ model <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile ){
 
         write_cloneout( cloneoutfile, pck.env$env, clones, isFirst, pck.env$onco_clones )
         #print(c(env$T,env$N,env$M,env$last_id, length(clones), "N_clones_new = ", N_clones_new))
-        if ( monitor ) write_monitor( start = FALSE, env = pck.env$env, clones = clones )
+        if ( monitor ) write_monitor( outfile = pck.env$file_monitor, start = FALSE, env = pck.env$env, clones = clones )
         time_current  =  Sys.time()
 
     }

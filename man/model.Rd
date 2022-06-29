@@ -4,34 +4,7 @@
 \alias{model}
 \title{Main function 'model' to simulate clones' evolution}
 \usage{
-model(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile)
-}
-\arguments{
-\item{genefile}{Name of file with input data of hallmarks}
-
-\item{clonefile}{Name of file with initial clones data}
-
-\item{geneoutfile}{Name of file with hallmark data}
-
-\item{cloneoutfile}{Name of file with cloneout data}
-
-\item{logoutfile}{File name of log file}
-
-\item{E0}{Parameter in the division probability, numeric type only}
-
-\item{F0}{Parameter in the division probability, numeric type only}
-
-\item{m0}{Mutation probability for point mutation, numeric type only}
-
-\item{s0}{Parameter in the sigmoid function, numeric type only}
-
-\item{k0}{Environmental death probability, numeric type only}
-
-\item{d0}{Initial probability to divide cells, numeric type only}
-
-\item{censore_n}{Max cell number where the program forcibly stops, integer type only}
-
-\item{censore_t}{Max time where the program forcibly stops, integer type only}
+model()
 }
 \value{
 List of (clones, onco_clones), where clones - list of objects of class 'Clone', and onco_clones - list of objects of class 'OncoGene'. During a simulation it saves data to geneoutfile.
@@ -47,7 +20,6 @@ define_parameters( read_fl = TRUE , file_name = './Input/parameters.txt' )
 define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
 time_stop = 3  #  Duration of simulation time is 3 sec
 \dontrun{
-res = model( genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
-E0, F0, m0, s0, k0, censore_n, censore_t, d0 )
+res = model( )
 }
 }

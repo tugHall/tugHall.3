@@ -4,7 +4,7 @@
 \alias{write_monitor}
 \title{Function to write a simulation monitoring data into the file_monitor}
 \usage{
-write_monitor(outfile = file_monitor, start = FALSE, env, clones)
+write_monitor(outfile, start = FALSE, env, clones)
 }
 \arguments{
 \item{outfile}{File name for output info}
