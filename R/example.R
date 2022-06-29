@@ -3,6 +3,7 @@
 #' @param verbose Logical type to show or do not show messages during execution
 #' @param to_plot Logical type to plot or do not plot graphical results of a simulation
 #' @param seed Numeric type to set seed for a simulation, if seed = NA (by default) then it will be skipped
+#' @param work_dir Working directory for a simulation, by default \code{ work_dir = getwd() }
 #'
 #' @return List of results of simulation with default values for all the parameters
 #' @export
@@ -12,9 +13,11 @@
 #' # it takes a time for a simulation and then it will demonstrates results, \cr
 #' # so, please, wait for a while
 #' simulation_example( verbose = FALSE , to_plot = FALSE )
-simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
+simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA, work_dir = getwd() ){
 
     # local_environment( env = pck.env )
+
+    local_dir( new = work_dir )
 
     if ( !is.na( seed ) ) set.seed( seed = seed )
 
@@ -30,7 +33,7 @@ simulation_example  <-  function( verbose = TRUE , to_plot = TRUE, seed = NA ){
                         utils = c('read.delim', 'read.table', 'write.table', 'globalVariables' ),
                         grDevices = c('dev.off', 'pdf', 'rgb'),
                         graphics = c('axis', 'legend', 'lines', 'par', 'plot', 'text', 'title' ),
-                        withr  =  c('local_environment', 'local_par' ))
+                        withr  =  c('local_environment', 'local_par', 'local_dir' ))
 
     for( pck in names( packages ) ){
         library( package = pck, character.only = TRUE, include.only = packages[[ pck ]])
