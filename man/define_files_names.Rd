@@ -6,16 +6,16 @@
 \usage{
 define_files_names(
   mainDir = getwd(),
-  sbdr_Input = "/Input",
-  sbdr_Output = "/Output"
+  sbdr_Input = "Input",
+  sbdr_Output = "Output"
 )
 }
 \arguments{
-\item{mainDir}{Working directory}
+\item{mainDir}{Working directory for simulation, can be different from working directory of user}
 
-\item{sbdr_Input}{Sub directory for input files}
+\item{sbdr_Input}{Sub directory for input files, by default \code{sbdr_Input = 'Input'}}
 
-\item{sbdr_Output}{Sub directory for output files}
+\item{sbdr_Output}{Sub directory for output files, by default \code{sbdr_Output = 'Output'}}
 }
 \value{
 NULL, but all file names are defined in GLOBAL environment

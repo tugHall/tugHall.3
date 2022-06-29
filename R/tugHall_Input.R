@@ -1,37 +1,35 @@
 ### Define the FOLDERS and files' names ---------------------------------------------------
-## Create folders:  /Input, /Output and /Figures
+## Create folders:  Input and Output
 
 #' Function to define all the files names
 #'
-#' @param mainDir Working directory
-#' @param sbdr_Input Sub directory for input files
-#' @param sbdr_Output Sub directory for output files
+#' @param mainDir Working directory for simulation, can be different from working directory of user
+#' @param sbdr_Input Sub directory for input files, by default \code{sbdr_Input = 'Input'}
+#' @param sbdr_Output Sub directory for output files, by default \code{sbdr_Output = 'Output'}
 #'
 #' @return NULL, but all file names are defined in GLOBAL environment
 #' @export
 #'
 #' @examples
 #' define_files_names()
-define_files_names  <-  function( mainDir = getwd(), sbdr_Input = '/Input', sbdr_Output = '/Output' ){
+define_files_names  <-  function( mainDir = getwd(), sbdr_Input = 'Input', sbdr_Output = 'Output' ){
 
     pck.env$mainDir  =  mainDir
 
-    if (! file.exists( paste0( mainDir, sbdr_Output ) ) ){  dir.create( file.path( mainDir, sbdr_Output ) ) }
-
-    if (! file.exists( paste0( mainDir, sbdr_Input ) ) ){  dir.create( file.path( mainDir, sbdr_Input ) ) }
+    if (! file.exists( file.path( mainDir, sbdr_Output ) ) ){  dir.create( file.path( mainDir, sbdr_Output ) ) }
+    if (! file.exists( file.path( mainDir, sbdr_Input ) ) ){  dir.create( file.path( mainDir, sbdr_Input ) ) }
 
     # if (! file.exists( paste0( mainDir, '/Figures' ) ) ){  dir.create( file.path( mainDir, 'Figures' ) ) }
 
     ### Files to output and input data
-    pck.env$genefile     =   paste0( mainDir, sbdr_Input, '/gene_hallmarks.txt' )    # gene file
-    pck.env$clonefile    =   paste0( mainDir, sbdr_Input, '/cloneinit.txt'      )    # initial Cells
+    pck.env$genefile     =   file.path( mainDir, sbdr_Input, 'gene_hallmarks.txt' )    # gene file
+    pck.env$clonefile    =   file.path( mainDir, sbdr_Input, 'cloneinit.txt'      )    # initial Cells
 
     ### Output files
-    pck.env$geneoutfile    =   paste0( mainDir, sbdr_Output, '/geneout.txt'       )    # Gene Out file with Hallmarks
-    pck.env$cloneoutfile   =   paste0( mainDir, sbdr_Output, '/cloneout.txt'      )    # output information of simulation
-    pck.env$logoutfile     =   paste0( mainDir, sbdr_Output, '/log.txt'     )    # log file to save the input information of simulation - "log.txt"
-    ### Output/Weights.txt               # file with gene weights for hallmarks
-    pck.env$file_monitor   =   './Sim_monitoring.txt'
+    pck.env$geneoutfile    =   file.path( mainDir, sbdr_Output, 'geneout.txt'       )    # Gene Out file with Hallmarks
+    pck.env$cloneoutfile   =   file.path( mainDir, sbdr_Output, 'cloneout.txt'      )    # output information of simulation
+    pck.env$logoutfile     =   file.path( mainDir, sbdr_Output, 'log.txt'     )    # log file to save the input information of simulation - "log.txt"
+    pck.env$file_monitor   =   'Sim_monitoring.txt'
 }
 ### Define the gene map - chromosomal locations --------------------------
 
