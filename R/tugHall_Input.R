@@ -23,7 +23,7 @@ define_files_names  <-  function( mainDir = getwd(), sbdr_Input = '/Input', sbdr
     # if (! file.exists( paste0( mainDir, '/Figures' ) ) ){  dir.create( file.path( mainDir, 'Figures' ) ) }
 
     ### Files to output and input data
-    genefile       <<-   paste0( mainDir, sbdr_Input, '/gene_hallmarks.txt' )    # gene file
+    pck.env$genefile     =   paste0( mainDir, sbdr_Input, '/gene_hallmarks.txt' )    # gene file
     pck.env$clonefile    =   paste0( mainDir, sbdr_Input, '/cloneinit.txt'      )    # initial Cells
 
     ### Output files
