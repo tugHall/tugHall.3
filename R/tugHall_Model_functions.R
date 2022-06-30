@@ -597,6 +597,7 @@ chk_pnt_mut  <-  function( pnt1 , Ref_start, Ref_end, Chr, prntl ){
 #' clone1 = tugHall_dataset$clones[[ 1 ]]
 #' env = tugHall_dataset$env
 #' define_parameters()
+#' m0 = 1E-06
 #' clone_copy(clone1)
 clone_copy <- function(clone1) {
     pck.env$env$last_id = pck.env$env$last_id + 1
