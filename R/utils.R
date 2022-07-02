@@ -5,7 +5,8 @@ attr( pck.env, "name" ) = "tugHall.Environment"
 
 #' Get results of simulation storaged in pck.env or tugHall.Environment environment
 #'
-#' @return NULL
+#' @return \code{get_tugHall.Environment} returns all the objects in the pck.env
+#' or tugHall.Environment environment
 #' @export
 #'
 #' @examples
@@ -14,8 +15,8 @@ get_tugHall.Environment  <-  function(){
 
     # local_environment( env = pck.env )
 
-    print( ls( pck.env ) )
-    print('---------------')
+    # print( ls( pck.env ) )
+    # print('---------------')
 
     results  =  list()
     l = ls( pck.env )
@@ -29,6 +30,45 @@ get_tugHall.Environment  <-  function(){
 
 }
 
+
+#' @describeIn  get_tugHall.Environment Load previous results of simulation to the environment pck.env or tugHall.Environment
+#'
+#' @return \code{load_tugHall.Environment} returns NULL and load
+#' results of simulation to the environment pck.env or tugHall.Environment
+#' @export
+#'
+#' @examples
+#' NULL
+load_tugHall.Environment  <-  function( results ){
+
+    l = ls( results )
+    if ( length( l ) > 0 ){
+        for( i in 1:length( l ) ){
+            pck.env[[ l[i] ]]  =  results[[ l[i] ]]
+        }
+    }
+
+    return( NULL )
+
+}
+
+
+#' @describeIn  get_tugHall.Environment Remove all the objects from the environment pck.env or tugHall.Environment
+#'
+#' @return \code{clear_tugHall.Environment} returns NULL and clear
+#' the environment pck.env or tugHall.Environment
+#' @export
+#'
+#' @examples
+#' NULL
+clear_tugHall.Environment  <-  function( ){
+
+    # l = ls( envir = pck.env )
+    # print( l )
+    remove( list =  ls( envir = pck.env ), envir = pck.env, inherits = FALSE )
+
+    return( NULL )
+}
 
 # Define global variables in tugHall.3:
 

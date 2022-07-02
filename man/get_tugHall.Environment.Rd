@@ -2,13 +2,38 @@
 % Please edit documentation in R/utils.R
 \name{get_tugHall.Environment}
 \alias{get_tugHall.Environment}
+\alias{load_tugHall.Environment}
+\alias{clear_tugHall.Environment}
 \title{Get results of simulation storaged in pck.env or tugHall.Environment environment}
 \usage{
 get_tugHall.Environment()
+
+load_tugHall.Environment(results)
+
+clear_tugHall.Environment()
+}
+\value{
+\code{get_tugHall.Environment} returns all the objects in the pck.env
+or tugHall.Environment environment
+
+\code{load_tugHall.Environment} returns NULL and load
+results of simulation to the environment pck.env or tugHall.Environment
+
+\code{clear_tugHall.Environment} returns NULL and clear
+the environment pck.env or tugHall.Environment
 }
 \description{
 Get results of simulation storaged in pck.env or tugHall.Environment environment
 }
+\section{Functions}{
+\itemize{
+\item \code{load_tugHall.Environment}: Load previous results of simulation to the environment pck.env or tugHall.Environment
+
+\item \code{clear_tugHall.Environment}: Remove all the objects from the environment pck.env or tugHall.Environment
+}}
+
 \examples{
+NULL
+NULL
 NULL
 }
