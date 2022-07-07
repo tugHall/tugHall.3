@@ -1,9 +1,17 @@
-
+#' Environment of the package 'tugHall.3' to store all the objects of a simulation
+#'
+#' @description \code{pck.env } is environment of the package 'tugHall.3'
+#' where all the objects of a simulation are stored and used
+#'
+#' @export
 pck.env = new.env( parent = emptyenv() )
 attr( pck.env, "name" ) = "tugHall.Environment"
 
 
-#' Get results of simulation storaged in pck.env or tugHall.Environment environment
+#' @describeIn pck.env Get results of simulation stored in pck.env or tugHall.Environment environment
+#'
+#' @description \code{get_tugHall.Environment} function returns all the objects
+#' in the pck.env environment of the package tugHall.3
 #'
 #' @return \code{get_tugHall.Environment} returns all the objects in the pck.env
 #' or tugHall.Environment environment
@@ -31,9 +39,12 @@ get_tugHall.Environment  <-  function(){
 }
 
 
-#' @describeIn  get_tugHall.Environment Load previous results of simulation to the environment pck.env or tugHall.Environment
+#' @describeIn  pck.env Load previous results of simulation to the environment pck.env or tugHall.Environment
 #'
-#' @return \code{load_tugHall.Environment} returns NULL and load
+#' @description \code{load_tugHall.Environment} loads list
+#' 'results' that is results of simulation to the environment pck.env or tugHall.Environment
+#'
+#' @return \code{load_tugHall.Environment} returns NULL and loads
 #' results of simulation to the environment pck.env or tugHall.Environment
 #' @export
 #'
@@ -53,9 +64,12 @@ load_tugHall.Environment  <-  function( results ){
 }
 
 
-#' @describeIn  get_tugHall.Environment Remove all the objects from the environment pck.env or tugHall.Environment
+#' @describeIn  pck.env Remove all the objects from the environment pck.env or tugHall.Environment
 #'
-#' @return \code{clear_tugHall.Environment} returns NULL and clear
+#' @description \code{clear_tugHall.Environment} clears
+#' the environment pck.env or tugHall.Environment
+#'
+#' @return \code{clear_tugHall.Environment} returns NULL and clears
 #' the environment pck.env or tugHall.Environment
 #' @export
 #'
