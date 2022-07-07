@@ -19,6 +19,9 @@ load_tugHall.Environment(results)
 
 clear_tugHall.Environment()
 }
+\arguments{
+\item{results}{List of results of a simulation to load to the environment pck.env or tugHall.Environment}
+}
 \value{
 \code{get_tugHall.Environment} returns all the objects in the pck.env
 or tugHall.Environment environment

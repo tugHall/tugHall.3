@@ -44,6 +44,8 @@ get_tugHall.Environment  <-  function(){
 #' @description \code{load_tugHall.Environment} loads list
 #' 'results' that is results of simulation to the environment pck.env or tugHall.Environment
 #'
+#' @param results List of results of a simulation to load to the environment pck.env or tugHall.Environment
+#'
 #' @return \code{load_tugHall.Environment} returns NULL and loads
 #' results of simulation to the environment pck.env or tugHall.Environment
 #' @export
