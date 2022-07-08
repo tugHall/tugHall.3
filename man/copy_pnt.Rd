@@ -10,7 +10,7 @@ copy_pnt(pnt1)
 \item{pnt1}{Object of class 'Point_Mutations'}
 }
 \value{
-The same object of class 'Point_Mutations' with different ID
+The same object of class 'Point_Mutations' with the same ID
 }
 \description{
 Function to copy of point mutation info

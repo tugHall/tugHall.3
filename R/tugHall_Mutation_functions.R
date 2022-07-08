@@ -44,7 +44,7 @@ copy_pnt_no_mutation  <-  function( pnt1 ){
 #' Function to copy of point mutation info
 #' @param pnt1 Object of class 'Point_Mutations'
 #'
-#' @return The same object of class 'Point_Mutations' with different ID
+#' @return The same object of class 'Point_Mutations' with the same ID
 #' @export
 #'
 #' @examples

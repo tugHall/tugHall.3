@@ -5,7 +5,12 @@
 \title{Function to emulate drug intervention to pool of tumor cells by killing a part of these cells
 and blocking a part of clones corresponding to malfunctioned gene}
 \usage{
-drug_intervention(kill_prob = 0, block_prob = 1, gene)
+drug_intervention(
+  kill_prob = 0,
+  block_prob = 1,
+  gene,
+  generate_mutations = TRUE
+)
 }
 \arguments{
 \item{kill_prob}{Probability of killing cancer cells corresponding to the malfunctioned gene}
@@ -13,6 +18,9 @@ drug_intervention(kill_prob = 0, block_prob = 1, gene)
 \item{block_prob}{Probability of blocking cancer cells corresponding to the malfunctioned gene}
 
 \item{gene}{Name of target gene to kill and block tumor cells by a drug}
+
+\item{generate_mutations}{Logical to generate or not new mutations states with
+the same positions but for passenger genes instead drivers}
 }
 \value{
 NULL changing clones and onco_clones objects in tugHall environment pck.env
