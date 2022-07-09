@@ -8,7 +8,8 @@ simulation_example(
   verbose = TRUE,
   to_plot = TRUE,
   seed = NA,
-  work_dir = getwd()
+  work_dir = getwd(),
+  digits = 5
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ simulation_example(
 \item{seed}{Numeric type to set seed for a simulation, if seed = NA (by default) then it will be skipped}
 
 \item{work_dir}{Working directory for a simulation, by default \code{ work_dir = getwd() }}
+
+\item{digits}{Number of digits in the numeric format of pck.env environment of tugHall}
 }
 \value{
 List of results of simulation with default values for all the parameters

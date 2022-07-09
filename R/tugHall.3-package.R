@@ -21,6 +21,7 @@
 #' @importFrom stats rnorm
 #' @importFrom stats runif
 #' @importFrom stringr str_length
+#' @importFrom stringr str_remove
 #' @importFrom stringr str_split
 #' @importFrom stringr str_sub
 #' @importFrom stringr str_trim
@@ -30,6 +31,7 @@
 #' @importFrom utils write.table
 #' @importFrom withr local_dir
 #' @importFrom withr local_environment
+#' @importFrom withr local_options
 #' @importFrom withr local_par
 ## usethis namespace: end
 NULL

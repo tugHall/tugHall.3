@@ -1,6 +1,7 @@
 ## code to prepare `tugHall_dataset` dataset goes here
 
-tugHall_dataset  =  simulation_example( verbose = FALSE, to_plot = FALSE )
+tugHall_dataset  =  simulation_example( seed    =  123456, work_dir =  '../Simulation/',
+                                        verbose =  FALSE,  to_plot  =  FALSE)
 
 usethis::use_data( tugHall_dataset, overwrite = TRUE )
 

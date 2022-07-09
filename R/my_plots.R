@@ -156,7 +156,7 @@ plot_order_dysfunction  <-  function( rdr_dysf , pos = c(0,100),
     tbl_rdr_dysf  =  aggregate( N_cells ~ order, data = rdr_dysf, FUN = sum )
     tbl_rdr_dysf  =  tbl_rdr_dysf[ order( tbl_rdr_dysf$N_cells, decreasing = T ), ]
 
-    if ( logscale == '' ) cfcnt = 1.05 else cfcnt = 10.5
+    if ( logscale == '' ) cfcnt = 1.05 else cfcnt = 1.5
 
     plot_2D_lines( x = 1:nrow(tbl_rdr_dysf), DF = tbl_rdr_dysf, nl = 2 ,
                    names = c( 'Index', 'Number of cells' ),
