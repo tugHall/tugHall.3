@@ -355,7 +355,7 @@ mixed_mut_order   <-   function( clone1 ) {
         }
     }
 
-    if ( length( clone1$CNA_ID ) > 0 & clone1$CNA_ID  != 0 ){
+    if ( length( clone1$CNA_ID ) > 0 & clone1$CNA_ID[ 1 ]  != 0 ){
         for (j in 1:length( clone1$CNA_ID ) ) {
             order_tp_num[j+i,'ID']      =   clone1$CNA_ID[ j ]
             cn1   =   pck.env$cna_clones[[ order_tp_num[ j+i, 'ID' ] ]]
@@ -393,7 +393,7 @@ mixed_mut_order   <-   function( clone1 ) {
 #' cna_clones = tugHall_dataset$cna_clones
 #' mut_order = 234
 #' start_end = c(112775658, 112775716 )
-#' withr::with_environment( env = pck.env, code = generate_cna( prntl = 1, genes = 'APC', start_end = start_end, onco1, dupOrdel = 'dup' ) )
+#' withr::with_environment( env = pck.env, code = generate_cna( prntl = 1, genes = 'APC', start_end = start_end, onco1 = onco, dupOrdel = 'dup' ) )
 generate_cna  <-  function( prntl, genes, start_end, onco1, dupOrdel ) {
     ### Function to generate object of point mutation cna
     cna0 = CNA_Mutations$new()

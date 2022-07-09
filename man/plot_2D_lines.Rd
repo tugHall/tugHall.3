@@ -168,8 +168,8 @@ yr = c(0,max(DF[,14],DF[,16],DF[,17] ))
 plot_2D_lines( x = DF[, 1 ], DF, nl = c(14,16,17) , xr =xr, yr = yr )
 plot_2D_lines( x = DF[, 1 ], DF, nl = 18:22 , xr = c(1,max(DF$Time) ), yr = c(0,1) )
 rdr_dysf = tugHall_dataset$rdr_dysf
-plot_order_dysfunction( rdr_dysf , logscale = '', pos = c(8, 5000), cex = 1.4)
-plot_order_dysfunction( rdr_dysf , logscale = 'y', pos = c(10, 100), cex = 1.2)
+plot_order_dysfunction( rdr_dysf , logscale = '', pos = c(3, 4000), cex = 1.3)
+plot_order_dysfunction( rdr_dysf , logscale = 'y', pos = c(4, 400), cex = 1.2)
 data_flow = tugHall_dataset$data_flow
 plot_clone_evolution( data_flow, threshold = c(0.01, 1 ), add_initial = TRUE, log_scale = FALSE )
 plot_clone_evolution( data_flow, threshold = c(0, 0.01 ), add_initial = FALSE, log_scale = TRUE )
