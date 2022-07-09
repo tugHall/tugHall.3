@@ -21,9 +21,9 @@ Generation CNA mutation info
 }
 \examples{
 copy_files_to_Input()
-define_parameters()
+load_tugHall.Environment( tugHall_dataset )
 onco = tugHall_dataset$onco
 gm = tugHall_dataset$gene_map
-get_cna_mutation( onco1 = onco, dupOrdel = 'dup', gm_1_2 = list(gm, gm) )
-get_cna_mutation( onco1 = onco, dupOrdel = 'del', gm_1_2 = list(gm, gm) )
+withr::with_environment( env = pck.env, code = get_cna_mutation( onco1 = onco, dupOrdel = 'dup', gm_1_2 = list(gm, gm) ) )
+withr::with_environment( env = pck.env, code = get_cna_mutation( onco1 = onco, dupOrdel = 'del', gm_1_2 = list(gm, gm) ) )
 }

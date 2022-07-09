@@ -101,7 +101,7 @@ Function to write log file
 \examples{
 copy_files_to_Input()
 define_files_names()
-define_parameters()
+load_tugHall.Environment( tugHall_dataset )
 if ( !dir.exists('./Output') ) dir.create('./Output')
 \dontrun{
 write_log(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,

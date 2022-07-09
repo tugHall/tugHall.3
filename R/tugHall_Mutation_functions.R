@@ -185,9 +185,9 @@ get_point_mutation_for_gene <- function( onco1, gm_1_2, gene ){
 #' onco = tugHall_dataset$onco
 #' pnt_clones = tugHall_dataset$pnt_clones
 #' copy_files_to_Input()
-#' define_parameters()
+#' load_tugHall.Environment( tugHall_dataset )
 #' mut_order = 234  # As an example
-#' pnt1 = generate_pnt( prntl = 1, gene = 'APC', pos = 112767192, onco, Chr = '5', mutation = NA )
+#' withr::with_environment( env = pck.env, code = generate_pnt( prntl = 1, gene = 'APC', pos = 112767192, onco, Chr = '5', mutation = NA ) )
 generate_pnt  <-  function( prntl, gene, pos, onco1, Chr, mutation = NA ) {
     ### Function to generate object of point mutation pnt
     pnt0 = Point_Mutations$new()
@@ -269,10 +269,10 @@ generate_to_copy_pnt  <-  function( pnt ) {
 #'
 #' @examples
 #' copy_files_to_Input()
-#' define_parameters()
+#' load_tugHall.Environment( tugHall_dataset )
 #' onco = tugHall_dataset$onco
-#' get_u_cna( genes = 'APC', dupOrdel = 'dup' )
-#' get_u_cna( genes = c('KRAS','APC'), dupOrdel = c('dup', 'del') )
+#' withr::with_environment( env = pck.env, code = get_u_cna( genes = 'APC', dupOrdel = 'dup' ) )
+#' withr::with_environment( env = pck.env, code = get_u_cna( genes = c('KRAS','APC'), dupOrdel = c('dup', 'del') ) )
 get_u_cna <- function( genes, dupOrdel ){
     # input: genes, u_del or u_dup for oncogenes and suppressors
     u = NULL
@@ -300,11 +300,11 @@ get_u_cna <- function( genes, dupOrdel ){
 #'
 #' @examples
 #' copy_files_to_Input()
-#' define_parameters()
+#' load_tugHall.Environment( tugHall_dataset )
 #' onco = tugHall_dataset$onco
 #' gm = tugHall_dataset$gene_map
-#' get_cna_mutation( onco1 = onco, dupOrdel = 'dup', gm_1_2 = list(gm, gm) )
-#' get_cna_mutation( onco1 = onco, dupOrdel = 'del', gm_1_2 = list(gm, gm) )
+#' withr::with_environment( env = pck.env, code = get_cna_mutation( onco1 = onco, dupOrdel = 'dup', gm_1_2 = list(gm, gm) ) )
+#' withr::with_environment( env = pck.env, code = get_cna_mutation( onco1 = onco, dupOrdel = 'del', gm_1_2 = list(gm, gm) ) )
 get_cna_mutation <- function( onco1, dupOrdel, gm_1_2 ){
     ### Function to get position of point mutation related to gm (gene_map) info for each chr
     prntl  =  sample( c(1,2), size = 1, replace = TRUE, prob = c( sum(onco1$cds_1), sum(onco1$cds_2) ))
@@ -386,14 +386,14 @@ mixed_mut_order   <-   function( clone1 ) {
 #'
 #' @examples
 #' copy_files_to_Input()
-#' define_parameters()
+#' load_tugHall.Environment( tugHall_dataset )
 #' onco = tugHall_dataset$onco
 #' gene_map = tugHall_dataset$gene_map
 #' pnt_clones = tugHall_dataset$pnt_clones
 #' cna_clones = tugHall_dataset$cna_clones
 #' mut_order = 234
 #' start_end = c(112775658, 112775716 )
-#' generate_cna( prntl = 1, genes = 'APC', start_end = start_end, onco1, dupOrdel = 'dup' )
+#' withr::with_environment( env = pck.env, code = generate_cna( prntl = 1, genes = 'APC', start_end = start_end, onco1, dupOrdel = 'dup' ) )
 generate_cna  <-  function( prntl, genes, start_end, onco1, dupOrdel ) {
     ### Function to generate object of point mutation cna
     cna0 = CNA_Mutations$new()
@@ -722,8 +722,8 @@ check_pnts  <-  function( gm_w1 ){
 #'
 #' @examples
 #' gene_map  =  tugHall_dataset$gene_map
-#' define_parameters()
-#' get_cds_rna( gm = gene_map )
+#' load_tugHall.Environment( tugHall_dataset )
+#' withr::with_environment( env = pck.env, code = get_cds_rna( gm = gene_map ) )
 get_cds_rna  <-  function( gm ){
 
     name0  =  unique( gm$Gene )

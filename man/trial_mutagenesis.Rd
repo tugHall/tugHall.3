@@ -22,7 +22,7 @@ Function for mutagenesis trial
 \examples{
 copy_files_to_Input()
 copy_files_to_Output()
-define_parameters()
+load_tugHall.Environment( tugHall_dataset )
 clone1 = tugHall_dataset$clones[[ 1 ]]
 onco1 = tugHall_dataset$onco_clones[[ 1 ]]
 onco = tugHall_dataset$onco

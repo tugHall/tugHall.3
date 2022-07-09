@@ -31,11 +31,8 @@ Function to get data about last simulation from cloneoutfile
 }
 \examples{
 copy_files_to_Input()
-define_files_names()
-define_parameters( read_fl = TRUE , file_name = './Input/parameters.txt' )
-define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
-define_gene_location()
+load_tugHall.Environment( results = tugHall_dataset )
 copy_files_to_Output()
-dataset = get_flow_data(cloneoutfile, genefile, mainDir = getwd(), sbdr_Output = '/Output' )
+withr::with_environment( env = pck.env, code = { dataset = get_flow_data(cloneoutfile, genefile, mainDir = getwd(), sbdr_Output = '/Output' ) } )
 # View(dataset)
 }

@@ -27,9 +27,12 @@ data.frame of genes' dysfunction and save it in a file
 Function to get order of genes' dysfunction
 }
 \examples{
-pnt_mut  =  tugHall_dataset$pnt_mut
-data_last  =  tugHall_dataset$data_last
-cna_mut = tugHall_dataset$cna_mut
+load_tugHall.Environment( results = tugHall_dataset )
+copy_files_to_Output()
+dtst = get_flow_data( pck.env$cloneoutfile, pck.env$genefile )
+pnt_mut   =  dtst$pnt_mut
+data_last  =  dtst$data_last
+cna_mut = dtst$cna_mut
 file_name = './Output/order_genes_dysfunction.txt'
 rdr = get_order_of_genes_dysfunction( pnt_mut, data_last, cna_mut, file_name = file_name )
 }

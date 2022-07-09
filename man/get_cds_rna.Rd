@@ -17,6 +17,6 @@ Function to get length of CDS and of genes from data.frame gene_map and related 
 }
 \examples{
 gene_map  =  tugHall_dataset$gene_map
-define_parameters()
-get_cds_rna( gm = gene_map )
+load_tugHall.Environment( tugHall_dataset )
+withr::with_environment( env = pck.env, code = get_cds_rna( gm = gene_map ) )
 }

@@ -19,8 +19,8 @@ Function to choose probability of CNA mutation for several genes
 }
 \examples{
 copy_files_to_Input()
-define_parameters()
+load_tugHall.Environment( tugHall_dataset )
 onco = tugHall_dataset$onco
-get_u_cna( genes = 'APC', dupOrdel = 'dup' )
-get_u_cna( genes = c('KRAS','APC'), dupOrdel = c('dup', 'del') )
+withr::with_environment( env = pck.env, code = get_u_cna( genes = 'APC', dupOrdel = 'dup' ) )
+withr::with_environment( env = pck.env, code = get_u_cna( genes = c('KRAS','APC'), dupOrdel = c('dup', 'del') ) )
 }

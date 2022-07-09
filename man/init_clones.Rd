@@ -19,10 +19,7 @@ Function to read file with initial clones
 }
 \examples{
 copy_files_to_Input()
-define_files_names()
-env = tugHall_dataset$env
-define_parameters()
-onco = tugHall_dataset$onco
+load_tugHall.Environment( tugHall_dataset )
 clone1 = tugHall_dataset$clones[[ 1 ]]
-clones = init_clones(clonefile, clone1)  # View( clones )
+withr::with_environment( env = pck.env, code =  clones = init_clones(clonefile, clone1) )
 }

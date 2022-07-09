@@ -17,8 +17,6 @@ Function to make one copy for clone1 in clone_init function
 }
 \examples{
 clone1 = tugHall_dataset$clones[[ 1 ]]
-env = tugHall_dataset$env
-define_parameters()
-m0 = 1E-06
-clone_copy(clone1)
+load_tugHall.Environment( tugHall_dataset )
+withr::with_environment( pck.env, code = clone_copy(clone1) )
 }

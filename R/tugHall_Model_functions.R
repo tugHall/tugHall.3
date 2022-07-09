@@ -269,7 +269,7 @@ trial_simple <- function( clone1, onco1 ) {
 #' @examples
 #' copy_files_to_Input()
 #' copy_files_to_Output()
-#' define_parameters()
+#' load_tugHall.Environment( tugHall_dataset )
 #' clone1 = tugHall_dataset$clones[[ 1 ]]
 #' onco1 = tugHall_dataset$onco_clones[[ 1 ]]
 #' onco = tugHall_dataset$onco
@@ -408,7 +408,7 @@ trial_mutagenesis <- function( clone1, num_mut, onco1 ) {
 #'
 #' @examples
 #' clones = tugHall_dataset$clones
-#' define_parameters()
+#' load_tugHall.Environment( tugHall_dataset )
 #' onco = tugHall_dataset$onco
 #' onco_clones = tugHall_dataset$onco_clones
 #' copy_files_to_Input()
@@ -526,7 +526,7 @@ change_allele_A_by_cna  <-  function( pnt1, start_end, t ) {
 #' onco1 = tugHall_dataset$onco_clones[[ 1 ]]
 #' copy_files_to_Input()
 #' define_gene_location()
-#' define_parameters()
+#' load_tugHall.Environment( tugHall_dataset )
 #' onco_update( onco1, gm = list(gene_map, gene_map[1:42, ] ) )  # Check CDS length for TP53 gene
 onco_update  <-  function( onco1, gm ){
 
@@ -595,10 +595,8 @@ chk_pnt_mut  <-  function( pnt1 , Ref_start, Ref_end, Chr, prntl ){
 #'
 #' @examples
 #' clone1 = tugHall_dataset$clones[[ 1 ]]
-#' env = tugHall_dataset$env
-#' define_parameters()
-#' m0 = 1E-06
-#' clone_copy(clone1)
+#' load_tugHall.Environment( tugHall_dataset )
+#' withr::with_environment( pck.env, code = clone_copy(clone1) )
 clone_copy <- function(clone1) {
     pck.env$env$last_id = pck.env$env$last_id + 1
 
@@ -671,7 +669,7 @@ onco_copy <- function( onco1 ){
 #' @examples
 #' copy_files_to_Input()
 #' define_files_names()
-#' define_parameters()
+#' load_tugHall.Environment( tugHall_dataset )
 #' if ( !dir.exists('./Output') ) dir.create('./Output')
 #' \dontrun{
 #' write_log(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile,
@@ -719,7 +717,7 @@ write_log <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile
 #' @examples
 #' copy_files_to_Input()
 #' define_files_names()
-#' define_parameters()
+#' load_tugHall.Environment( tugHall_dataset )
 #' if ( !dir.exists('./Output') ) dir.create('./Output')
 #' hall = tugHall_dataset$hall
 #' onco = tugHall_dataset$onco
@@ -959,12 +957,9 @@ write_pnt_clones <- function( pnt_clones, file_out = 'Output/point_mutations.txt
 #'
 #' @examples
 #' copy_files_to_Input()
-#' define_files_names()
-#' env = tugHall_dataset$env
-#' define_parameters()
-#' onco = tugHall_dataset$onco
+#' load_tugHall.Environment( tugHall_dataset )
 #' clone1 = tugHall_dataset$clones[[ 1 ]]
-#' clones = init_clones(clonefile, clone1)  # View( clones )
+#' withr::with_environment( env = pck.env, code =  clones = init_clones(clonefile, clone1) )
 init_clones <- function(clonefile, clone1) {
     mpos <- regexpr("\\.", clonefile)[1]
     if (mpos != -1) {
@@ -1038,7 +1033,7 @@ init_clones <- function(clonefile, clone1) {
 #' copy_files_to_Input()
 #' define_files_names()
 #' env = tugHall_dataset$env
-#' define_parameters()
+#' load_tugHall.Environment( tugHall_dataset )
 #' onco = tugHall_dataset$onco
 #' clone1 = tugHall_dataset$clones[[ 1 ]]
 #' clones = init_clones(clonefile, clone1)  # View( clones )

@@ -31,7 +31,7 @@ gm_1_2 = list( gm, gm )
 onco = tugHall_dataset$onco
 pnt_clones = tugHall_dataset$pnt_clones
 copy_files_to_Input()
-define_parameters()
+load_tugHall.Environment( tugHall_dataset )
 mut_order = 234  # As an example
-pnt1 = generate_pnt( prntl = 1, gene = 'APC', pos = 112767192, onco, Chr = '5', mutation = NA )
+withr::with_environment( env = pck.env, code = generate_pnt( prntl = 1, gene = 'APC', pos = 112767192, onco, Chr = '5', mutation = NA ) )
 }

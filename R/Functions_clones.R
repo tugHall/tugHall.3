@@ -13,12 +13,9 @@
 #' @export
 #' @examples
 #' copy_files_to_Input()
-#' define_files_names()
-#' define_parameters( read_fl = TRUE , file_name = './Input/parameters.txt' )
-#' define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
-#' define_gene_location()
+#' load_tugHall.Environment( results = tugHall_dataset )
 #' copy_files_to_Output()
-#' dataset = get_flow_data(cloneoutfile, genefile, mainDir = getwd(), sbdr_Output = '/Output' )
+#' withr::with_environment( env = pck.env, code = { dataset = get_flow_data(cloneoutfile, genefile, mainDir = getwd(), sbdr_Output = '/Output' ) } )
 #' # View(dataset)
 get_flow_data <- function(cloneoutfile, genefile, mainDir = getwd(), sbdr_Output = '/Output' ) {
 
@@ -138,9 +135,12 @@ plot_average_simulation_data  <-  function( data_avg, time_max ){
 #' @export
 #'
 #' @examples
-#' pnt_mut  =  tugHall_dataset$pnt_mut
-#' data_last  =  tugHall_dataset$data_last
-#' cna_mut = tugHall_dataset$cna_mut
+#' load_tugHall.Environment( results = tugHall_dataset )
+#' copy_files_to_Output()
+#' dtst = get_flow_data( pck.env$cloneoutfile, pck.env$genefile )
+#' pnt_mut   =  dtst$pnt_mut
+#' data_last  =  dtst$data_last
+#' cna_mut = dtst$cna_mut
 #' file_name = './Output/order_genes_dysfunction.txt'
 #' rdr = get_order_of_genes_dysfunction( pnt_mut, data_last, cna_mut, file_name = file_name )
 get_order_of_genes_dysfunction  <-  function( pnt_mut, data_last, cna_mut, file_name = './Output/order_genes_dysfunction.txt' ){

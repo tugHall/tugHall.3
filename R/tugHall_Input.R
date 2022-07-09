@@ -255,7 +255,7 @@ print_parameters  <-  function(){
 #' @examples
 #' copy_files_to_Input()
 #' define_compaction_factor( read_fl = TRUE , file_name = './Input/CF.txt' )
-#' CF1 = CF
+#' CF1 = pck.env$CF
 #' cf = data.frame( Ha = 0.1, Hb = 0.2, Hd = 0.7, Hi = 1, Him = 0.5 )
 #' define_compaction_factor( cf = cf, read_fl = FALSE )  # View( c( CF, CF1 ) ) to compare
 define_compaction_factor  <-  function( cf = data.frame( Ha = 1, Hb = 1, Hd = 1,

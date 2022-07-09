@@ -25,12 +25,12 @@ Function to generate object of CNA mutation
 }
 \examples{
 copy_files_to_Input()
-define_parameters()
+load_tugHall.Environment( tugHall_dataset )
 onco = tugHall_dataset$onco
 gene_map = tugHall_dataset$gene_map
 pnt_clones = tugHall_dataset$pnt_clones
 cna_clones = tugHall_dataset$cna_clones
 mut_order = 234
 start_end = c(112775658, 112775716 )
-generate_cna( prntl = 1, genes = 'APC', start_end = start_end, onco1, dupOrdel = 'dup' )
+withr::with_environment( env = pck.env, code = generate_cna( prntl = 1, genes = 'APC', start_end = start_end, onco1, dupOrdel = 'dup' ) )
 }

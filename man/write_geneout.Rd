@@ -24,7 +24,7 @@ Function to write info about HallMark data
 \examples{
 copy_files_to_Input()
 define_files_names()
-define_parameters()
+load_tugHall.Environment( tugHall_dataset )
 if ( !dir.exists('./Output') ) dir.create('./Output')
 hall = tugHall_dataset$hall
 onco = tugHall_dataset$onco

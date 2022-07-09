@@ -16,7 +16,7 @@ Function to generate point mutations for initial clones
 }
 \examples{
 clones = tugHall_dataset$clones
-define_parameters()
+load_tugHall.Environment( tugHall_dataset )
 onco = tugHall_dataset$onco
 onco_clones = tugHall_dataset$onco_clones
 copy_files_to_Input()
