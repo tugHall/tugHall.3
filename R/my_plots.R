@@ -143,8 +143,8 @@ plot_2D_lines   <-  function( x, DF, nl = 1:2, names = c( 'X', 'Y' ),
 #'
 #' @examples
 #' rdr_dysf = tugHall_dataset$rdr_dysf
-#' plot_order_dysfunction( rdr_dysf , logscale = '', pos = c(8, 5000), cex = 1.4)
-#' plot_order_dysfunction( rdr_dysf , logscale = 'y', pos = c(10, 100), cex = 1.2)
+#' plot_order_dysfunction( rdr_dysf , logscale = '', pos = c(3, 4000), cex = 1.3)
+#' plot_order_dysfunction( rdr_dysf , logscale = 'y', pos = c(4, 400), cex = 1.2)
 plot_order_dysfunction  <-  function( rdr_dysf , pos = c(0,100),
                                       logscale = 'y', cex = 1,
                                       par_list = list( xpd=TRUE, cex.lab=2, lwd = 2, mar = c(5, 5, 5, 5),

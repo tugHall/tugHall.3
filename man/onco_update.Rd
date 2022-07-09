@@ -20,7 +20,7 @@ Function to update onco1 after mutation (for usage in trial_mutagenesis() functi
 \examples{
 onco1 = tugHall_dataset$onco_clones[[ 1 ]]
 copy_files_to_Input()
-define_gene_location()
 load_tugHall.Environment( tugHall_dataset )
-onco_update( onco1, gm = list(gene_map, gene_map[1:42, ] ) )  # Check CDS length for TP53 gene
+withr::with_environment( env = pck.env, code = onco_update( onco1, gm = list(gene_map, gene_map[1:42, ] ) )  )
+# Check CDS length for TP53 gene
 }

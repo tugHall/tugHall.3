@@ -21,5 +21,5 @@ Function to read file with initial clones
 copy_files_to_Input()
 load_tugHall.Environment( tugHall_dataset )
 clone1 = tugHall_dataset$clones[[ 1 ]]
-withr::with_environment( env = pck.env, code =  clones = init_clones(clonefile, clone1) )
+withr::with_environment( env = pck.env, code = init_clones(clonefile, clone1) )
 }

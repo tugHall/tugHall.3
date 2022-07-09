@@ -19,11 +19,8 @@ Function to make list of objects of class 'OncoGene' and generate initial onco s
 }
 \examples{
 copy_files_to_Input()
-define_files_names()
-env = tugHall_dataset$env
 load_tugHall.Environment( tugHall_dataset )
-onco = tugHall_dataset$onco
 clone1 = tugHall_dataset$clones[[ 1 ]]
-clones = init_clones(clonefile, clone1)  # View( clones )
-onco_clones = init_onco_clones( onco1 = onco, clones )
+withr::with_environment( env = pck.env, code = { clones = init_clones(clonefile, clone1)  } )
+withr::with_environment( env = pck.env, code = { onco_clones = init_onco_clones( onco1 = onco, clones ) } )
 }

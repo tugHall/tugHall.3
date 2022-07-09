@@ -565,9 +565,7 @@ hallmark <- setRefClass(
 #' @examples
 #' clone = tugHall_dataset$clones[[ 1 ]]
 #' load_tugHall.Environment( tugHall_dataset )
-#' hall = tugHall_dataset$hall
-#' env = tugHall_dataset$env
-#' update_Hallmarks( clone )
+#' withr::with_environment( env = pck.env, code = update_Hallmarks( clone ) )
 update_Hallmarks <- function(clone1) {
     # Hallmark
     pck.env$hall$updateClone(clone1, pck.env$env$F)

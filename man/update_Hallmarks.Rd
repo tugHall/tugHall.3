@@ -18,7 +18,5 @@ Function to update Hallmark and variable after division or under initialization
 \examples{
 clone = tugHall_dataset$clones[[ 1 ]]
 load_tugHall.Environment( tugHall_dataset )
-hall = tugHall_dataset$hall
-env = tugHall_dataset$env
-update_Hallmarks( clone )
+withr::with_environment( env = pck.env, code = update_Hallmarks( clone ) )
 }

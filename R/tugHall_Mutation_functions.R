@@ -347,7 +347,7 @@ mixed_mut_order   <-   function( clone1 ) {
     # return the order, type and number of mutation (del, dup or point in order of appearance)
     order_tp_num  <-  data.frame( order = NULL, type = NULL, ID = NULL )
     i  =  0
-    if ( length( clone1$PointMut_ID ) > 0  & clone1$PointMut_ID  != 0 ){
+    if ( length( clone1$PointMut_ID ) > 0  & clone1$PointMut_ID[ 1 ]  != 0 ){
         for (i in 1:length( clone1$PointMut_ID )) {
             order_tp_num[i,'type']   =  'pnt'
             order_tp_num[i,'ID']     =  as.numeric( clone1$PointMut_ID[i] )

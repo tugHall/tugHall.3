@@ -348,7 +348,7 @@ trial_mutagenesis <- function( clone1, num_mut, onco1 ) {
             ### Check what point mutations match into the CNA
             sp   = FALSE
             sp_A = FALSE
-            if ( clone1$PointMut_ID != 0 ){
+            if ( clone1$PointMut_ID[ 1 ] != 0 ){
                 sp = sapply( clone1$PointMut_ID , FUN = function( x )  {
                     chk_pnt_mut( pnt1  =  pck.env$pnt_clones[[ x ]], Ref_start = start_end[1],
                                  Ref_end = start_end[2], Chr = Chr, prntl  =  prntl )
@@ -525,9 +525,9 @@ change_allele_A_by_cna  <-  function( pnt1, start_end, t ) {
 #' @examples
 #' onco1 = tugHall_dataset$onco_clones[[ 1 ]]
 #' copy_files_to_Input()
-#' define_gene_location()
 #' load_tugHall.Environment( tugHall_dataset )
-#' onco_update( onco1, gm = list(gene_map, gene_map[1:42, ] ) )  # Check CDS length for TP53 gene
+#' withr::with_environment( env = pck.env, code = onco_update( onco1, gm = list(gene_map, gene_map[1:42, ] ) )  )
+#' # Check CDS length for TP53 gene
 onco_update  <-  function( onco1, gm ){
 
     lst1  =  get_cds_rna( gm[[1]] )
@@ -716,13 +716,9 @@ write_log <- function(genefile, clonefile, geneoutfile, cloneoutfile, logoutfile
 #'
 #' @examples
 #' copy_files_to_Input()
-#' define_files_names()
 #' load_tugHall.Environment( tugHall_dataset )
 #' if ( !dir.exists('./Output') ) dir.create('./Output')
-#' hall = tugHall_dataset$hall
-#' onco = tugHall_dataset$onco
-#' define_compaction_factor()
-#' write_geneout(outfile = geneoutfile, hall, Compaction_factor, CF)
+#' withr::with_environment( env = pck.env, code =  write_geneout(outfile = geneoutfile, hall, Compaction_factor, CF) )
 write_geneout <- function(outfile, hall, Compaction_factor, CF) {
     gene <- c(pck.env$onco$name[hall$Ha], pck.env$onco$name[hall$Hi], pck.env$onco$name[hall$Hd],
               pck.env$onco$name[hall$Hb], pck.env$onco$name[hall$Him])
@@ -959,7 +955,7 @@ write_pnt_clones <- function( pnt_clones, file_out = 'Output/point_mutations.txt
 #' copy_files_to_Input()
 #' load_tugHall.Environment( tugHall_dataset )
 #' clone1 = tugHall_dataset$clones[[ 1 ]]
-#' withr::with_environment( env = pck.env, code =  clones = init_clones(clonefile, clone1) )
+#' withr::with_environment( env = pck.env, code = init_clones(clonefile, clone1) )
 init_clones <- function(clonefile, clone1) {
     mpos <- regexpr("\\.", clonefile)[1]
     if (mpos != -1) {
@@ -1031,13 +1027,10 @@ init_clones <- function(clonefile, clone1) {
 #'
 #' @examples
 #' copy_files_to_Input()
-#' define_files_names()
-#' env = tugHall_dataset$env
 #' load_tugHall.Environment( tugHall_dataset )
-#' onco = tugHall_dataset$onco
 #' clone1 = tugHall_dataset$clones[[ 1 ]]
-#' clones = init_clones(clonefile, clone1)  # View( clones )
-#' onco_clones = init_onco_clones( onco1 = onco, clones )
+#' withr::with_environment( env = pck.env, code = { clones = init_clones(clonefile, clone1)  } )
+#' withr::with_environment( env = pck.env, code = { onco_clones = init_onco_clones( onco1 = onco, clones ) } )
 init_onco_clones <- function( onco1, clones ) {
     # initialization of onco_clones in order to assign an onco to each clone
     onco_clones = NULL
