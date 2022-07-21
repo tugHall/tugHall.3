@@ -142,7 +142,7 @@ model <- function( ){
 }
 
 
-#' Main function 'model' to simulate clones' evolution
+#' @describeIn model Function 'model_keep_run' to start simulation from previous results with new parameter set
 #'
 #'
 #'
@@ -158,6 +158,7 @@ model <- function( ){
 #' time_stop = 3  #  Duration of simulation time is 3 sec
 #' \dontrun{
 #' res = model( )
+#' res2 = model_keep_run()
 #' }
 model_keep_run <- function( ){
 
