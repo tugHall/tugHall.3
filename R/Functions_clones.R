@@ -222,8 +222,10 @@ get_VAF  <-  function( pnt_mut, data_last, file_name = 'Output/VAF_data.txt'){
     pnt_mut_A  =  pnt_mut[ which(  is.na( pnt_mut$MalfunctionedByPointMut ) ) , ]
     pnt_mut_B  =  pnt_mut[ which( !is.na( pnt_mut$MalfunctionedByPointMut ) ) , ]
 
+    if ( nrow(data_last) == 0 ) return( NULL )
+
     ids  =  str_split( data_last$PointMut_ID, pattern = ',' )
-    ids =  sapply( X = 1:nrow( data_last), FUN = function(x) as.numeric( ids[[ x ]] ) )
+    ids  =  lapply( X = 1:nrow( data_last), FUN = function(x) as.numeric( ids[[ x ]] ) )
 
     nqu  =  sort( unique( unlist( ids ) ) )  # unique IDs of point mutations
     if ( nqu[1] == 0 ) nqu = nqu[ -1 ]       # exclude intact normal cells
